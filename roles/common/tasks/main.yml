@@ -321,6 +321,25 @@
     - nfs
     - nfs-client
 
+# Установка MariaDB на master
+- name: "[COMMON] Установка MariaDB"
+  apt:
+    name:
+      - mariadb-server
+      - mariadb-client  
+      - python3-pymysql
+    state: present
+  when: inventory_hostname in groups['slurm_master']
+  tags:
+    - mariadb
+
+- name: "[COMMON] Установка python3-pymysql для Ansible mysql модулей"
+  apt:
+    name: python3-pymysql
+    state: present
+  when: inventory_hostname in groups['slurm_master']
+  tags: mariadb
+
 # =============================================================================
 # БАЗОВЫЕ ДИРЕКТОРИИ SLURM
 # =============================================================================
