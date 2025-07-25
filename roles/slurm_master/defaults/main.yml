@@ -1,7 +1,7 @@
 # roles/slurm_master/defaults/main.yml
 ---
 # =============================================================================
-# SLURM MASTER DEFAULTS (полная версия)
+# SLURM MASTER DEFAULTS (автоопределение ресурсов)
 # =============================================================================
 
 # Slurm installation paths
@@ -48,12 +48,13 @@ slurm_max_array_size: 1000
 slurm_scheduler_timeout: 300
 slurm_node_timeout: 120
 
-# Node configuration defaults (обновлено под ваши узлы)
+# Node configuration defaults (АВТООПРЕДЕЛЕНИЕ РЕСУРСОВ)
 slurm_node_defaults:
   state: "UNKNOWN"
-  cpus: 32          # Примерное значение для ваших узлов
-  real_memory: 64000  # 64GB RAM примерно
-  tmp_disk: 100000    # 100GB временного дискового пространства
+  # Автоматическое определение ресурсов из фактов Ansible
+  # CPUs берется из ansible_processor_vcpus
+  # RealMemory из ansible_memtotal_mb - 10% (резерв системе)
+  # TmpDisk из ansible_mounts (корневой раздел) - 20% (резерв системе)
 
 # Partition configuration
 slurm_default_partition: "compute"

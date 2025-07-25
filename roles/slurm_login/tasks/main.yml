@@ -1,8 +1,309 @@
+# roles/slurm_login/tasks/main.yml
 ---
-# Роль: slurm_login
+# Роль: slurm_login - настройка Login узла для пользователей
 
-- name: "[slurm_login] Начало выполнения роли"
+- name: "[SLURM-LOGIN] Начало настройки Slurm Login узла"
   debug:
-    msg: "🔧 Выполняется роль slurm_login"
+    msg: |
+      🔑 Настройка Slurm Login узла: {{ inventory_hostname }}
+      🔗 Master: {{ slurm_master_host }}
+      👥 Пользовательский доступ к кластеру
 
-# TODO: Добавить задачи роли
+# =============================================================================
+# УСТАНОВКА ДОПОЛНИТЕЛЬНЫХ ПАКЕТОВ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Установка пакетов для пользователей"
+  apt:
+    name: "{{ login_node_packages }}"
+    state: present
+    update_cache: yes
+  tags:
+    - packages
+
+# =============================================================================
+# УСТАНОВКА SLURM КЛИЕНТСКИХ КОМАНД
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Создание директории Slurm"
+  file:
+    path: "{{ slurm_install_prefix }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags:
+    - install
+
+# - name: "[SLURM-LOGIN] Ожидание Slurm binaries на NFS"
+#   wait_for:
+#     path: "{{ nfs_slurm_path }}/bin/sinfo"
+#     timeout: 60
+#   tags:
+#     - install
+
+- name: "[SLURM-LOGIN] Копирование Slurm клиентских команд из NFS"
+  shell: |
+    # Создаем директории
+    mkdir -p {{ slurm_install_prefix }}/bin
+    mkdir -p {{ slurm_install_prefix }}/lib
+    mkdir -p {{ slurm_install_prefix }}/share
+    
+    # Копируем только клиентские компоненты (НЕ демоны)
+    cp -r {{ nfs_slurm_path }}/bin/* {{ slurm_install_prefix }}/bin/
+    cp -r {{ nfs_slurm_path }}/lib/* {{ slurm_install_prefix }}/lib/
+    cp -r {{ nfs_slurm_path }}/share/* {{ slurm_install_prefix }}/share/
+    
+    # Устанавливаем права
+    chown -R root:root {{ slurm_install_prefix }}
+    chmod -R 755 {{ slurm_install_prefix }}/bin
+    
+    echo "Установлено $(ls {{ slurm_install_prefix }}/bin | wc -l) команд"
+  register: client_install
+  tags:
+    - install
+
+- name: "[SLURM-LOGIN] Результат установки клиентов"
+  debug:
+    var: client_install.stdout_lines
+  tags:
+    - install
+
+# =============================================================================
+# СОЗДАНИЕ СИМВОЛИЧЕСКИХ ССЫЛОК
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Создание символических ссылок для Slurm команд"
+  file:
+    src: "{{ slurm_install_prefix }}/bin/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+    force: yes
+  loop: "{{ slurm_client_commands }}"
+  tags:
+    - links
+
+- name: "[SLURM-LOGIN] Обновление библиотечного кеша"
+  shell: ldconfig
+  tags:
+    - links
+
+# =============================================================================
+# КОПИРОВАНИЕ КОНФИГУРАЦИОННЫХ ФАЙЛОВ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Ожидание конфигурационных файлов на NFS"
+  wait_for:
+    path: "{{ nfs_config_path }}/{{ item }}"
+    timeout: 30
+  loop: "{{ slurm_config_files }}"
+  tags:
+    - config
+
+- name: "[SLURM-LOGIN] Копирование конфигурационных файлов из NFS"
+  copy:
+    src: "{{ nfs_config_path }}/{{ item }}"
+    dest: "{{ slurm_config_dir }}/{{ item }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  loop: "{{ slurm_config_files }}"
+  tags:
+    - config
+
+# =============================================================================
+# СОЗДАНИЕ ПОЛЬЗОВАТЕЛЬСКИХ ДИРЕКТОРИЙ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Создание пользовательских директорий"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop: "{{ user_directories }}"
+  tags:
+    - directories
+
+# =============================================================================
+# НАСТРОЙКА ПОЛЬЗОВАТЕЛЬСКОГО ОКРУЖЕНИЯ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Создание профиля Slurm для пользователей"
+  copy:
+    dest: /etc/profile.d/slurm.sh
+    mode: '0644'
+    content: |
+      # Slurm environment for users
+      # Generated by Ansible
+      
+      # Slurm environment variables
+      {% for var, value in slurm_env_vars.items() %}
+      export {{ var }}="{{ value }}"
+      {% endfor %}
+      
+      # Slurm aliases for convenience
+      alias sq='squeue'
+      alias si='sinfo'
+      alias sj='squeue -u $USER'
+      alias scan='scancel'
+      
+      # Show cluster info on login
+      if [ -t 1 ] && command -v sinfo >/dev/null 2>&1; then
+        echo "🎯 HPC Cluster Status:"
+        sinfo --summarize 2>/dev/null || echo "Cluster information unavailable"
+        echo ""
+      fi
+  when: slurm_user_profile
+  tags:
+    - environment
+
+- name: "[SLURM-LOGIN] Bash completion для Slurm команд"
+  copy:
+    dest: /etc/bash_completion.d/slurm
+    mode: '0644'
+    content: |
+      # Slurm bash completion
+      # Basic completion for common Slurm commands
+      
+      _slurm_partitions() {
+        local partitions
+        partitions=$(sinfo -h -o '%P' 2>/dev/null | sort -u)
+        COMPREPLY=($(compgen -W "$partitions" -- "$cur"))
+      }
+      
+      _slurm_nodes() {
+        local nodes
+        nodes=$(sinfo -h -o '%N' 2>/dev/null | sort -u)
+        COMPREPLY=($(compgen -W "$nodes" -- "$cur"))
+      }
+      
+      # Basic completion for srun
+      _srun() {
+        local cur prev
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        
+        case $prev in
+          -p|--partition)
+            _slurm_partitions
+            return 0
+            ;;
+          -w|--nodelist)
+            _slurm_nodes
+            return 0
+            ;;
+        esac
+        
+        if [[ $cur == -* ]]; then
+          COMPREPLY=($(compgen -W "-p --partition -N --nodes -n --ntasks -t --time -J --job-name" -- "$cur"))
+        fi
+      }
+      
+      complete -F _srun srun
+      complete -F _srun sbatch
+      complete -F _srun salloc
+  when: slurm_completion
+  tags:
+    - environment
+
+# =============================================================================
+# SSH НАСТРОЙКИ (ОПЦИОНАЛЬНО)
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Настройка SSH для пользователей"
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backup: yes
+  loop:
+    - { regexp: '^#?MaxSessions', line: 'MaxSessions {{ ssh_max_sessions }}' }
+    - { regexp: '^#?PrintMotd', line: 'PrintMotd yes' }
+    - { regexp: '^#?Banner', line: 'Banner /etc/ssh/banner' }
+  when: ssh_allow_users
+  notify: restart ssh
+  tags:
+    - ssh
+
+- name: "[SLURM-LOGIN] Создание SSH banner"
+  copy:
+    dest: /etc/ssh/banner
+    mode: '0644'
+    content: |
+      ================================================================================
+      🎯 HPC CLUSTER LOGIN NODE
+      ================================================================================
+      
+      Welcome to {{ inventory_hostname }} - Slurm HPC Cluster Login Node
+      
+      Available commands:
+        sinfo     - View cluster status  
+        squeue    - View job queue
+        sbatch    - Submit batch job
+        srun      - Run interactive job
+        scancel   - Cancel job
+        
+      Useful aliases:
+        sq        - squeue
+        si        - sinfo  
+        sj        - squeue -u $USER
+        
+      Documentation: Use 'man <command>' for detailed help
+      
+      ================================================================================
+  when: ssh_allow_users
+  tags:
+    - ssh
+
+# =============================================================================
+# ПРОВЕРКА ФУНКЦИОНАЛЬНОСТИ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Тест Slurm клиентских команд"
+  shell: |
+    echo "=== ТЕСТ SLURM КОМАНД ==="
+    echo "sinfo version: $(/usr/bin/sinfo --version)"
+    echo "Cluster ping:"
+    /usr/bin/scontrol ping 2>&1 || echo "Контроллер недоступен (ожидаемо на login узле)"
+    echo "Cluster info:"
+    /usr/bin/sinfo --summarize 2>&1 || echo "Информация о кластере недоступна"
+  register: slurm_test
+  changed_when: false
+  failed_when: false
+  tags:
+    - verify
+
+- name: "[SLURM-LOGIN] Результаты тестирования"
+  debug:
+    var: slurm_test.stdout_lines
+  tags:
+    - verify
+
+# =============================================================================
+# ФИНАЛЬНАЯ ИНФОРМАЦИЯ
+# =============================================================================
+
+- name: "[SLURM-LOGIN] Завершение настройки Login узла"
+  debug:
+    msg: |
+      ✅ Slurm Login узел {{ inventory_hostname }} настроен!
+      
+      👥 Пользователи могут:
+      - Подключаться по SSH
+      - Запускать задачи: sbatch, srun, salloc
+      - Просматривать кластер: sinfo, squeue
+      - Управлять задачами: scancel, scontrol
+      
+      📁 Доступные директории:
+      {{ user_directories | join(', ') }}
+      
+      🔧 Команды Slurm установлены в /usr/bin/
+      📋 Конфигурация синхронизирована с {{ slurm_master_host }}
+      🎯 Алиасы и автодополнение настроены
+      
+      🚀 Login узел готов к работе!

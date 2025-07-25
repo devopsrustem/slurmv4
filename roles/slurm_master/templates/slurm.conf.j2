@@ -19,7 +19,7 @@ AuthType=auth/munge
 CredType=cred/munge
 
 # =============================================================================
-# USERS AND PERMISSIONS (ИСПРАВЛЕНО на root)
+# USERS AND PERMISSIONS
 # =============================================================================
 SlurmUser=root
 SlurmdUser=root
@@ -76,7 +76,7 @@ KillWait=30
 Waittime=0
 
 # =============================================================================
-# PROCESS TRACKING (ИСПРАВЛЕНО)
+# PROCESS TRACKING
 # =============================================================================
 ProctrackType=proctrack/cgroup
 TaskPlugin=task/cgroup,task/affinity
@@ -91,13 +91,14 @@ GresTypes=gpu
 {% endif %}
 
 # =============================================================================
-# NODE DEFINITIONS
+# NODE DEFINITIONS (АВТООПРЕДЕЛЕНИЕ РЕСУРСОВ)
 # =============================================================================
 {% for host in groups['slurm_compute'] %}
+{% set node_facts = hostvars[host] %}
 NodeName={{ host }} \
-    CPUs={{ slurm_node_defaults.cpus }} \
-    RealMemory={{ slurm_node_defaults.real_memory }} \
-    TmpDisk={{ slurm_node_defaults.tmp_disk }} \
+    CPUs={{ node_facts.ansible_processor_vcpus | default(4) }} \
+    RealMemory={{ ((node_facts.ansible_memtotal_mb | default(12000)) * 0.9) | int }} \
+    TmpDisk={{ ((node_facts.ansible_mounts | selectattr('mount', 'equalto', '/') | map(attribute='size_total') | first | default(60000000000) ) / 1024 / 1024 * 0.8) | int }} \
 {% if host in groups['gpu_nodes'] | default([]) %}
     Gres=gpu:h100:8 \
 {% endif %}

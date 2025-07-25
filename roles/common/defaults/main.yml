@@ -1,62 +1,126 @@
-# roles/slurm_compute/defaults/main.yml
+# roles/common/defaults/main.yml
 ---
+# Переменные по умолчанию для роли common (БЕЗ ХАРДКОДА)
+
 # =============================================================================
-# SLURM COMPUTE NODE DEFAULTS
+# СИСТЕМНЫЕ НАСТРОЙКИ
 # =============================================================================
 
-# Slurm installation paths (ИСПРАВЛЕНО - единый путь!)
-slurm_install_prefix: "/opt/slurm"  # Совпадает с slurm_build
-slurm_config_dir: "/etc/slurm"
-slurm_log_dir: "/var/log/slurm"
-slurm_spool_dir: "/var/spool/slurm"
+# Базовые пакеты для всех узлов
+common_base_packages:
+  - build-essential
+  - git
+  - curl
+  - wget
+  - vim
+  - htop
+  - tree
+  - rsync
+  - python3-dev
+  - pkg-config
+  - libtool
+  - autotools-dev
+  - autoconf
+  - automake
+  - cmake
+  - gcc
+  - g++
+  - make
+  - libssl-dev
+  - libcurl4-openssl-dev
+  - libjson-c-dev
+  - libhttp-parser-dev
+  - libjwt-dev
+  - libmysqlclient-dev
 
-# Slurm daemon settings
-slurm_daemon_port: 6818
-slurm_debug_level: "3"
+# Timezone по умолчанию
+timezone: "Europe/Moscow"
 
-# Controller connection
-slurm_master_host: "{{ groups['slurm_master'][0] }}"
-slurm_master_addr: "{{ hostvars[groups['slurm_master'][0]]['ansible_default_ipv4']['address'] | default(groups['slurm_master'][0]) }}"
+# =============================================================================
+# ПОЛЬЗОВАТЕЛИ SLURM
+# =============================================================================
 
-# Slurm users
+# Пользователь Slurm
 slurm_user: "slurm"
+slurm_uid: 1001
 slurm_group: "slurm"
+slurm_gid: 1001
 
-# Node configuration
-slurm_node_name: "{{ inventory_hostname }}"
-slurm_node_addr: "{{ ansible_default_ipv4.address | default(inventory_hostname) }}"
+# =============================================================================
+# ДИРЕКТОРИИ
+# =============================================================================
 
-# GPU settings
-gpu_detection_enabled: true
-gpu_count: "{{ hostvars[inventory_hostname]['gpu_count'] | default(8) }}"
-gpu_type: "{{ hostvars[inventory_hostname]['gpu_type'] | default('h100') }}"
+# Базовые директории Slurm
+slurm_base_dirs:
+  - path: /var/log/slurm
+    owner: slurm
+    group: slurm
+    mode: '0755'
+  - path: /var/spool/slurm
+    owner: slurm
+    group: slurm
+    mode: '0755'
+  - path: /var/spool/slurm/ctld
+    owner: slurm
+    group: slurm
+    mode: '0755'
+  - path: /var/spool/slurm/d
+    owner: slurm
+    group: slurm
+    mode: '0755'
+  - path: /etc/slurm
+    owner: root
+    group: root
+    mode: '0755'
+  - path: /var/lib/slurm
+    owner: slurm
+    group: slurm
+    mode: '0755'
 
-# Performance settings
-slurm_node_timeout: 300
-slurm_health_check_interval: 600
+# NFS директории для экспорта
+nfs_export_dirs:
+  - /home
+  - /sw
 
-# Configuration files to copy from NFS
-slurm_config_files:
-  - slurm.conf
-  - cgroup.conf
-  - gres.conf
+# =============================================================================
+# NFS НАСТРОЙКИ (АВТООПРЕДЕЛЕНИЕ)
+# =============================================================================
 
-# NFS configuration source path
-nfs_config_path: "/sw/config"
+# NFS опции по умолчанию
+nfs_export_options: "rw,sync,no_root_squash"
 
-# Service management
-slurmd_service_enabled: true
-slurmd_auto_start: true
+# NFS mount опции
+nfs_mount_options: "defaults"
 
-# Logging
-slurmd_log_level: "info"
-slurmd_log_file: "{{ slurm_log_dir }}/slurmd.log"
+# =============================================================================
+# MUNGE НАСТРОЙКИ
+# =============================================================================
 
-# Process tracking
-cgroup_enabled: true
-proctrack_type: "proctrack/cgroup"
+# MUNGE директории и права
+munge_dirs:
+  - path: /etc/munge
+    owner: munge
+    group: munge
+    mode: '0700'
+  - path: /var/log/munge
+    owner: munge
+    group: munge
+    mode: '0700'
+  - path: /var/lib/munge
+    owner: munge
+    group: munge
+    mode: '0700'
+  - path: /run/munge
+    owner: munge
+    group: munge
+    mode: '0755'
 
-# Memory and CPU constraints
-memory_constraint: true
-cpu_constraint: true
-device_constraint: true
+# =============================================================================
+# ПРОВЕРКИ И ВЕРИФИКАЦИЯ
+# =============================================================================
+
+# Включить проверки после установки
+common_verify_installation: true
+
+# Тайм-аут для проверок (секунды)
+common_verify_timeout: 30

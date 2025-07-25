@@ -1,9 +1,12 @@
+# roles/slurm_login/meta/main.yml
 ---
-# Роль: slurm_login - метаданные
+# Метаданные роли slurm_login
 
 galaxy_info:
   author: DevOps Team
-  description: slurm_login role for Slurm HPC cluster
+  description: Slurm login node role - user access point to HPC cluster
+  company: HPC Lab
+  license: MIT
   min_ansible_version: 2.15
   
   platforms:
@@ -11,4 +14,18 @@ galaxy_info:
       versions:
         - 24.04
 
-dependencies: []
+  galaxy_tags:
+    - hpc
+    - slurm
+    - cluster
+    - login
+    - users
+    - ssh
+
+# Зависимости роли
+dependencies:
+  - role: common
+    # Базовая настройка узла - MUNGE, NFS, пользователи
+
+# Login узел НЕ требует slurm_build - только клиентские команды через NFS
+allow_duplicates: false

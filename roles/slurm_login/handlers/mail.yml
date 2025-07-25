@@ -1,0 +1,11 @@
+# roles/slurm_login/handlers/main.yml
+---
+# =============================================================================
+# SLURM LOGIN HANDLERS
+# =============================================================================
+
+- name: restart ssh
+  systemd:
+    name: sshd
+    state: restarted
+  listen: "restart ssh"

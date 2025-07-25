@@ -1,4 +1,74 @@
+# roles/slurm_login/defaults/main.yml
 ---
-# Роль: slurm_login - переменные по умолчанию
+# =============================================================================
+# SLURM LOGIN NODE DEFAULTS
+# =============================================================================
 
-# TODO: Добавить переменные
+# Slurm paths (same as other nodes)
+slurm_install_prefix: "/opt/slurm"
+slurm_config_dir: "/etc/slurm"
+slurm_log_dir: "/var/log/slurm"
+
+# Master node for config sync
+slurm_master_host: "{{ groups['slurm_master'][0] }}"
+
+# Slurm client commands to install
+slurm_client_commands:
+  - sinfo
+  - squeue
+  - scancel
+  - sbatch
+  - salloc
+  - srun
+  - sacct
+  - scontrol
+  - sprio
+  - smap
+  - sdiag
+  - sstat
+  - sreport
+  - sacctmgr
+  - sattach
+  - sbcast
+  - sshare
+
+# Configuration files to sync from master
+slurm_config_files:
+  - slurm.conf
+  - gres.conf
+  - cgroup.conf
+
+# NFS configuration source path  
+nfs_config_path: "/sw/config"
+nfs_slurm_path: "/sw/slurm-final"
+
+# User environment settings
+slurm_user_profile: true
+slurm_completion: true
+
+# SSH settings for users
+ssh_allow_users: true
+ssh_max_sessions: 10
+
+# Login node specific settings
+login_node_packages:
+  - htop
+  - tree
+  - vim
+  - nano
+  - git
+  - rsync
+  - screen
+  - tmux
+  - bash-completion
+
+# User directories
+user_directories:
+  - /home/users
+  - /scratch
+  - /projects
+
+# Slurm environment
+slurm_env_vars:
+  SLURM_CONF: "{{ slurm_config_dir }}/slurm.conf"
+  SLURM_CLUSTER_NAME: "{{ slurm_cluster_name | default('hpc-cluster') }}"
