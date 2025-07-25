@@ -1,0 +1,42 @@
+# roles/slurm_compute/handlers/main.yml
+---
+# =============================================================================
+# SLURM COMPUTE HANDLERS
+# =============================================================================
+
+- name: restart slurmd
+  systemd:
+    name: slurmd
+    state: restarted
+    daemon_reload: yes
+  listen: "restart slurmd"
+
+- name: reload slurmd
+  systemd:
+    name: slurmd
+    state: reloaded
+  listen: "reload slurmd"
+
+- name: stop slurmd
+  systemd:
+    name: slurmd
+    state: stopped
+  listen: "stop slurmd"
+
+- name: start slurmd
+  systemd:
+    name: slurmd
+    state: started
+  listen: "start slurmd"
+
+- name: enable slurmd
+  systemd:
+    name: slurmd
+    enabled: yes
+  listen: "enable slurmd"
+
+- name: disable slurmd
+  systemd:
+    name: slurmd
+    enabled: no
+  listen: "disable slurmd"

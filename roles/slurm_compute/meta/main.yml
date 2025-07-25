@@ -1,9 +1,13 @@
+
+# roles/slurm_compute/meta/main.yml
 ---
-# Роль: slurm_compute - метаданные
+# Метаданные роли slurm_compute
 
 galaxy_info:
   author: DevOps Team
-  description: slurm_compute role for Slurm HPC cluster
+  description: Slurm compute node role - configures slurmd daemon with GPU support
+  company: HPC Lab
+  license: MIT
   min_ansible_version: 2.15
   
   platforms:
@@ -11,4 +15,20 @@ galaxy_info:
       versions:
         - 24.04
 
-dependencies: []
+  galaxy_tags:
+    - hpc
+    - slurm
+    - cluster
+    - compute
+    - gpu
+    - h100
+
+# Зависимости роли
+dependencies:
+  - role: common
+    # Базовая настройка узла - MUNGE, NFS, пользователи
+  - role: slurm_build
+    # Slurm должен быть скомпилирован и установлен
+
+# Роль должна выполняться только на compute узлах
+allow_duplicates: false

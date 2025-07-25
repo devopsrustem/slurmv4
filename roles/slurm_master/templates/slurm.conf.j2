@@ -19,10 +19,10 @@ AuthType=auth/munge
 CredType=cred/munge
 
 # =============================================================================
-# USERS AND PERMISSIONS
+# USERS AND PERMISSIONS (ИСПРАВЛЕНО на root)
 # =============================================================================
-SlurmUser={{ slurm_user }}
-SlurmdUser={{ slurm_user }}
+SlurmUser=root
+SlurmdUser=root
 
 # =============================================================================
 # PORTS AND COMMUNICATION
@@ -76,7 +76,7 @@ KillWait=30
 Waittime=0
 
 # =============================================================================
-# PROCESS TRACKING
+# PROCESS TRACKING (ИСПРАВЛЕНО)
 # =============================================================================
 ProctrackType=proctrack/cgroup
 TaskPlugin=task/cgroup,task/affinity

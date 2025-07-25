@@ -12,44 +12,44 @@
 # Automatic GPU detection via NVML
 AutoDetect=nvml
 
-{% if groups['gpu_nodes'] is defined and groups['gpu_nodes'] | length > 0 %}
-# =============================================================================
-# NODE-SPECIFIC GPU DEFINITIONS
-# =============================================================================
-{% for host in groups['gpu_nodes'] %}
-{% set node_info = hostvars[host] %}
+# {% if groups['gpu_nodes'] is defined and groups['gpu_nodes'] | length > 0 %}
+# # =============================================================================
+# # NODE-SPECIFIC GPU DEFINITIONS
+# # =============================================================================
+# {% for host in groups['gpu_nodes'] %}
+# {% set node_info = hostvars[host] %}
 
-# {{ host }} - {{ node_info.gpu_type | default('h100') }} GPUs
-{% if node_info.gpu_count is defined and node_info.gpu_count > 0 %}
-NodeName={{ host }} Name=gpu Type={{ node_info.gpu_type | default('h100') }} File=/dev/nvidia[0-{{ node_info.gpu_count - 1 }}]
-{% else %}
-NodeName={{ host }} Name=gpu Type=h100 File=/dev/nvidia[0-7]
-{% endif %}
+# # {{ host }} - {{ node_info.gpu_type | default('h100') }} GPUs
+# {% if node_info.gpu_count is defined and node_info.gpu_count > 0 %}
+# NodeName={{ host }} Name=gpu Type={{ node_info.gpu_type | default('h100') }} File=/dev/nvidia[0-{{ node_info.gpu_count - 1 }}]
+# {% else %}
+# NodeName={{ host }} Name=gpu Type=h100 File=/dev/nvidia[0-7]
+# {% endif %}
 
-{% endfor %}
-{% else %}
-# No GPU nodes defined in inventory
-{% endif %}
+# {% endfor %}
+# {% else %}
+# # No GPU nodes defined in inventory
+# {% endif %}
 
 # =============================================================================
 # GPU TYPES CONFIGURATION
 # =============================================================================
 
-{% if groups['gpu_nodes'] is defined %}
-{% set gpu_types = [] %}
-{% for host in groups['gpu_nodes'] %}
-{% set node_info = hostvars[host] %}
-{% set gpu_type = node_info.gpu_type | default('h100') %}
-{% if gpu_type not in gpu_types %}
-{% set _ = gpu_types.append(gpu_type) %}
-{% endif %}
-{% endfor %}
+# {% if groups['gpu_nodes'] is defined %}
+# {% set gpu_types = [] %}
+# {% for host in groups['gpu_nodes'] %}
+# {% set node_info = hostvars[host] %}
+# {% set gpu_type = node_info.gpu_type | default('h100') %}
+# {% if gpu_type not in gpu_types %}
+# {% set _ = gpu_types.append(gpu_type) %}
+# {% endif %}
+# {% endfor %}
 
-# Supported GPU types in cluster:
-{% for gpu_type in gpu_types %}
-# - {{ gpu_type }}
-{% endfor %}
-{% endif %}
+# # Supported GPU types in cluster:
+# {% for gpu_type in gpu_types %}
+# # - {{ gpu_type }}
+# {% endfor %}
+# {% endif %}
 
 # =============================================================================
 # ADVANCED GPU SETTINGS

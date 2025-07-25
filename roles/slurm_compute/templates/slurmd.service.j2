@@ -1,19 +1,14 @@
-
-# roles/slurm_master/templates/slurmctld.service.j2
+# roles/slurm_compute/templates/slurmd.service.j2
 [Unit]
-Description=Slurm controller daemon
+Description=Slurm node daemon
 After=network-online.target munge.service
-{% if slurm_db_enabled %}
-After=slurmdbd.service
-Wants=slurmdbd.service
-{% endif %}
 Wants=network-online.target
 Wants=munge.service
 ConditionPathExists={{ slurm_config_dir }}/slurm.conf
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/slurmctld -D
+ExecStart=/usr/sbin/slurmd -D
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
 TasksMax=infinity

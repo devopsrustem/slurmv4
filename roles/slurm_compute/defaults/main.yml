@@ -1,4 +1,61 @@
+# roles/slurm_compute/defaults/main.yml
 ---
-# Роль: slurm_compute - переменные по умолчанию
+# =============================================================================
+# SLURM COMPUTE NODE DEFAULTS
+# =============================================================================
 
-# TODO: Добавить переменные
+# Slurm configuration paths
+slurm_config_dir: "/etc/slurm"
+slurm_log_dir: "/var/log/slurm"
+slurm_spool_dir: "/var/spool/slurm"
+
+# Slurm daemon settings
+slurm_daemon_port: 6818
+slurm_debug_level: "3"
+
+# Controller connection
+slurm_master_host: "{{ groups['slurm_master'][0] }}"
+slurm_master_addr: "{{ hostvars[groups['slurm_master'][0]]['ansible_default_ipv4']['address'] | default(groups['slurm_master'][0]) }}"
+
+# Slurm users
+slurm_user: "slurm"
+slurm_group: "slurm"
+
+# Node configuration
+slurm_node_name: "{{ inventory_hostname }}"
+slurm_node_addr: "{{ ansible_default_ipv4.address | default(inventory_hostname) }}"
+
+# GPU settings
+gpu_detection_enabled: true
+gpu_count: "{{ hostvars[inventory_hostname]['gpu_count'] | default(8) }}"
+gpu_type: "{{ hostvars[inventory_hostname]['gpu_type'] | default('h100') }}"
+
+# Performance settings
+slurm_node_timeout: 300
+slurm_health_check_interval: 600
+
+# Configuration files to copy from NFS
+slurm_config_files:
+  - slurm.conf
+  - cgroup.conf
+  - gres.conf
+
+# NFS configuration source path
+nfs_config_path: "/sw/config"
+
+# Service management
+slurmd_service_enabled: true
+slurmd_auto_start: true
+
+# Logging
+slurmd_log_level: "info"
+slurmd_log_file: "{{ slurm_log_dir }}/slurmd.log"
+
+# Process tracking
+cgroup_enabled: true
+proctrack_type: "proctrack/cgroup"
+
+# Memory and CPU constraints
+memory_constraint: true
+cpu_constraint: true
+device_constraint: true
