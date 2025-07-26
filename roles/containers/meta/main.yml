@@ -1,9 +1,13 @@
+
+# roles/containers/meta/main.yml
 ---
 # Роль: containers - метаданные
 
 galaxy_info:
   author: DevOps Team
-  description: containers role for Slurm HPC cluster
+  description: Enroot + Pyxis container support for Slurm HPC cluster
+  company: HPC Lab
+  license: MIT
   min_ansible_version: 2.15
   
   platforms:
@@ -11,4 +15,21 @@ galaxy_info:
       versions:
         - 24.04
 
-dependencies: []
+  galaxy_tags:
+    - hpc
+    - slurm
+    - containers
+    - enroot
+    - pyxis
+    - nvidia
+    - gpu
+
+# Зависимости роли
+dependencies:
+  - role: common
+    # Базовая настройка узла - MUNGE, NFS, пользователи
+  - role: slurm_build
+    # Slurm должен быть скомпилирован и установлен
+
+# Роль выполняется на всех compute и gpu узлах
+allow_duplicates: false

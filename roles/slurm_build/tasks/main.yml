@@ -127,6 +127,24 @@
   tags:
     - build
 
+- name: "[SLURM_BUILD] Установка development файлов (headers для Pyxis)"
+  shell: |
+    cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
+    # Копируем headers в правильное место
+    mkdir -p {{ slurm_install_prefix }}/include/slurm
+    cp -r slurm/*.h {{ slurm_install_prefix }}/include/slurm/
+    # Копируем главный header из src
+    cp src/slurmd/slurmd.h {{ slurm_install_prefix }}/include/slurm/ 2>/dev/null || true
+    echo "Headers установлены в {{ slurm_install_prefix }}/include/slurm/"
+  args:
+    chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
+    creates: "{{ slurm_install_prefix }}/include/slurm/spank.h"
+  when: inventory_hostname in groups['slurm_master']
+  register: slurm_dev_install
+  tags:
+    - build
+    - dev
+
 # =============================================================================
 # РАСПРОСТРАНЕНИЕ НА ВСЕ УЗЛЫ
 # =============================================================================
@@ -172,6 +190,7 @@
     mkdir -p /sw/slurm-temp/sbin
     mkdir -p /sw/slurm-temp/lib
     mkdir -p /sw/slurm-temp/share
+    mkdir -p /sw/slurm-temp/include
     
     # Копируем файлы с проверкой
     echo "=== Копируем bin ==="
@@ -189,6 +208,15 @@
     echo "=== Копируем share ==="
     cp -r $SLURM_PATH/share/* /sw/slurm-temp/share/
     echo "share: скопировано $(ls /sw/slurm-temp/share | wc -l) файлов"
+    
+    # Копируем headers для dev (КРИТИЧНО ДЛЯ PYXIS!)
+    echo "=== Копируем include (headers) ==="
+    if [ -d $SLURM_PATH/include ]; then
+      cp -r $SLURM_PATH/include/* /sw/slurm-temp/include/
+      echo "include: скопировано $(find /sw/slurm-temp/include -name '*.h' | wc -l) header файлов"
+    else
+      echo "WARNING: headers не найдены в $SLURM_PATH/include"
+    fi
     
     # Переименовываем в финальное имя
     echo "=== Финальное переименование ==="
@@ -214,6 +242,11 @@
     cp -r /sw/slurm-final/* {{ slurm_install_prefix }}/
     chown -R root:root {{ slurm_install_prefix }}
     chmod -R 755 {{ slurm_install_prefix }}/bin {{ slurm_install_prefix }}/sbin
+    # Устанавливаем права на headers
+    if [ -d {{ slurm_install_prefix }}/include ]; then
+      chmod -R 644 {{ slurm_install_prefix }}/include
+      echo "Headers скопированы в {{ slurm_install_prefix }}/include"
+    fi
   when: inventory_hostname not in groups['slurm_master']
   tags:
     - distribute

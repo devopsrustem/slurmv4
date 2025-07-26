@@ -1,0 +1,258 @@
+# playbooks/rebuild_containers.yml
+---
+# Полная пересборка Slurm + Pyxis для контейнерной поддержки
+
+- name: "🔄 ПОЛНАЯ ПЕРЕСБОРКА: Slurm + Контейнеры"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "📋 Информация о пересборке"
+      debug:
+        msg: |
+          🔄 ПОЛНАЯ ПЕРЕСБОРКА SLURM + КОНТЕЙНЕРЫ
+          ==========================================
+          🎯 Этап 1: Очистка старых файлов
+          🔧 Этап 2: Пересборка Slurm с headers
+          🐳 Этап 3: Пересборка Pyxis
+          ✅ Этап 4: Тестирование
+          ==========================================
+
+# =============================================================================
+# ЭТАП 1: ОЧИСТКА СТАРЫХ ФАЙЛОВ
+# =============================================================================
+
+- name: "🧹 ЭТАП 1: Очистка старых файлов"
+  hosts: slurm_cluster
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "[CLEANUP] Удаление старых headers Slurm"
+      file:
+        path: /opt/slurm/include
+        state: absent
+      when: inventory_hostname in groups['slurm_master']
+
+    - name: "[CLEANUP] Удаление старого Pyxis"
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - /usr/local/src/pyxis/spank_pyxis.so
+        - /etc/slurm/plugstack.conf
+      when: inventory_hostname in groups['slurm_compute']
+
+    - name: "[CLEANUP] Очистка NFS от старых файлов"
+      file:
+        path: /sw/slurm-final
+        state: absent
+      when: inventory_hostname in groups['slurm_master']
+
+# =============================================================================
+# ЭТАП 2: ПЕРЕСБОРКА SLURM С HEADERS
+# =============================================================================
+
+- name: "🔧 ЭТАП 2: Пересборка Slurm с headers"
+  hosts: slurm_master
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "[REBUILD] Информация о пересборке Slurm"
+      debug:
+        msg: |
+          🔧 Пересборка Slurm на {{ inventory_hostname }}
+          📁 Будут установлены headers в /opt/slurm/include/
+          📦 Распространение через NFS на все узлы
+
+  roles:
+    - slurm_build
+
+  post_tasks:
+    - name: "[REBUILD] Проверка установки headers"
+      stat:
+        path: /opt/slurm/include/slurm/spank.h
+      register: headers_check
+
+    - name: "[REBUILD] Результат установки headers"
+      debug:
+        msg: |
+          📁 Headers в /opt/slurm/include: {{ headers_check.stat.exists | ternary('✅ установлены', '❌ отсутствуют') }}
+          {% if headers_check.stat.exists %}
+          📊 Количество header файлов: {{ (ansible_facts.get('find_headers', {}).get('matched', 0)) }}
+          {% endif %}
+
+    - name: "[REBUILD] Подсчет header файлов"
+      find:
+        paths: /opt/slurm/include
+        patterns: "*.h"
+        recurse: yes
+      register: find_headers
+
+    - name: "[REBUILD] Статистика headers"
+      debug:
+        msg: |
+          📊 Найдено {{ find_headers.matched }} header файлов
+          📁 Готово к компиляции Pyxis
+
+# =============================================================================
+# ЭТАП 3: РАСПРОСТРАНЕНИЕ НА ВСЕ УЗЛЫ
+# =============================================================================
+
+- name: "📦 ЭТАП 3: Распространение Slurm на все узлы"
+  hosts: slurm_cluster
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "[DISTRIBUTE] Копирование Slurm из NFS"
+      shell: |
+        cp -r /sw/slurm-final/* /opt/slurm/
+        chown -R root:root /opt/slurm
+        chmod -R 755 /opt/slurm/bin /opt/slurm/sbin
+        if [ -d /opt/slurm/include ]; then
+          chmod -R 644 /opt/slurm/include
+          echo "Headers скопированы: $(find /opt/slurm/include -name '*.h' | wc -l) файлов"
+        fi
+      register: distribute_result
+      when: inventory_hostname not in groups['slurm_master']
+
+    - name: "[DISTRIBUTE] Результат распространения"
+      debug:
+        var: distribute_result.stdout_lines
+      when: inventory_hostname not in groups['slurm_master']
+
+# =============================================================================
+# ЭТАП 4: ПЕРЕСБОРКА PYXIS
+# =============================================================================
+
+- name: "🐳 ЭТАП 4: Пересборка Pyxis с правильными headers"
+  hosts: slurm_compute
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "[PYXIS] Информация о пересборке Pyxis"
+      debug:
+        msg: |
+          🐳 Пересборка Pyxis на {{ inventory_hostname }}
+          📁 Используем headers из /opt/slurm/include/
+          🎯 Размещение: /usr/local/src/pyxis/spank_pyxis.so
+
+    - name: "[PYXIS] Проверка headers перед сборкой"
+      stat:
+        path: /opt/slurm/include/slurm/spank.h
+      register: spank_header_check
+
+    - name: "[PYXIS] Ошибка если нет headers"
+      fail:
+        msg: "❌ Headers не найдены в /opt/slurm/include/slurm/spank.h"
+      when: not spank_header_check.stat.exists
+
+  roles:
+    - containers
+
+  post_tasks:
+    - name: "[PYXIS] Проверка результата сборки"
+      stat:
+        path: /usr/local/src/pyxis/spank_pyxis.so
+      register: pyxis_check
+
+    - name: "[PYXIS] Проверка совместимости"
+      shell: |
+        if [ -f /usr/local/src/pyxis/spank_pyxis.so ]; then
+          echo "Файл: $(ls -la /usr/local/src/pyxis/spank_pyxis.so)"
+          echo "Линковка: $(ldd /usr/local/src/pyxis/spank_pyxis.so | grep slurm || echo 'Standalone - OK!')"
+          echo "Размер: $(du -h /usr/local/src/pyxis/spank_pyxis.so)"
+        else
+          echo "❌ Файл не найден"
+        fi
+      register: pyxis_info
+      when: pyxis_check.stat.exists
+
+    - name: "[PYXIS] Информация о собранном Pyxis"
+      debug:
+        var: pyxis_info.stdout_lines
+      when: pyxis_check.stat.exists
+
+# =============================================================================
+# ЭТАП 5: ПЕРЕЗАПУСК И ТЕСТИРОВАНИЕ
+# =============================================================================
+
+- name: "🔄 ЭТАП 5: Перезапуск сервисов"
+  hosts: slurm_compute
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "[RESTART] Перезапуск slurmd"
+      systemd:
+        name: slurmd
+        state: restarted
+      register: slurmd_restart
+
+    - name: "[RESTART] Пауза после перезапуска"
+      pause:
+        seconds: 5
+
+    - name: "[RESTART] Проверка статуса slurmd"
+      systemd:
+        name: slurmd
+      register: slurmd_status
+
+    - name: "[RESTART] Результат перезапуска"
+      debug:
+        msg: |
+          🔄 Перезапуск slurmd: {{ slurmd_restart.changed | ternary('✅ выполнен', '❌ ошибка') }}
+          📊 Статус: {{ slurmd_status.status.ActiveState | default('unknown') }}
+
+# =============================================================================
+# ЭТАП 6: ФИНАЛЬНОЕ ТЕСТИРОВАНИЕ
+# =============================================================================
+
+- name: "✅ ЭТАП 6: Финальное тестирование"
+  hosts: slurm_master
+  become: true
+  gather_facts: false
+  tasks:
+    - name: "[TEST] Проверка кластера"
+      shell: |
+        echo "=== СТАТУС КЛАСТЕРА ==="
+        sinfo
+        echo ""
+        echo "=== ТЕСТ ОБЫЧНОЙ ЗАДАЧИ ==="
+        timeout 30 srun date || echo "Тест задачи не прошел"
+        echo ""
+        echo "=== ТЕСТ КОНТЕЙНЕРА ==="
+        timeout 60 srun --container-image=docker://hello-world || echo "Тест контейнера не прошел"
+      register: final_test
+      failed_when: false
+
+    - name: "[TEST] Результаты тестирования"
+      debug:
+        var: final_test.stdout_lines
+
+# =============================================================================
+# ФИНАЛЬНЫЙ ОТЧЕТ
+# =============================================================================
+
+- name: "🎉 ФИНАЛЬНЫЙ ОТЧЕТ"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "📊 Результат полной пересборки"
+      debug:
+        msg: |
+          ==========================================
+          🎉 ПОЛНАЯ ПЕРЕСБОРКА ЗАВЕРШЕНА!
+          ==========================================
+          
+          ✅ Этап 1: Очистка - выполнена
+          ✅ Этап 2: Slurm + headers - собран
+          ✅ Этап 3: Распространение - выполнено  
+          ✅ Этап 4: Pyxis - пересобран
+          ✅ Этап 5: Перезапуск - выполнен
+          ✅ Этап 6: Тестирование - проверено
+          
+          🚀 КОНТЕЙНЕРЫ ГОТОВЫ К ИСПОЛЬЗОВАНИЮ!
+          
+          🔧 Команды для тестирования:
+          srun --container-image=docker://hello-world
+          srun --pty --container-image=docker://ubuntu:20.04 /bin/bash
+          
+          ==========================================

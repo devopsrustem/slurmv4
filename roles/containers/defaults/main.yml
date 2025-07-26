@@ -1,4 +1,100 @@
+# roles/containers/defaults/main.yml
 ---
-# Роль: containers - переменные по умолчанию
+# =============================================================================
+# ПЕРЕМЕННЫЕ ПО УМОЛЧАНИЮ ДЛЯ ENROOT + PYXIS
+# =============================================================================
 
-# TODO: Добавить переменные
+# Версии компонентов
+enroot_version: "3.5.0"
+pyxis_version: "0.20.0"
+
+# URL для скачивания
+enroot_download_url: "https://github.com/NVIDIA/enroot/releases/download/v{{ enroot_version }}"
+pyxis_download_url: "https://github.com/NVIDIA/pyxis/archive/v{{ pyxis_version }}.tar.gz"
+
+# Пути установки
+enroot_install_dir: "/usr/local/enroot"
+pyxis_install_dir: "/usr/local/pyxis"
+enroot_config_dir: "/etc/enroot"
+enroot_data_dir: "/var/lib/enroot"
+enroot_cache_dir: "/var/cache/enroot"
+enroot_temp_dir: "/tmp/enroot"
+
+# Конфигурация Enroot (как в продакшене - работает под root/существующими пользователями)
+enroot_user: "root"
+enroot_group: "root"
+# uid/gid не нужны - используем существующих пользователей
+
+# Runtime настройки
+enroot_runtime_path: "/run/enroot"
+enroot_mount_home: true
+enroot_mount_tmp: true
+
+# tmpfs размер для /run (для больших образов)
+pyxis_run_tmpfs_size: "16G"
+
+# Storage mapping (текущее + будущее для Lustre)
+enroot_bind_mounts:
+  - "/home:/home"
+  - "/sw:/sw"
+  - "/opt/slurm:/opt/slurm:ro"
+  # Для будущего Lustre (закомментировано)
+  # - "/scratch:/scratch"
+
+# GPU settings
+enroot_restrict_dev: true
+enroot_gpu_support: true
+
+# Container registry settings
+container_registry_default: "docker.io"
+container_registry_prod: "git.sa1.test"  # Для продакшена
+container_squashfs_support: true
+
+# Pyxis SPANK плагин (как в продакшене - используем из build директории)
+pyxis_spank_config: "/etc/slurm/plugstack.conf"
+pyxis_library_path: "/usr/local/src/pyxis/spank_pyxis.so"
+pyxis_build_dir: "/usr/local/src/pyxis"
+
+# Build зависимости для Pyxis (убираем libslurm-dev - используем свои headers)
+pyxis_build_packages:
+  - build-essential
+  - pkg-config
+
+# Безопасность (privileged для HPC + GPU)
+enroot_allow_privileged: true
+enroot_allow_setuid: true
+
+# Prolog/Epilog скрипты
+slurm_prolog_dir: "/etc/slurm/prolog.d"
+slurm_epilog_dir: "/etc/slurm/epilog.d"
+enroot_prolog_enabled: true
+enroot_epilog_enabled: true
+
+# Зависимости системы
+enroot_system_packages:
+  - fuse3
+  - squashfs-tools
+  - parallel
+  - curl
+  - gzip
+  - zstd
+  - pigz
+  - pv
+
+# Build зависимости для Pyxis (убираем libslurm-dev - используем свои headers)
+pyxis_build_packages:
+  - build-essential
+  - pkg-config
+
+# Limits
+enroot_max_containers_per_user: 10
+enroot_max_processors: "{{ ansible_processor_vcpus }}"
+enroot_max_memory: "{{ (ansible_memtotal_mb * 0.8) | int }}M"
+
+# Логирование
+enroot_log_level: "INFO"
+pyxis_log_level: "info"
+
+# Проверки
+containers_verify_installation: true
+containers_test_nvidia_runtime: true

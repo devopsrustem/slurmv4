@@ -1,0 +1,27 @@
+# roles/containers/handlers/main.yml
+---
+# =============================================================================
+# HANDLERS ДЛЯ РОЛИ CONTAINERS
+# =============================================================================
+
+- name: restart slurmctld
+  systemd:
+    name: slurmctld
+    state: restarted
+    daemon_reload: yes
+  listen: "restart slurmctld"
+  when: inventory_hostname in groups['slurm_master']
+
+- name: restart slurmd
+  systemd:
+    name: slurmd
+    state: restarted
+    daemon_reload: yes
+  listen: "restart slurmd"
+  when: inventory_hostname in groups['slurm_compute']
+
+- name: reload slurm config
+  shell: scontrol reconfigure
+  listen: "reload slurm config"
+  failed_when: false
+  when: inventory_hostname in groups['slurm_master']

@@ -1,0 +1,59 @@
+################################################################################
+# ФАЙЛ: roles/slurm_master/tasks/epilog_prolog.yml
+################################################################################
+---
+# =============================================================================
+# EPILOG/PROLOG СКРИПТЫ ДЛЯ SLURM
+# =============================================================================
+
+- name: "[EPILOG-PROLOG] Создание директории для скриптов"
+  file:
+    path: "/etc/slurm/scripts"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: scripts
+
+- name: "[EPILOG-PROLOG] Создание Prolog скрипта"
+  template:
+    src: prolog.sh.j2
+    dest: "/etc/slurm/scripts/prolog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: scripts
+
+- name: "[EPILOG-PROLOG] Создание Epilog скрипта"
+  template:
+    src: epilog.sh.j2
+    dest: "/etc/slurm/scripts/epilog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: scripts
+
+- name: "[EPILOG-PROLOG] Создание TaskProlog скрипта"
+  template:
+    src: task_prolog.sh.j2
+    dest: "/etc/slurm/scripts/task_prolog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: scripts
+
+- name: "[EPILOG-PROLOG] Создание TaskEpilog скрипта"
+  template:
+    src: task_epilog.sh.j2
+    dest: "/etc/slurm/scripts/task_epilog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  tags: scripts
+
+- name: "[EPILOG-PROLOG] Копирование скриптов на NFS для распространения"
+  shell: |
+    mkdir -p /sw/slurm-scripts
+    cp -r /etc/slurm/scripts/* /sw/slurm-scripts/
+    chmod 755 /sw/slurm-scripts/*.sh
+  tags: scripts

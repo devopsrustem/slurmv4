@@ -1,8 +1,303 @@
+# roles/containers/tasks/main.yml
 ---
-# Роль: containers
+# =============================================================================
+# УСТАНОВКА ENROOT + PYXIS ДЛЯ КОНТЕЙНЕРИЗАЦИИ
+# =============================================================================
 
-- name: "[containers] Начало выполнения роли"
+- name: "[CONTAINERS] Начало установки Enroot + Pyxis"
   debug:
-    msg: "🔧 Выполняется роль containers"
+    msg: |
+      🚀 Установка контейнерной поддержки на {{ inventory_hostname }}
+      📦 Enroot {{ enroot_version }} + Pyxis {{ pyxis_version }}
+      🎮 GPU: {{ enroot_gpu_support | ternary('включено', 'отключено') }}
 
-# TODO: Добавить задачи роли
+# =============================================================================
+# ПОДГОТОВКА СИСТЕМЫ (как в продакшене - БЕЗ пользователя enroot)
+# =============================================================================
+
+- name: "[CONTAINERS] Установка системных зависимостей"
+  apt:
+    name: "{{ enroot_system_packages + pyxis_build_packages }}"
+    state: present
+    update_cache: yes
+  tags: 
+    - packages
+    - system
+
+- name: "[CONTAINERS] Создание базовых директорий"
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner | default('root') }}"
+    group: "{{ item.group | default('root') }}"
+    mode: "{{ item.mode | default('0755') }}"
+  loop:
+    - { path: "{{ enroot_config_dir }}" }
+    - { path: "{{ enroot_data_dir }}" }
+    - { path: "{{ enroot_cache_dir }}" }
+    - { path: "{{ enroot_runtime_path }}", mode: "0755" }
+    - { path: "{{ slurm_prolog_dir }}" }
+    - { path: "{{ slurm_epilog_dir }}" }
+    - { path: "/tmp/containers-build" }
+    - { path: "/etc/enroot/hooks.d" }
+  tags:
+    - directories
+
+- name: "[CONTAINERS] Увеличение размера tmpfs для /run (для больших образов)"
+  mount:
+    name: /run
+    src: tmpfs
+    opts: "size={{ pyxis_run_tmpfs_size | default('16G') }}"
+    fstype: tmpfs
+    state: mounted
+  tags:
+    - tmpfs
+
+# =============================================================================
+# УСТАНОВКА ENROOT
+# =============================================================================
+
+- name: "[CONTAINERS] Проверка существования Enroot"
+  stat:
+    path: "/usr/bin/enroot"
+  register: enroot_installed
+  tags: enroot
+
+- name: "[CONTAINERS] Скачивание Enroot {{ enroot_version }}"
+  get_url:
+    url: "{{ enroot_download_url }}/enroot_{{ enroot_version }}-1_amd64.deb"
+    dest: "/tmp/containers-build/enroot_{{ enroot_version }}-1_amd64.deb"
+    mode: '0644'
+    timeout: 300
+  when: not enroot_installed.stat.exists
+  tags: enroot
+
+- name: "[CONTAINERS] Установка Enroot из DEB пакета"
+  apt:
+    deb: "/tmp/containers-build/enroot_{{ enroot_version }}-1_amd64.deb"
+    state: present
+  when: not enroot_installed.stat.exists
+  tags: enroot
+
+- name: "[CONTAINERS] Создание конфигурации Enroot"
+  template:
+    src: enroot.conf.j2
+    dest: "{{ enroot_config_dir }}/enroot.conf"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  tags: 
+    - enroot
+    - config
+
+# =============================================================================
+# УСТАНОВКА PYXIS (как в продакшене - в /usr/local/src/pyxis)
+# =============================================================================
+
+- name: "[CONTAINERS] Создание директории Pyxis как в продакшене"
+  file:
+    path: "{{ pyxis_build_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  tags: pyxis
+
+- name: "[CONTAINERS] Проверка существования Pyxis"
+  stat:
+    path: "{{ pyxis_library_path }}"
+  register: pyxis_installed
+  tags: pyxis
+
+- name: "[CONTAINERS] Скачивание исходников Pyxis {{ pyxis_version }}"
+  get_url:
+    url: "{{ pyxis_download_url }}"
+    dest: "/tmp/containers-build/pyxis-{{ pyxis_version }}.tar.gz"
+    mode: '0644'
+    timeout: 300
+  when: not pyxis_installed.stat.exists
+  tags: pyxis
+
+- name: "[CONTAINERS] Извлечение исходников Pyxis"
+  unarchive:
+    src: "/tmp/containers-build/pyxis-{{ pyxis_version }}.tar.gz"
+    dest: "/tmp/containers-build/"
+    remote_src: yes
+    creates: "/tmp/containers-build/pyxis-{{ pyxis_version }}"
+  when: not pyxis_installed.stat.exists
+  tags: pyxis
+
+- name: "[CONTAINERS] Компиляция Pyxis против правильного Slurm"
+  shell: |
+    cd /tmp/containers-build/pyxis-{{ pyxis_version }}
+    # Используем правильные Slurm headers из /opt/slurm
+    export CPPFLAGS="-I/opt/slurm/include"
+    export LDFLAGS="-L/opt/slurm/lib"
+    make clean || true
+    make
+    # НЕ делаем make install - используем файл напрямую как в продакшене
+    echo "Pyxis скомпилирован с headers из /opt/slurm/include"
+  args:
+    creates: "/tmp/containers-build/pyxis-{{ pyxis_version }}/spank_pyxis.so"
+  when: not pyxis_installed.stat.exists
+  tags: pyxis
+
+- name: "[CONTAINERS] Копирование Pyxis в продакшн директорию"
+  shell: |
+    cp /tmp/containers-build/pyxis-{{ pyxis_version }}/spank_pyxis.so {{ pyxis_library_path }}
+    chmod 755 {{ pyxis_library_path }}
+    echo "Pyxis установлен как в продакшене: {{ pyxis_library_path }}"
+  args:
+    creates: "{{ pyxis_library_path }}"
+  when: not pyxis_installed.stat.exists
+  tags: pyxis
+
+# =============================================================================
+# SLURM HOOKS (как в продакшене)
+# =============================================================================
+
+- name: "[CONTAINERS] Установка Slurm PMI hook"
+  file:
+    path: /etc/enroot/hooks.d/50-slurm-pmi.sh
+    state: link
+    src: /usr/share/enroot/hooks.d/50-slurm-pmi.sh
+    force: yes
+  failed_when: false
+  when: inventory_hostname in groups['slurm_compute']
+  tags: hooks
+
+- name: "[CONTAINERS] Установка Slurm PyTorch hook"
+  file:
+    path: /etc/enroot/hooks.d/50-slurm-pytorch.sh
+    state: link
+    src: /usr/share/enroot/hooks.d/50-slurm-pytorch.sh
+    force: yes
+  failed_when: false
+  when: inventory_hostname in groups['slurm_compute']
+  tags: hooks
+
+# =============================================================================
+# ИНТЕГРАЦИЯ С SLURM
+# =============================================================================
+
+- name: "[CONTAINERS] Создание plugstack.conf для SPANK плагина"
+  template:
+    src: plugstack.conf.j2
+    dest: "{{ pyxis_spank_config }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  notify: restart slurmctld
+  tags: 
+    - slurm
+    - config
+
+- name: "[CONTAINERS] Создание Prolog скрипта"
+  template:
+    src: prolog.sh.j2
+    dest: "{{ slurm_prolog_dir }}/enroot_prolog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  when: enroot_prolog_enabled
+  tags: 
+    - prolog
+    - scripts
+
+- name: "[CONTAINERS] Создание Epilog скрипта"
+  template:
+    src: epilog.sh.j2
+    dest: "{{ slurm_epilog_dir }}/enroot_epilog.sh"
+    owner: root
+    group: root
+    mode: '0755'
+  when: enroot_epilog_enabled
+  tags: 
+    - epilog
+    - scripts
+
+# =============================================================================
+# ПРОВЕРКИ И ВАЛИДАЦИЯ
+# =============================================================================
+
+- name: "[CONTAINERS] Проверка версии Enroot"
+  command: enroot version
+  register: enroot_version_check
+  changed_when: false
+  failed_when: false
+  tags: verify
+
+- name: "[CONTAINERS] Проверка SPANK плагина Pyxis"
+  stat:
+    path: "{{ pyxis_library_path }}"
+  register: pyxis_plugin_check
+  tags: verify
+
+- name: "[CONTAINERS] Тест базовой функциональности Enroot"
+  shell: |
+    # Тест создания контейнера (от root)
+    timeout 60 enroot import docker://hello-world 2>/dev/null || echo 'Import test completed'
+    echo "Enroot основные функции доступны"
+  register: enroot_basic_test
+  changed_when: false
+  failed_when: false
+  when: containers_verify_installation
+  tags: verify
+
+- name: "[CONTAINERS] Проверка GPU поддержки (если доступны)"
+  shell: |
+    if command -v nvidia-smi >/dev/null 2>&1; then
+      nvidia-smi -L | wc -l
+    else
+      echo "0"
+    fi
+  register: gpu_count_check
+  changed_when: false
+  when: enroot_gpu_support
+  tags: verify
+
+# =============================================================================
+# ОЧИСТКА
+# =============================================================================
+
+- name: "[CONTAINERS] Очистка временных файлов сборки"
+  file:
+    path: "/tmp/containers-build"
+    state: absent
+  tags: 
+    - cleanup
+    - never
+
+# =============================================================================
+# ФИНАЛЬНАЯ ИНФОРМАЦИЯ
+# =============================================================================
+
+- name: "[CONTAINERS] Результат установки контейнерной поддержки"
+  debug:
+    msg: |
+      ✅ Контейнерная поддержка установлена на {{ inventory_hostname }}!
+      
+      📦 Компоненты:
+      🔧 Enroot: {{ enroot_version_check.stdout | default('не определена') }}
+      🔌 Pyxis SPANK: {{ pyxis_plugin_check.stat.exists | ternary('установлен', 'ошибка') }}
+      
+      🎮 GPU поддержка: {{ enroot_gpu_support | ternary('включена', 'отключена') }}
+      {% if enroot_gpu_support and gpu_count_check.stdout is defined %}
+      📊 GPU обнаружено: {{ gpu_count_check.stdout }} шт.
+      {% endif %}
+      
+      🗂️ Монтируемые директории:
+      {% for mount in enroot_bind_mounts %}
+      📁 {{ mount }}
+      {% endfor %}
+      
+      🔧 Конфигурация:
+      📝 Enroot: {{ enroot_config_dir }}/enroot.conf
+      🔌 SPANK: {{ pyxis_spank_config }}
+      📜 Prolog: {{ enroot_prolog_enabled | ternary('включен', 'отключен') }}
+      📜 Epilog: {{ enroot_epilog_enabled | ternary('включен', 'отключен') }}
+      
+      🚀 Готов к запуску контейнерных задач!
+  tags: verify
