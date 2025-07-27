@@ -1,7 +1,7 @@
 # roles/slurm_build/tasks/main.yml
 ---
 # Роль: slurm_build - компиляция Slurm 25.05.1 с JWT поддержкой
-# Ubuntu 24.04 
+# Ubuntu 24.04 + ИСПРАВЛЕННОЕ РАСПРОСТРАНЕНИЕ HEADERS
 
 - name: "[SLURM_BUILD] Начало сборки Slurm"
   debug:
@@ -94,15 +94,6 @@
   tags:
     - build
 
-- name: "[SLURM_BUILD] Результат конфигурации"
-  debug:
-    var: slurm_configure.stdout_lines
-  when: 
-    - inventory_hostname in groups['slurm_master']
-    - slurm_configure.changed
-  tags:
-    - build
-
 - name: "[SLURM_BUILD] Компиляция Slurm (это займет время...)"
   shell: |
     cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
@@ -146,7 +137,7 @@
     - dev
 
 # =============================================================================
-# РАСПРОСТРАНЕНИЕ НА ВСЕ УЗЛЫ
+# СОЗДАНИЕ NFS АРХИВА ДЛЯ РАСПРОСТРАНЕНИЯ (ИСПРАВЛЕНО!)
 # =============================================================================
 
 - name: "[SLURM_BUILD] Создание директории Slurm на всех узлах"
@@ -159,94 +150,87 @@
   tags:
     - distribute
 
-- name: "[SLURM_BUILD] Исправление прав доступа к /sw на NFS сервере"
-  file:
-    path: "/sw"
-    owner: root
-    group: root
-    mode: '0755'
-    state: directory
-  when: inventory_hostname in groups['slurm_master']
-  tags:
-    - distribute
-
-- name: "[SLURM_BUILD] ПРОСТОЕ копирование через NFS (С ДЕТАЛЬНЫМ ЛОГИРОВАНИЕМ)"
+- name: "[SLURM_BUILD] Создание полного архива Slurm в NFS"
   shell: |
-    set -e  # Останавливаться при любой ошибке
-    echo "=== Начало копирования ==="
+    set -e
+    echo "=== СОЗДАНИЕ АРХИВА SLURM + HEADERS ==="
     
-    # ХАРДКОД ПУТИ - исправляем проблему с переменной
-    SLURM_PATH="/opt/slurm"
+    # Очистка старого архива
+    rm -rf /sw/slurm-complete
+    mkdir -p /sw/slurm-complete
     
-    # Проверяем что источник существует
-    echo "Проверяем $SLURM_PATH:"
-    ls -la $SLURM_PATH/
+    # Копируем ВСЁ из /opt/slurm
+    echo "Копируем binaries..."
+    cp -r {{ slurm_install_prefix }}/* /sw/slurm-complete/
     
-    # Создаем простые директории БЕЗ фигурных скобок
-    echo "=== Создаем временные директории ==="
-    rm -rf /sw/slurm-temp
-    mkdir -p /sw/slurm-temp
-    mkdir -p /sw/slurm-temp/bin
-    mkdir -p /sw/slurm-temp/sbin
-    mkdir -p /sw/slurm-temp/lib
-    mkdir -p /sw/slurm-temp/share
-    mkdir -p /sw/slurm-temp/include
-    
-    # Копируем файлы с проверкой
-    echo "=== Копируем bin ==="
-    cp -r $SLURM_PATH/bin/* /sw/slurm-temp/bin/
-    echo "bin: скопировано $(ls /sw/slurm-temp/bin | wc -l) файлов"
-    
-    echo "=== Копируем sbin ==="
-    cp -r $SLURM_PATH/sbin/* /sw/slurm-temp/sbin/
-    echo "sbin: скопировано $(ls /sw/slurm-temp/sbin | wc -l) файлов"
-    
-    echo "=== Копируем lib ==="
-    cp -r $SLURM_PATH/lib/* /sw/slurm-temp/lib/
-    echo "lib: скопировано $(ls /sw/slurm-temp/lib | wc -l) файлов"
-    
-    echo "=== Копируем share ==="
-    cp -r $SLURM_PATH/share/* /sw/slurm-temp/share/
-    echo "share: скопировано $(ls /sw/slurm-temp/share | wc -l) файлов"
-    
-    # Копируем headers для dev (КРИТИЧНО ДЛЯ PYXIS!)
-    echo "=== Копируем include (headers) ==="
-    if [ -d $SLURM_PATH/include ]; then
-      cp -r $SLURM_PATH/include/* /sw/slurm-temp/include/
-      echo "include: скопировано $(find /sw/slurm-temp/include -name '*.h' | wc -l) header файлов"
+    # КРИТИЧНО: Проверяем что headers скопированы!
+    if [ -f /sw/slurm-complete/include/slurm/spank.h ]; then
+      echo "✅ Headers включены в архив: $(find /sw/slurm-complete/include -name '*.h' | wc -l) файлов"
     else
-      echo "WARNING: headers не найдены в $SLURM_PATH/include"
+      echo "❌ ОШИБКА: Headers не найдены в архиве!"
+      exit 1
     fi
     
-    # Переименовываем в финальное имя
-    echo "=== Финальное переименование ==="
-    mv /sw/slurm-temp /sw/slurm-final
+    # Устанавливаем права
+    chown -R root:root /sw/slurm-complete
+    chmod -R 755 /sw/slurm-complete/bin /sw/slurm-complete/sbin
+    chmod -R 644 /sw/slurm-complete/include
     
-    echo "=== ГОТОВО! ==="
-    ls -la /sw/slurm-final/bin/sinfo
+    echo "=== АРХИВ ГОТОВ ==="
+    echo "Binaries: $(ls /sw/slurm-complete/bin | wc -l) файлов"
+    echo "Daemons: $(ls /sw/slurm-complete/sbin | wc -l) файлов"
+    echo "Headers: $(find /sw/slurm-complete/include -name '*.h' | wc -l) файлов"
+    echo "Libs: $(ls /sw/slurm-complete/lib | wc -l) файлов"
   when: inventory_hostname in groups['slurm_master']
-  register: nfs_copy_result
+  register: archive_creation
   tags:
     - distribute
 
-# - name: "[SLURM_BUILD] Ожидание копирования в NFS"
-#   wait_for:
-#     path: "/sw/slurm-final/bin/sinfo"
-#     timeout: 30
-#   when: inventory_hostname not in groups['slurm_master']
-#   tags:
-#     - distribute
+- name: "[SLURM_BUILD] Результат создания архива"
+  debug:
+    var: archive_creation.stdout_lines
+  when: inventory_hostname in groups['slurm_master']
+  tags:
+    - distribute
 
-- name: "[SLURM_BUILD] Копирование Slurm на все узлы из NFS"
+- name: "[SLURM_BUILD] Ожидание готовности архива"
+  wait_for:
+    path: "/sw/slurm-complete/include/slurm/spank.h"
+    timeout: 30
+  when: inventory_hostname not in groups['slurm_master']
+  tags:
+    - distribute
+
+- name: "[SLURM_BUILD] Установка Slurm на все узлы из архива"
   shell: |
-    cp -r /sw/slurm-final/* {{ slurm_install_prefix }}/
+    set -e
+    echo "=== УСТАНОВКА SLURM ИЗ АРХИВА ==="
+    
+    # Копируем всё из архива
+    cp -r /sw/slurm-complete/* {{ slurm_install_prefix }}/
+    
+    # Устанавливаем права
     chown -R root:root {{ slurm_install_prefix }}
     chmod -R 755 {{ slurm_install_prefix }}/bin {{ slurm_install_prefix }}/sbin
-    # Устанавливаем права на headers
-    if [ -d {{ slurm_install_prefix }}/include ]; then
-      chmod -R 644 {{ slurm_install_prefix }}/include
-      echo "Headers скопированы в {{ slurm_install_prefix }}/include"
+    chmod -R 644 {{ slurm_install_prefix }}/include
+    
+    # Проверяем что headers установлены
+    if [ -f {{ slurm_install_prefix }}/include/slurm/spank.h ]; then
+      echo "✅ Headers установлены: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) файлов"
+    else
+      echo "❌ ОШИБКА: Headers не установлены!"
+      exit 1
     fi
+    
+    echo "=== УСТАНОВКА ЗАВЕРШЕНА ==="
+  when: inventory_hostname not in groups['slurm_master']
+  register: slurm_install_nodes
+  tags:
+    - distribute
+
+- name: "[SLURM_BUILD] Результат установки на узлах"
+  debug:
+    var: slurm_install_nodes.stdout_lines
   when: inventory_hostname not in groups['slurm_master']
   tags:
     - distribute
@@ -307,7 +291,7 @@
 # ПРОВЕРКА УСТАНОВКИ
 # =============================================================================
 
-- name: "[SLURM_BUILD] Проверка версии Slurm (без подключения к демону)"
+- name: "[SLURM_BUILD] Проверка версии Slurm"
   command: "{{ slurm_install_prefix }}/bin/sinfo -V"
   register: slurm_version_check
   changed_when: false
@@ -323,17 +307,15 @@
   tags:
     - verify
 
-- name: "[SLURM_BUILD] Проверка поддержки GPU/NVIDIA"
-  shell: "{{ slurm_install_prefix }}/bin/scontrol show config 2>&1 | grep -i gres || echo 'GRES support available'"
-  register: gpu_check
-  changed_when: false
-  failed_when: false
-  tags:
-    - verify
-
-- name: "[SLURM_BUILD] Проверка поддержки MySQL"
-  shell: "{{ slurm_install_prefix }}/sbin/slurmctld -V 2>&1 | grep -i mysql || echo 'MySQL support check'"
-  register: mysql_check
+- name: "[SLURM_BUILD] Проверка headers (КРИТИЧНО ДЛЯ PYXIS!)"
+  shell: |
+    if [ -f {{ slurm_install_prefix }}/include/slurm/spank.h ]; then
+      echo "✅ Headers найдены: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) файлов"
+      echo "✅ spank.h: $(ls -la {{ slurm_install_prefix }}/include/slurm/spank.h)"
+    else
+      echo "❌ Headers НЕ НАЙДЕНЫ - Pyxis НЕ СКОМПИЛИРУЕТСЯ!"
+    fi
+  register: headers_check
   changed_when: false
   failed_when: false
   tags:
@@ -345,8 +327,7 @@
       ✅ Slurm успешно установлен на {{ inventory_hostname }}
       📋 Версия: {{ slurm_version_check.stdout }}
       🔐 JWT поддержка: {{ jwt_check.stdout }}
-      🎮 GPU поддержка: {{ gpu_check.stdout }}
-      💾 MySQL поддержка: {{ mysql_check.stdout }}
+      📁 Headers: {{ headers_check.stdout }}
       📍 Путь установки: {{ slurm_install_prefix }}
       🔗 Команды доступны в /usr/bin/, демоны в /usr/sbin/
   tags:
@@ -354,16 +335,4 @@
 
 - name: "[SLURM_BUILD] Сборка завершена успешно"
   debug:
-    msg: "🎉 Slurm {{ slurm_version }} с JWT готов к настройке на {{ inventory_hostname }}"
-
-# =============================================================================
-# ОЧИСТКА (только по отдельному тегу)
-# =============================================================================
-
-- name: "[SLURM_BUILD] Очистка временных файлов из NFS"
-  file:
-    path: "/sw/slurm-final"
-    state: absent
-  when: inventory_hostname in groups['slurm_master']
-  tags:
-    - cleanup
+    msg: "🎉 Slurm {{ slurm_version }} с headers готов к установке контейнеров на {{ inventory_hostname }}"

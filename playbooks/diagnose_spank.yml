@@ -1,0 +1,108 @@
+# diagnose_spank.yml
+---
+- name: "🔍 ДИАГНОСТИКА SPANK ПЛАГИНА"
+  hosts: slurm_compute,slurm_login
+  become: true
+  gather_facts: false
+  
+  tasks:
+    - name: "🔍 Полная диагностика SPANK"
+      shell: |
+        echo "=================== ДИАГНОСТИКА SPANK ==================="
+        echo "Узел: {{ inventory_hostname }}"
+        echo ""
+        
+        echo "1. ПРОВЕРКА ФАЙЛОВ PYXIS:"
+        echo "Плагин /usr/local/lib/slurm/spank_pyxis.so:"
+        ls -la /usr/local/lib/slurm/spank_pyxis.so 2>/dev/null || echo "❌ НЕ НАЙДЕН"
+        
+        echo ""
+        echo "Конфиг /usr/local/share/pyxis/pyxis.conf:"
+        ls -la /usr/local/share/pyxis/pyxis.conf 2>/dev/null || echo "❌ НЕ НАЙДЕН"
+        
+        echo ""
+        echo "2. ПРОВЕРКА КОНФИГУРАЦИИ SLURM:"
+        echo "Директория plugstack.conf.d:"
+        ls -la /etc/slurm/plugstack.conf.d/ 2>/dev/null || echo "❌ ДИРЕКТОРИЯ НЕ СУЩЕСТВУЕТ"
+        
+        echo ""
+        echo "Ссылка pyxis.conf:"
+        ls -la /etc/slurm/plugstack.conf.d/pyxis.conf 2>/dev/null || echo "❌ ССЫЛКА НЕ СУЩЕСТВУЕТ"
+        
+        echo ""
+        echo "Основной plugstack.conf:"
+        ls -la /etc/slurm/plugstack.conf 2>/dev/null || echo "❌ НЕ НАЙДЕН"
+        
+        echo ""
+        echo "3. СОДЕРЖИМОЕ КОНФИГОВ:"
+        if [ -f /etc/slurm/plugstack.conf.d/pyxis.conf ]; then
+          echo "Содержимое pyxis.conf:"
+          cat /etc/slurm/plugstack.conf.d/pyxis.conf
+        fi
+        
+        if [ -f /etc/slurm/plugstack.conf ]; then
+          echo "Содержимое основного plugstack.conf:"
+          cat /etc/slurm/plugstack.conf
+        fi
+        
+        echo ""
+        echo "4. ПРОВЕРКА SLURM.CONF:"
+        echo "PlugStackConfig в slurm.conf:"
+        grep -i plugstack /etc/slurm/slurm.conf || echo "❌ НЕ НАЙДЕНО"
+        
+        echo ""
+        echo "5. ЛОГИ SLURMD (последние 20 строк):"
+        if [ -f /var/log/slurm/slurmd.log ]; then
+          echo "Поиск spank/pyxis в логах:"
+          tail -50 /var/log/slurm/slurmd.log | grep -i -E "(spank|pyxis|plugin)" || echo "❌ НЕ НАЙДЕНО"
+        else
+          echo "❌ Лог файл /var/log/slurm/slurmd.log не найден"
+          echo "Systemd логи:"
+          journalctl -u slurmd -n 10 --no-pager | grep -i -E "(spank|pyxis|plugin)" || echo "❌ НЕ НАЙДЕНО"
+        fi
+        
+        echo ""
+        echo "6. СТАТУС SLURMD:"
+        if [ "{{ inventory_hostname in groups['slurm_compute'] }}" = "True" ]; then
+          systemctl is-active slurmd || echo "❌ SLURMD НЕ АКТИВЕН"
+        else
+          echo "Login узел - slurmd не требуется"
+        fi
+        
+        echo ""
+        echo "7. ТЕСТ ЗАГРУЗКИ ПЛАГИНА:"
+        echo "Проверяем может ли slurmd загрузить плагин..."
+        if [ -f /usr/local/lib/slurm/spank_pyxis.so ]; then
+          ldd /usr/local/lib/slurm/spank_pyxis.so | head -5 || echo "Проблемы с зависимостями"
+        fi
+        
+        echo "=================== КОНЕЦ ДИАГНОСТИКИ ==================="
+      register: spank_diagnosis
+      
+    - name: "📊 Результат диагностики"
+      debug:
+        var: spank_diagnosis.stdout_lines
+
+- name: "🧪 ТЕСТ КОМАНД SRUN"
+  hosts: slurm_master  
+  become: true
+  tasks:
+    - name: "🧪 Проверка доступных опций srun"
+      shell: |
+        echo "=== ПРОВЕРКА ОПЦИЙ SRUN ==="
+        echo "Ищем container-related опции:"
+        srun --help | grep -i container || echo "❌ Нет container опций"
+        
+        echo ""
+        echo "Все доступные опции srun:"
+        srun --help | head -50
+        
+        echo ""
+        echo "=== ПРОВЕРКА SPANK НА MASTER ==="
+        echo "PlugStackConfig в slurm.conf:"
+        grep -i plugstack /etc/slurm/slurm.conf || echo "❌ НЕ НАСТРОЕНО"
+      register: srun_options_test
+      
+    - name: "📊 Опции srun"
+      debug:
+        var: srun_options_test.stdout_lines

@@ -1,0 +1,229 @@
+# containers_debug.yml
+---
+- name: "🔍 ДИАГНОСТИКА КОНТЕЙНЕРОВ ENROOT + PYXIS"
+  hosts: slurm_cluster
+  become: true
+  gather_facts: true
+  
+  tasks:
+    - name: "📋 Базовая информация об узле"
+      debug:
+        msg: |
+          🖥️ Узел: {{ inventory_hostname }}
+          📍 Роль: {{ group_names | join(', ') }}
+          💾 RAM: {{ (ansible_memtotal_mb / 1024) | round(1) }}GB
+      run_once: false
+
+    # =================================================================
+    # ПРОВЕРКА ENROOT
+    # =================================================================
+    
+    - name: "[ENROOT] Проверка установки Enroot"
+      command: enroot version
+      register: enroot_check
+      failed_when: false
+      changed_when: false
+    
+    - name: "[ENROOT] Проверка конфигурации Enroot"
+      stat:
+        path: /etc/enroot/enroot.conf
+      register: enroot_config_check
+    
+    - name: "[ENROOT] Чтение конфигурации Enroot"
+      shell: cat /etc/enroot/enroot.conf
+      register: enroot_config_content
+      when: enroot_config_check.stat.exists
+      failed_when: false
+      changed_when: false
+
+    # =================================================================
+    # ПРОВЕРКА SLURM HEADERS (КРИТИЧНО!)
+    # =================================================================
+    
+    - name: "[HEADERS] Проверка Slurm headers"
+      stat:
+        path: /opt/slurm/include/slurm/spank.h
+      register: slurm_headers_check
+    
+    - name: "[HEADERS] Подсчет header файлов"
+      shell: find /opt/slurm/include -name "*.h" | wc -l
+      register: headers_count
+      when: slurm_headers_check.stat.exists
+      failed_when: false
+      changed_when: false
+
+    # =================================================================
+    # ПРОВЕРКА PYXIS
+    # =================================================================
+    
+    - name: "[PYXIS] Проверка SPANK плагина Pyxis"
+      stat:
+        path: /usr/local/src/pyxis/spank_pyxis.so
+      register: pyxis_plugin_check
+    
+    - name: "[PYXIS] Информация о Pyxis плагине"
+      shell: |
+        if [ -f /usr/local/src/pyxis/spank_pyxis.so ]; then
+          echo "Размер: $(du -h /usr/local/src/pyxis/spank_pyxis.so)"
+          echo "Права: $(ls -la /usr/local/src/pyxis/spank_pyxis.so)"
+          echo "Линковка: $(ldd /usr/local/src/pyxis/spank_pyxis.so | head -3)"
+        else
+          echo "❌ Файл не существует"
+        fi
+      register: pyxis_info
+      when: inventory_hostname in groups['slurm_compute']
+      failed_when: false
+      changed_when: false
+    
+    - name: "[PYXIS] Проверка plugstack.conf"
+      stat:
+        path: /etc/slurm/plugstack.conf
+      register: plugstack_check
+    
+    - name: "[PYXIS] Содержимое plugstack.conf"
+      shell: cat /etc/slurm/plugstack.conf
+      register: plugstack_content
+      when: plugstack_check.stat.exists
+      failed_when: false
+      changed_when: false
+
+    # =================================================================
+    # ПРОВЕРКА СЕРВИСОВ
+    # =================================================================
+    
+    - name: "[SERVICES] Статус slurmd"
+      shell: systemctl status slurmd --no-pager -l
+      register: slurmd_status
+      when: inventory_hostname in groups['slurm_compute']
+      failed_when: false
+      changed_when: false
+    
+    - name: "[SERVICES] Последние 10 строк лога slurmd"
+      shell: tail -10 /var/log/slurm/slurmd.log
+      register: slurmd_logs
+      when: inventory_hostname in groups['slurm_compute']
+      failed_when: false
+      changed_when: false
+
+    # =================================================================
+    # ПРОВЕРКА GPU (если есть)
+    # =================================================================
+    
+    - name: "[GPU] Проверка NVIDIA"
+      command: nvidia-smi -L
+      register: nvidia_check
+      failed_when: false
+      changed_when: false
+    
+    - name: "[GPU] Проверка устройств"
+      shell: ls -la /dev/nvidia* 2>/dev/null || echo "Нет NVIDIA устройств"
+      register: nvidia_devices
+      failed_when: false
+      changed_when: false
+
+    # =================================================================
+    # ТЕСТ КОНТЕЙНЕРА
+    # =================================================================
+    
+    - name: "[TEST] Простой тест контейнера"
+      shell: timeout 30 srun --container-image=docker://hello-world 2>&1 || echo "ТЕСТ НЕ ПРОШЕЛ"
+      register: container_test
+      when: inventory_hostname in groups['slurm_master']
+      failed_when: false
+      changed_when: false
+
+# =================================================================
+# ОТЧЕТ О РЕЗУЛЬТАТАХ
+# =================================================================
+
+- name: "📊 ОТЧЕТ О ДИАГНОСТИКЕ"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "📋 Результаты диагностики контейнеров"
+      debug:
+        msg: |
+          ==========================================
+          🔍 ДИАГНОСТИКА КОНТЕЙНЕРОВ ЗАВЕРШЕНА
+          ==========================================
+          
+          {% for host in groups['slurm_cluster'] %}
+          🖥️ {{ host }}:
+          {% set h = hostvars[host] %}
+          
+          📦 ENROOT:
+          {% if h.enroot_check.rc == 0 %}
+          ✅ Установлен: {{ h.enroot_check.stdout }}
+          ✅ Конфиг: {{ h.enroot_config_check.stat.exists | ternary('есть', 'отсутствует') }}
+          {% else %}
+          ❌ НЕ УСТАНОВЛЕН
+          {% endif %}
+          
+          📁 SLURM HEADERS:
+          {% if h.slurm_headers_check.stat.exists %}
+          ✅ spank.h найден
+          ✅ Всего headers: {{ h.headers_count.stdout | default('?') }}
+          {% else %}
+          ❌ HEADERS ОТСУТСТВУЮТ - ЭТО ПРОБЛЕМА!
+          {% endif %}
+          
+          🔌 PYXIS ПЛАГИН:
+          {% if h.pyxis_plugin_check.stat.exists %}
+          ✅ Плагин найден
+          {% if h.pyxis_info is defined %}
+          📊 {{ h.pyxis_info.stdout }}
+          {% endif %}
+          {% else %}
+          ❌ ПЛАГИН НЕ НАЙДЕН
+          {% endif %}
+          
+          ⚙️ PLUGSTACK.CONF:
+          {% if h.plugstack_check.stat.exists %}
+          ✅ Файл есть: {{ h.plugstack_content.stdout | default('?') }}
+          {% else %}
+          ❌ ФАЙЛ ОТСУТСТВУЕТ
+          {% endif %}
+          
+          {% if host in groups['slurm_compute'] %}
+          🔧 SLURMD:
+          {% if h.slurmd_status.rc == 0 %}
+          ✅ Работает
+          {% else %}
+          ❌ Проблемы: {{ h.slurmd_status.stdout | default('неизвестно') }}
+          {% endif %}
+          {% endif %}
+          
+          🎮 GPU:
+          {% if h.nvidia_check.rc == 0 %}
+          ✅ GPU найдены: {{ h.nvidia_check.stdout_lines | length }}
+          {% else %}
+          ⚪ GPU не обнаружены
+          {% endif %}
+          
+          {% endfor %}
+          
+          {% if hostvars[groups['slurm_master'][0]].container_test is defined %}
+          🧪 ТЕСТ КОНТЕЙНЕРА:
+          {{ hostvars[groups['slurm_master'][0]].container_test.stdout }}
+          {% endif %}
+          
+          ==========================================
+          
+          🔧 ПРОБЛЕМЫ (требуют исправления):
+          {% for host in groups['slurm_cluster'] %}
+          {% set h = hostvars[host] %}
+          {% if not h.slurm_headers_check.stat.exists %}
+          ❌ {{ host }}: ОТСУТСТВУЮТ SLURM HEADERS
+          {% endif %}
+          {% if not h.pyxis_plugin_check.stat.exists and host in groups['slurm_compute'] %}
+          ❌ {{ host }}: ОТСУТСТВУЕТ PYXIS ПЛАГИН  
+          {% endif %}
+          {% if not h.plugstack_check.stat.exists and host in groups['slurm_compute'] %}
+          ❌ {{ host }}: ОТСУТСТВУЕТ PLUGSTACK.CONF
+          {% endif %}
+          {% if h.enroot_check.rc != 0 %}
+          ❌ {{ host }}: ENROOT НЕ РАБОТАЕТ
+          {% endif %}
+          {% endfor %}
+          
+          ==========================================

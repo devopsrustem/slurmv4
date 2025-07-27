@@ -1,7 +1,7 @@
 # roles/containers/defaults/main.yml
 ---
 # =============================================================================
-# ПЕРЕМЕННЫЕ ПО УМОЛЧАНИЮ ДЛЯ ENROOT + PYXIS
+# ПЕРЕМЕННЫЕ ДЛЯ ENROOT + PYXIS (ОФИЦИАЛЬНЫЙ ПОДХОД)
 # =============================================================================
 
 # Версии компонентов
@@ -12,65 +12,55 @@ pyxis_version: "0.20.0"
 enroot_download_url: "https://github.com/NVIDIA/enroot/releases/download/v{{ enroot_version }}"
 pyxis_download_url: "https://github.com/NVIDIA/pyxis/archive/v{{ pyxis_version }}.tar.gz"
 
-# Пути установки
-enroot_install_dir: "/usr/local/enroot"
-pyxis_install_dir: "/usr/local/pyxis"
+# =============================================================================
+# СИСТЕМНЫЕ ПУТИ (ЕДИНООБРАЗИЕ)
+# =============================================================================
+
+# Slurm installation prefix (должен совпадать с slurm_build!)
+slurm_install_prefix: "/opt/slurm"
+
+# Enroot пути
 enroot_config_dir: "/etc/enroot"
 enroot_data_dir: "/var/lib/enroot"
 enroot_cache_dir: "/var/cache/enroot"
-enroot_temp_dir: "/tmp/enroot"
+enroot_runtime_path: "/run/enroot"
+enroot_temp_dir: "/tmp/"
+# Pyxis build директория (временная, только для компиляции)
+pyxis_build_dir: "/tmp/pyxis-build"
 
-# Конфигурация Enroot (как в продакшене - работает под root/существующими пользователями)
-enroot_user: "root"
-enroot_group: "root"
-# uid/gid не нужны - используем существующих пользователей
+# ОФИЦИАЛЬНАЯ конфигурация SPANK
+plugstack_config_dir: "/etc/slurm/plugstack.conf.d"
+
+# =============================================================================
+# ENROOT НАСТРОЙКИ
+# =============================================================================
 
 # Runtime настройки
-enroot_runtime_path: "/run/enroot"
 enroot_mount_home: true
 enroot_mount_tmp: true
-
-# tmpfs размер для /run (для больших образов)
 pyxis_run_tmpfs_size: "16G"
 
-# Storage mapping (текущее + будущее для Lustre)
+# Storage mapping
 enroot_bind_mounts:
   - "/home:/home"
   - "/sw:/sw"
   - "/opt/slurm:/opt/slurm:ro"
-  # Для будущего Lustre (закомментировано)
-  # - "/scratch:/scratch"
 
 # GPU settings
 enroot_restrict_dev: true
 enroot_gpu_support: true
-
-# Container registry settings
-container_registry_default: "docker.io"
-container_registry_prod: "git.sa1.test"  # Для продакшена
-container_squashfs_support: true
-
-# Pyxis SPANK плагин (как в продакшене - используем из build директории)
-pyxis_spank_config: "/etc/slurm/plugstack.conf"
-pyxis_library_path: "/usr/local/src/pyxis/spank_pyxis.so"
-pyxis_build_dir: "/usr/local/src/pyxis"
-
-# Build зависимости для Pyxis (убираем libslurm-dev - используем свои headers)
-pyxis_build_packages:
-  - build-essential
-  - pkg-config
-
-# Безопасность (privileged для HPC + GPU)
 enroot_allow_privileged: true
 enroot_allow_setuid: true
 
-# Prolog/Epilog скрипты
-slurm_prolog_dir: "/etc/slurm/prolog.d"
-slurm_epilog_dir: "/etc/slurm/epilog.d"
-enroot_prolog_enabled: true
-enroot_epilog_enabled: true
+# Container registry settings
+container_registry_default: "docker.io"
+container_squashfs_support: true
 
-# Зависимости системы
+# =============================================================================
+# СИСТЕМНЫЕ ЗАВИСИМОСТИ
+# =============================================================================
+
+# Пакеты для Enroot
 enroot_system_packages:
   - fuse3
   - squashfs-tools
@@ -81,10 +71,14 @@ enroot_system_packages:
   - pigz
   - pv
 
-# Build зависимости для Pyxis (убираем libslurm-dev - используем свои headers)
+# Build зависимости для Pyxis (минимальные)
 pyxis_build_packages:
   - build-essential
   - pkg-config
+
+# =============================================================================
+# ПРОИЗВОДИТЕЛЬНОСТЬ И ЛИМИТЫ
+# =============================================================================
 
 # Limits
 enroot_max_containers_per_user: 10
@@ -95,6 +89,29 @@ enroot_max_memory: "{{ (ansible_memtotal_mb * 0.8) | int }}M"
 enroot_log_level: "INFO"
 pyxis_log_level: "info"
 
-# Проверки
+# =============================================================================
+# ПРОВЕРКИ
+# =============================================================================
+
+# Включить проверки после установки
 containers_verify_installation: true
 containers_test_nvidia_runtime: true
+
+# =============================================================================
+# УДАЛЕННЫЕ ПЕРЕМЕННЫЕ (больше не нужны!)
+# =============================================================================
+
+# ❌ pyxis_library_path - плагин устанавливается в /usr/local/lib/slurm/
+# ❌ pyxis_spank_config - используется plugstack.conf.d/
+# ❌ slurm_prolog_dir, slurm_epilog_dir - не нужны для базовой функциональности  
+# ❌ enroot_prolog_enabled, enroot_epilog_enabled - упрощаем
+
+# =============================================================================
+# КОММЕНТАРИИ
+# =============================================================================
+
+# Этот файл настроен для официального подхода установки Pyxis:
+# 1. make install - устанавливает плагин в /usr/local/lib/slurm/
+# 2. готовый конфиг в /usr/local/share/pyxis/pyxis.conf
+# 3. символическая ссылка в /etc/slurm/plugstack.conf.d/pyxis.conf
+# 4. установка на compute И login узлы (согласно документации SPANK)
