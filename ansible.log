@@ -9950,3 +9950,356 @@ PLUGEOF
 2025-07-26 20:32:35,873 p=129309 u=master n=ansible | slurm_build : [SLURM_BUILD] Создание полного архива Slurm в NFS ------------------------------------------------------------------------------------------------- 1.33s
 2025-07-26 20:32:35,873 p=129309 u=master n=ansible | common : [COMMON] Настройка прав доступа MUNGE директорий ------------------------------------------------------------------------------------------------------- 1.24s
 2025-07-26 20:32:35,873 p=129309 u=master n=ansible | common : [COMMON] Установка HWLOC ------------------------------------------------------------------------------------------------------------------------------- 1.23s
+2025-07-27 11:51:23,612 p=132983 u=master n=ansible | ERROR! the playbook: fix_permissions.yml could not be found
+2025-07-27 11:51:47,783 p=133075 u=master n=ansible | PLAY [🔧 ИСПРАВЛЕНИЕ МАСТЕРА - УСТАНОВКА PYXIS] ***************************************************************************************************************************************
+2025-07-27 11:51:47,795 p=133075 u=master n=ansible | TASK [📦 Установка pyxis на мастер] ***************************************************************************************************************************************************
+2025-07-27 11:51:47,795 p=133075 u=master n=ansible | Sunday 27 July 2025  11:51:47 +0000 (0:00:00.014)       0:00:00.014 *********** 
+2025-07-27 11:51:54,934 p=133075 u=master n=ansible | changed: [sm01]
+2025-07-27 11:51:54,937 p=133075 u=master n=ansible | TASK [📊 Результат установки на мастер] ***********************************************************************************************************************************************
+2025-07-27 11:51:54,938 p=133075 u=master n=ansible | Sunday 27 July 2025  11:51:54 +0000 (0:00:07.142)       0:00:07.156 *********** 
+2025-07-27 11:51:54,963 p=133075 u=master n=ansible | ok: [sm01] => 
+  master_pyxis_install.stdout_lines:
+  - "\U0001F527 УСТАНОВКА PYXIS НА МАСТЕР"
+  - Hit:1 http://ru.archive.ubuntu.com/ubuntu noble InRelease
+  - Get:2 http://ru.archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+  - Hit:3 http://ru.archive.ubuntu.com/ubuntu noble-backports InRelease
+  - Hit:4 http://security.ubuntu.com/ubuntu noble-security InRelease
+  - Get:5 http://ru.archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1,282 kB]
+  - Get:6 http://ru.archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [1,113 kB]
+  - Fetched 2,521 kB in 1s (4,038 kB/s)
+  - Reading package lists...
+  - Building dependency tree...
+  - Reading state information...
+  - 1 package can be upgraded. Run 'apt list --upgradable' to see it.
+  - Reading package lists...
+  - Building dependency tree...
+  - Reading state information...
+  - build-essential is already the newest version (12.10ubuntu1).
+  - pkg-config is already the newest version (1.8.1-2build1).
+  - 0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+  - rm -rf common.o args.o pyxis_slurmstepd.o pyxis_slurmd.o pyxis_srun.o pyxis_alloc.o pyxis_dispatch.o config.o enroot.o common.d args.d pyxis_slurmstepd.d pyxis_slurmd.d pyxis_srun.d pyxis_alloc.d pyxis_dispatch.d config.d enroot.d spank_pyxis.so
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF common.d -c common.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF args.d -c args.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF pyxis_slurmstepd.d -c pyxis_slurmstepd.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF pyxis_slurmd.d -c pyxis_slurmd.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF pyxis_srun.d -c pyxis_srun.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF pyxis_alloc.d -c pyxis_alloc.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF pyxis_dispatch.d -c pyxis_dispatch.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF config.d -c config.c
+  - cc -std=gnu11 -O2 -g -Wall -Wunused-variable -fstack-protector-strong -fpic  -D_GNU_SOURCE -D_FORTIFY_SOURCE=2 -DPYXIS_VERSION=\"0.20.0\" -I/opt/slurm/include -MMD -MF enroot.d -c enroot.c
+  - cc -shared -Wl,-znoexecstack -Wl,-zrelro -Wl,-znow -L/opt/slurm/lib -o spank_pyxis.so spank_pyxis.lds common.o args.o pyxis_slurmstepd.o pyxis_slurmd.o pyxis_srun.o pyxis_alloc.o pyxis_dispatch.o config.o enroot.o
+  - strip --strip-unneeded -R .comment spank_pyxis.so
+  - install -d -m 755 /usr/local/lib/slurm
+  - install -m 644 spank_pyxis.so /usr/local/lib/slurm
+  - install -d -m 755 /usr/local/share/pyxis
+  - echo 'required /usr/local/lib/slurm/spank_pyxis.so' | install -m 644 /dev/stdin /usr/local/share/pyxis/pyxis.conf
+  - ✅ Pyxis установлен на мастер!
+  - 'Плагин: -rw-r--r-- 1 root root 60512 Jul 27 14:51 /usr/local/lib/slurm/spank_pyxis.so'
+  - 'Конфиг: -rw-r--r-- 1 root root 45 Jul 27 14:51 /usr/local/share/pyxis/pyxis.conf'
+2025-07-27 11:51:54,966 p=133075 u=master n=ansible | TASK [🧪 ТЕСТ НА МАСТЕРЕ] *************************************************************************************************************************************************************
+2025-07-27 11:51:54,966 p=133075 u=master n=ansible | Sunday 27 July 2025  11:51:54 +0000 (0:00:00.028)       0:00:07.184 *********** 
+2025-07-27 11:51:55,238 p=133075 u=master n=ansible | changed: [sm01]
+2025-07-27 11:51:55,241 p=133075 u=master n=ansible | TASK [🎉 РЕЗУЛЬТАТ ТЕСТА МАСТЕРА] *****************************************************************************************************************************************************
+2025-07-27 11:51:55,241 p=133075 u=master n=ansible | Sunday 27 July 2025  11:51:55 +0000 (0:00:00.275)       0:00:07.459 *********** 
+2025-07-27 11:51:55,267 p=133075 u=master n=ansible | ok: [sm01] => 
+  msg: "\U0001F9EA ТЕСТ НА МАСТЕРЕ:\n\U0001F9EA ТЕСТ КОНТЕЙНЕРА НА МАСТЕРЕ\nsrun: fatal: No command given to execute.\n\n\n\U0001F494 Мастер еще не работает, проверяем..."
+2025-07-27 11:51:55,273 p=133075 u=master n=ansible | PLAY RECAP ****************************************************************************************************************************************************************************
+2025-07-27 11:51:55,273 p=133075 u=master n=ansible | sm01                       : ok=4    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:51:55,273 p=133075 u=master n=ansible | Playbook run took 0 days, 0 hours, 0 minutes, 7 seconds
+2025-07-27 11:51:55,273 p=133075 u=master n=ansible | Sunday 27 July 2025  11:51:55 +0000 (0:00:00.032)       0:00:07.492 *********** 
+2025-07-27 11:51:55,273 p=133075 u=master n=ansible | =============================================================================== 
+2025-07-27 11:51:55,274 p=133075 u=master n=ansible | 📦 Установка pyxis на мастер ---------------------------------------------------------------------------------------------------------------------------------------------------- 7.14s
+2025-07-27 11:51:55,274 p=133075 u=master n=ansible | 🧪 ТЕСТ НА МАСТЕРЕ -------------------------------------------------------------------------------------------------------------------------------------------------------------- 0.28s
+2025-07-27 11:51:55,274 p=133075 u=master n=ansible | 🎉 РЕЗУЛЬТАТ ТЕСТА МАСТЕРА ------------------------------------------------------------------------------------------------------------------------------------------------------ 0.03s
+2025-07-27 11:51:55,274 p=133075 u=master n=ansible | 📊 Результат установки на мастер ------------------------------------------------------------------------------------------------------------------------------------------------ 0.03s
+2025-07-27 11:53:12,894 p=133217 u=master n=ansible | PLAY [🔧 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА ENROOT] *********************************************************************************************************************************************
+2025-07-27 11:53:12,911 p=133217 u=master n=ansible | TASK [🔧 Исправление прав доступа директорий Enroot] **********************************************************************************************************************************
+2025-07-27 11:53:12,911 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:12 +0000 (0:00:00.019)       0:00:00.019 *********** 
+2025-07-27 11:53:14,102 p=133217 u=master n=ansible | changed: [sm01]
+2025-07-27 11:53:14,203 p=133217 u=master n=ansible | changed: [cn01]
+2025-07-27 11:53:14,321 p=133217 u=master n=ansible | changed: [sm02]
+2025-07-27 11:53:14,598 p=133217 u=master n=ansible | changed: [cn02]
+2025-07-27 11:53:14,601 p=133217 u=master n=ansible | TASK [📊 Результат исправления прав] **************************************************************************************************************************************************
+2025-07-27 11:53:14,601 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:14 +0000 (0:00:01.689)       0:00:01.709 *********** 
+2025-07-27 11:53:14,628 p=133217 u=master n=ansible | ok: [sm01] => 
+  permissions_fix.stdout_lines:
+  - "\U0001F527 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА ENROOT НА sm01"
+  - Настройка /run/enroot...
+  - Настройка /var/lib/enroot...
+  - Настройка /var/cache/enroot...
+  - 'Проверка прав:'
+  - drwxrwxrwt  2 root  root      40 Jul 26 18:59 enroot
+  - drwxr-xr-x  2 root      root      4096 Jul 26 18:59 enroot
+  - drwxrwxrwt  2 root          root          4096 Jul 26 18:59 enroot
+  - ✅ Права исправлены на sm01
+2025-07-27 11:53:14,631 p=133217 u=master n=ansible | ok: [sm02] => 
+  permissions_fix.stdout_lines:
+  - "\U0001F527 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА ENROOT НА sm02"
+  - Настройка /run/enroot...
+  - Настройка /var/lib/enroot...
+  - Настройка /var/cache/enroot...
+  - 'Проверка прав:'
+  - drwxrwxrwt  2 root  root    40 Jul 26 18:59 enroot
+  - drwxr-xr-x  2 root      root      4096 Jul 26 18:59 enroot
+  - drwxrwxrwt  2 root          root          4096 Jul 26 18:59 enroot
+  - ✅ Права исправлены на sm02
+2025-07-27 11:53:14,637 p=133217 u=master n=ansible | ok: [cn01] => 
+  permissions_fix.stdout_lines:
+  - "\U0001F527 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА ENROOT НА cn01"
+  - Настройка /run/enroot...
+  - Настройка /var/lib/enroot...
+  - Настройка /var/cache/enroot...
+  - 'Проверка прав:'
+  - drwxrwxrwt  2 root  root    40 Jul 27 14:46 enroot
+  - drwxr-xr-x  2 root      root      4096 Jul 27 14:52 enroot
+  - drwxrwxrwt  3 root          root          4096 Jul 27 00:02 enroot
+  - ✅ Права исправлены на cn01
+2025-07-27 11:53:14,645 p=133217 u=master n=ansible | ok: [cn02] => 
+  permissions_fix.stdout_lines:
+  - "\U0001F527 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА ENROOT НА cn02"
+  - Настройка /run/enroot...
+  - Настройка /var/lib/enroot...
+  - Настройка /var/cache/enroot...
+  - 'Проверка прав:'
+  - drwxrwxrwt  2 root  root    40 Jul 27 14:53 enroot
+  - drwxr-xr-x  2 root      root      4096 Jul 26 18:59 enroot
+  - drwxrwxrwt  2 root          root          4096 Jul 26 18:59 enroot
+  - ✅ Права исправлены на cn02
+2025-07-27 11:53:14,647 p=133217 u=master n=ansible | TASK [📝 Обновление конфигурации Enroot] **********************************************************************************************************************************************
+2025-07-27 11:53:14,648 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:14 +0000 (0:00:00.046)       0:00:01.755 *********** 
+2025-07-27 11:53:15,620 p=133217 u=master n=ansible | changed: [sm01]
+2025-07-27 11:53:15,717 p=133217 u=master n=ansible | changed: [sm02]
+2025-07-27 11:53:15,756 p=133217 u=master n=ansible | changed: [cn01]
+2025-07-27 11:53:15,769 p=133217 u=master n=ansible | changed: [cn02]
+2025-07-27 11:53:15,786 p=133217 u=master n=ansible | PLAY [🧪 ТЕСТ ИСПРАВЛЕНИЯ] ************************************************************************************************************************************************************
+2025-07-27 11:53:15,790 p=133217 u=master n=ansible | TASK [Gathering Facts] ****************************************************************************************************************************************************************
+2025-07-27 11:53:15,790 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:15 +0000 (0:00:01.142)       0:00:02.898 *********** 
+2025-07-27 11:53:17,461 p=133217 u=master n=ansible | ok: [cn01]
+2025-07-27 11:53:17,515 p=133217 u=master n=ansible | ok: [cn02]
+2025-07-27 11:53:17,540 p=133217 u=master n=ansible | TASK [🧪 Тест контейнера от обычного пользователя] ************************************************************************************************************************************
+2025-07-27 11:53:17,540 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:17 +0000 (0:00:01.750)       0:00:04.648 *********** 
+2025-07-27 11:53:17,829 p=133217 u=master n=ansible | changed: [cn01]
+2025-07-27 11:53:17,972 p=133217 u=master n=ansible | changed: [cn02]
+2025-07-27 11:53:17,978 p=133217 u=master n=ansible | TASK [📊 Результат теста пользователя] ************************************************************************************************************************************************
+2025-07-27 11:53:17,979 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:17 +0000 (0:00:00.438)       0:00:05.086 *********** 
+2025-07-27 11:53:18,011 p=133217 u=master n=ansible | ok: [cn01] => 
+  msg: "\U0001F9EA ТЕСТ ОТ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ:\n\U0001F9EA ТЕСТ ОТ ПОЛЬЗОВАТЕЛЯ master НА cn01\nПроверка доступа к /run/enroot:\ntotal 0\ndrwxrwxrwt  2 root root   40 Jul 27 14:46 .\ndrwxr-xr-x 32 root root 1020 Jul 27 14:53 ..\nПопытка создать тестовую директорию:\n✅ Создание директории успешно\nТест базового контейнера:\nsrun: fatal: No command given to execute.\nКонтейнер тест не прошел\n\n⚠️ Нужна дополнительная отладка"
+2025-07-27 11:53:18,026 p=133217 u=master n=ansible | ok: [cn02] => 
+  msg: "\U0001F9EA ТЕСТ ОТ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ:\n\U0001F9EA ТЕСТ ОТ ПОЛЬЗОВАТЕЛЯ master НА cn02\nПроверка доступа к /run/enroot:\ntotal 0\ndrwxrwxrwt  2 root root   40 Jul 27 14:53 .\ndrwxr-xr-x 32 root root 1020 Jul 27 14:53 ..\nПопытка создать тестовую директорию:\n✅ Создание директории успешно\nТест базового контейнера:\nsrun: fatal: No command given to execute.\nКонтейнер тест не прошел\n\n⚠️ Нужна дополнительная отладка"
+2025-07-27 11:53:18,065 p=133217 u=master n=ansible | PLAY [📋 ФИНАЛЬНАЯ ПРОВЕРКА] **********************************************************************************************************************************************************
+2025-07-27 11:53:18,068 p=133217 u=master n=ansible | TASK [Gathering Facts] ****************************************************************************************************************************************************************
+2025-07-27 11:53:18,068 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:18 +0000 (0:00:00.089)       0:00:05.176 *********** 
+2025-07-27 11:53:19,980 p=133217 u=master n=ansible | ok: [sm01]
+2025-07-27 11:53:19,995 p=133217 u=master n=ansible | TASK [🎯 Финальный тест с мастера] ****************************************************************************************************************************************************
+2025-07-27 11:53:19,995 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:19 +0000 (0:00:01.926)       0:00:07.103 *********** 
+2025-07-27 11:53:22,480 p=133217 u=master n=ansible | changed: [sm01]
+2025-07-27 11:53:22,487 p=133217 u=master n=ansible | TASK [🎉 ФИНАЛЬНЫЙ РЕЗУЛЬТАТ] *********************************************************************************************************************************************************
+2025-07-27 11:53:22,487 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:22 +0000 (0:00:02.491)       0:00:09.594 *********** 
+2025-07-27 11:53:22,514 p=133217 u=master n=ansible | ok: [sm01] => 
+  msg: "\U0001F3AF ФИНАЛЬНЫЙ ТЕСТ:\n\U0001F3AF ФИНАЛЬНЫЙ ТЕСТ КОНТЕЙНЕРОВ ОТ ОБЫЧНОГО ПОЛЬЗОВАТЕЛЯ\nПользователь: master\nУзел: sm01\n\nТест простого контейнера:\nsrun: fatal: No command given to execute.\n\nТест Debian контейнера:\npyxis: importing docker image: docker://debian:unstable-slim\n[2025-07-27T14:53:22.412] error: pyxis: child 3910 failed with error code: 1\n[2025-07-27T14:53:22.412] error: pyxis: failed to import docker image\n[2025-07-27T14:53:22.412] error: pyxis: printing enroot log file:\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Querying registry for permission grant\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Authenticating with user: <anonymous>\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Authentication succeeded\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Fetching image manifest list\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Fetching image manifest\n[2025-07-27T14:53:22.413] error: pyxis:     [INFO] Found all layers in cache\n[2025-07-27T14:53:22.413]
+    error: pyxis:     [INFO] Extracting image layers...\n[2025-07-27T14:53:22.413] error: pyxis:     tar (child): /var/cache/enroot/7eb21030b22200760fb6011eff5978e6bf9e7c8798a34e9a835123cf30f6deb2: Cannot open: Permission denied\n[2025-07-27T14:53:22.413] error: pyxis:     tar (child): Error is not recoverable: exiting now\n[2025-07-27T14:53:22.413] error: pyxis:     tar: Child returned status 2\n[2025-07-27T14:53:22.413] error: pyxis:     tar: Error is not recoverable: exiting now\n[2025-07-27T14:53:22.413] error: pyxis: couldn't start container\n[2025-07-27T14:53:22.413] error: spank: required plugin spank_pyxis.so: task_init() failed with rc=-1\n[2025-07-27T14:53:22.413] error: Failed to invoke spank plugin stack\n[2025-07-27T14:53:22.441] error: pyxis: child 4012 failed with error code: 1\nsrun: error: cn01: task 0: Exited with exit code 1\n\n\U0001F494 Еще есть проблемы с правами\n\nПопробуйте вручную:\nsudo chmod 1777 /run/enroot /var/cache/enroot"
+2025-07-27 11:53:22,534 p=133217 u=master n=ansible | PLAY RECAP ****************************************************************************************************************************************************************************
+2025-07-27 11:53:22,534 p=133217 u=master n=ansible | cn01                       : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:53:22,534 p=133217 u=master n=ansible | cn02                       : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | sm01                       : ok=6    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | sm02                       : ok=3    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | Playbook run took 0 days, 0 hours, 0 minutes, 9 seconds
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | Sunday 27 July 2025  11:53:22 +0000 (0:00:00.048)       0:00:09.643 *********** 
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | =============================================================================== 
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | 🎯 Финальный тест с мастера ----------------------------------------------------------------------------------------------------------------------------------------------------- 2.49s
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | Gathering Facts ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 1.93s
+2025-07-27 11:53:22,535 p=133217 u=master n=ansible | Gathering Facts ---------------------------------------------------------------------------------------------------------------------------------------------------------------- 1.75s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 🔧 Исправление прав доступа директорий Enroot ----------------------------------------------------------------------------------------------------------------------------------- 1.69s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 📝 Обновление конфигурации Enroot ----------------------------------------------------------------------------------------------------------------------------------------------- 1.14s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 🧪 Тест контейнера от обычного пользователя ------------------------------------------------------------------------------------------------------------------------------------- 0.44s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 📊 Результат теста пользователя ------------------------------------------------------------------------------------------------------------------------------------------------- 0.09s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 🎉 ФИНАЛЬНЫЙ РЕЗУЛЬТАТ ---------------------------------------------------------------------------------------------------------------------------------------------------------- 0.05s
+2025-07-27 11:53:22,536 p=133217 u=master n=ansible | 📊 Результат исправления прав --------------------------------------------------------------------------------------------------------------------------------------------------- 0.05s
+2025-07-27 11:57:03,858 p=133473 u=master n=ansible | PLAY [🔧 ИСПРАВЛЕНИЕ ПРАВ ДОСТУПА КЕША ENROOT] ****************************************************************************************************************************************
+2025-07-27 11:57:03,907 p=133473 u=master n=ansible | TASK [🔧 Полное исправление директорий Enroot] ****************************************************************************************************************************************
+2025-07-27 11:57:03,907 p=133473 u=master n=ansible | Sunday 27 July 2025  11:57:03 +0000 (0:00:00.050)       0:00:00.050 *********** 
+2025-07-27 11:57:05,035 p=133473 u=master n=ansible | fatal: [cn01]: FAILED! => changed=true 
+  cmd: "echo \"\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА cn01\"\n\n# Останавливаем все контейнеры\npkill -f enroot || true\n\n# Удаляем старые кеши с неправильными правами\necho \"Очистка старых кешей...\"\nrm -rf /var/cache/enroot/*\nrm -rf /run/enroot/*\n\n# Пересоздаем директории с правильными правами\necho \"Создание директорий с правильными правами...\"\nmkdir -p /var/cache/enroot\nmkdir -p /var/lib/enroot\nmkdir -p /run/enroot\n\n# КРИТИЧНО: права как у /tmp!\nchmod 1777 /var/cache/enroot\nchmod 1777 /run/enroot\nchmod 755 /var/lib/enroot\n\n# Проверяем результат\necho \"Проверка прав:\"\nls -la /var/cache/ | grep enroot\nls -la /run/ | grep enroot\nls -la /var/lib/ | grep enroot\n\necho \"✅ Права исправлены на cn01\""
+  delta: '0:00:00.044481'
+  end: '2025-07-27 14:57:05.000730'
+  msg: non-zero return code
+  rc: -15
+  start: '2025-07-27 14:57:04.956249'
+  stderr: ''
+  stderr_lines: <omitted>
+  stdout: "\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА cn01"
+  stdout_lines: <omitted>
+2025-07-27 11:57:05,047 p=133473 u=master n=ansible | fatal: [sm01]: FAILED! => changed=true 
+  cmd: "echo \"\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА sm01\"\n\n# Останавливаем все контейнеры\npkill -f enroot || true\n\n# Удаляем старые кеши с неправильными правами\necho \"Очистка старых кешей...\"\nrm -rf /var/cache/enroot/*\nrm -rf /run/enroot/*\n\n# Пересоздаем директории с правильными правами\necho \"Создание директорий с правильными правами...\"\nmkdir -p /var/cache/enroot\nmkdir -p /var/lib/enroot\nmkdir -p /run/enroot\n\n# КРИТИЧНО: права как у /tmp!\nchmod 1777 /var/cache/enroot\nchmod 1777 /run/enroot\nchmod 755 /var/lib/enroot\n\n# Проверяем результат\necho \"Проверка прав:\"\nls -la /var/cache/ | grep enroot\nls -la /run/ | grep enroot\nls -la /var/lib/ | grep enroot\n\necho \"✅ Права исправлены на sm01\""
+  delta: '0:00:00.024258'
+  end: '2025-07-27 14:57:05.019073'
+  msg: non-zero return code
+  rc: -15
+  start: '2025-07-27 14:57:04.994815'
+  stderr: ''
+  stderr_lines: <omitted>
+  stdout: "\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА sm01"
+  stdout_lines: <omitted>
+2025-07-27 11:57:05,285 p=133473 u=master n=ansible | fatal: [sm02]: FAILED! => changed=true 
+  cmd: "echo \"\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА sm02\"\n\n# Останавливаем все контейнеры\npkill -f enroot || true\n\n# Удаляем старые кеши с неправильными правами\necho \"Очистка старых кешей...\"\nrm -rf /var/cache/enroot/*\nrm -rf /run/enroot/*\n\n# Пересоздаем директории с правильными правами\necho \"Создание директорий с правильными правами...\"\nmkdir -p /var/cache/enroot\nmkdir -p /var/lib/enroot\nmkdir -p /run/enroot\n\n# КРИТИЧНО: права как у /tmp!\nchmod 1777 /var/cache/enroot\nchmod 1777 /run/enroot\nchmod 755 /var/lib/enroot\n\n# Проверяем результат\necho \"Проверка прав:\"\nls -la /var/cache/ | grep enroot\nls -la /run/ | grep enroot\nls -la /var/lib/ | grep enroot\n\necho \"✅ Права исправлены на sm02\""
+  delta: '0:00:00.052175'
+  end: '2025-07-27 14:57:05.255316'
+  msg: non-zero return code
+  rc: -15
+  start: '2025-07-27 14:57:05.203141'
+  stderr: ''
+  stderr_lines: <omitted>
+  stdout: "\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА sm02"
+  stdout_lines: <omitted>
+2025-07-27 11:57:05,290 p=133473 u=master n=ansible | fatal: [cn02]: FAILED! => changed=true 
+  cmd: "echo \"\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА cn02\"\n\n# Останавливаем все контейнеры\npkill -f enroot || true\n\n# Удаляем старые кеши с неправильными правами\necho \"Очистка старых кешей...\"\nrm -rf /var/cache/enroot/*\nrm -rf /run/enroot/*\n\n# Пересоздаем директории с правильными правами\necho \"Создание директорий с правильными правами...\"\nmkdir -p /var/cache/enroot\nmkdir -p /var/lib/enroot\nmkdir -p /run/enroot\n\n# КРИТИЧНО: права как у /tmp!\nchmod 1777 /var/cache/enroot\nchmod 1777 /run/enroot\nchmod 755 /var/lib/enroot\n\n# Проверяем результат\necho \"Проверка прав:\"\nls -la /var/cache/ | grep enroot\nls -la /run/ | grep enroot\nls -la /var/lib/ | grep enroot\n\necho \"✅ Права исправлены на cn02\""
+  delta: '0:00:00.052947'
+  end: '2025-07-27 14:57:05.261805'
+  msg: non-zero return code
+  rc: -15
+  start: '2025-07-27 14:57:05.208858'
+  stderr: ''
+  stderr_lines: <omitted>
+  stdout: "\U0001F527 ИСПРАВЛЕНИЕ ENROOT ДИРЕКТОРИЙ НА cn02"
+  stdout_lines: <omitted>
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | PLAY RECAP ****************************************************************************************************************************************************************************
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | cn01                       : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | cn02                       : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | sm01                       : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | sm02                       : ok=0    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-07-27 11:57:05,292 p=133473 u=master n=ansible | Playbook run took 0 days, 0 hours, 0 minutes, 1 seconds
+2025-07-27 11:57:05,293 p=133473 u=master n=ansible | Sunday 27 July 2025  11:57:05 +0000 (0:00:01.385)       0:00:01.436 *********** 
+2025-07-27 11:57:05,293 p=133473 u=master n=ansible | =============================================================================== 
+2025-07-27 11:57:05,293 p=133473 u=master n=ansible | 🔧 Полное исправление директорий Enroot ----------------------------------------------------------------------------------------------------------------------------------------- 1.39s
+2025-07-27 11:58:48,826 p=133564 u=master n=ansible | cn01 | CHANGED | rc=0 >>
+
+
+2025-07-27 11:58:48,828 p=133564 u=master n=ansible | sm01 | CHANGED | rc=0 >>
+
+
+2025-07-27 11:58:48,970 p=133564 u=master n=ansible | sm02 | CHANGED | rc=0 >>
+
+
+2025-07-27 11:58:49,070 p=133564 u=master n=ansible | cn02 | CHANGED | rc=0 >>
+
+
+2025-07-27 12:02:33,573 p=133756 u=master n=ansible | PLAY [🔧 ИСПРАВЛЕНИЕ ENROOT CAPABILITIES] *********************************************************************************************************************************************
+2025-07-27 12:02:33,622 p=133756 u=master n=ansible | TASK [📝 Создание правильной конфигурации Enroot для unprivileged пользователей] ******************************************************************************************************
+2025-07-27 12:02:33,622 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:33 +0000 (0:00:00.051)       0:00:00.051 *********** 
+2025-07-27 12:02:35,439 p=133756 u=master n=ansible | changed: [sm01]
+2025-07-27 12:02:35,825 p=133756 u=master n=ansible | changed: [cn01]
+2025-07-27 12:02:36,023 p=133756 u=master n=ansible | changed: [cn02]
+2025-07-27 12:02:36,026 p=133756 u=master n=ansible | changed: [sm02]
+2025-07-27 12:02:36,034 p=133756 u=master n=ansible | TASK [🔧 Проверка user namespaces на системе] *****************************************************************************************************************************************
+2025-07-27 12:02:36,034 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:36 +0000 (0:00:02.411)       0:00:02.463 *********** 
+2025-07-27 12:02:36,433 p=133756 u=master n=ansible | changed: [sm02]
+2025-07-27 12:02:36,434 p=133756 u=master n=ansible | changed: [cn01]
+2025-07-27 12:02:36,439 p=133756 u=master n=ansible | changed: [sm01]
+2025-07-27 12:02:36,443 p=133756 u=master n=ansible | changed: [cn02]
+2025-07-27 12:02:36,451 p=133756 u=master n=ansible | TASK [📊 Результат проверки namespaces] ***********************************************************************************************************************************************
+2025-07-27 12:02:36,451 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:36 +0000 (0:00:00.417)       0:00:02.880 *********** 
+2025-07-27 12:02:36,493 p=133756 u=master n=ansible | ok: [sm01] => 
+  userns_check.stdout_lines:
+  - 'Проверка поддержки user namespaces:'
+  - 'max_user_namespaces: 46581'
+  - 'unprivileged_userns_clone: 1'
+2025-07-27 12:02:36,494 p=133756 u=master n=ansible | ok: [sm02] => 
+  userns_check.stdout_lines:
+  - 'Проверка поддержки user namespaces:'
+  - 'max_user_namespaces: 46581'
+  - 'unprivileged_userns_clone: 1'
+2025-07-27 12:02:36,496 p=133756 u=master n=ansible | ok: [cn01] => 
+  userns_check.stdout_lines:
+  - 'Проверка поддержки user namespaces:'
+  - 'max_user_namespaces: 46581'
+  - 'unprivileged_userns_clone: 1'
+2025-07-27 12:02:36,512 p=133756 u=master n=ansible | ok: [cn02] => 
+  userns_check.stdout_lines:
+  - 'Проверка поддержки user namespaces:'
+  - 'max_user_namespaces: 46581'
+  - 'unprivileged_userns_clone: 1'
+2025-07-27 12:02:36,519 p=133756 u=master n=ansible | TASK [🔧 Альтернативная конфигурация для старых систем] *******************************************************************************************************************************
+2025-07-27 12:02:36,519 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:36 +0000 (0:00:00.067)       0:00:02.948 *********** 
+2025-07-27 12:02:36,559 p=133756 u=master n=ansible | skipping: [sm01]
+2025-07-27 12:02:36,560 p=133756 u=master n=ansible | skipping: [sm02]
+2025-07-27 12:02:36,562 p=133756 u=master n=ansible | skipping: [cn01]
+2025-07-27 12:02:36,576 p=133756 u=master n=ansible | skipping: [cn02]
+2025-07-27 12:02:36,647 p=133756 u=master n=ansible | PLAY [🧪 ТЕСТ ИСПРАВЛЕНИЯ CAPABILITIES] ***********************************************************************************************************************************************
+2025-07-27 12:02:36,688 p=133756 u=master n=ansible | TASK [🧪 Тест после исправления capabilities] *****************************************************************************************************************************************
+2025-07-27 12:02:36,689 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:36 +0000 (0:00:00.169)       0:00:03.118 *********** 
+2025-07-27 12:02:41,913 p=133756 u=master n=ansible | changed: [sm01]
+2025-07-27 12:02:41,922 p=133756 u=master n=ansible | TASK [🎉 РЕЗУЛЬТАТ ТЕСТА CAPABILITIES] ************************************************************************************************************************************************
+2025-07-27 12:02:41,922 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:41 +0000 (0:00:05.233)       0:00:08.351 *********** 
+2025-07-27 12:02:41,950 p=133756 u=master n=ansible | ok: [sm01] => 
+  msg: "\U0001F9EA ТЕСТ ПОСЛЕ ИСПРАВЛЕНИЯ CAPABILITIES:\n\U0001F9EA ТЕСТ КОНТЕЙНЕРА ПОСЛЕ ИСПРАВЛЕНИЯ CAPABILITIES\nПользователь: master\n\nПроверяем конфигурацию enroot:\n# Enroot Configuration for Unprivileged Users\n# Generated by Ansible\n\n# Basic paths\nENROOT_DATA_PATH /var/lib/enroot\nENROOT_CACHE_PATH /var/cache/enroot\nENROOT_RUNTIME_PATH /run/enroot\n\n# Mount points\nENROOT_MOUNT_HOME /home:/home\n\nТест простого контейнера:\nsrun: fatal: No command given to execute.\n\nТест Ubuntu контейнера:\npyxis: importing docker image: docker://ubuntu:22.04\n[2025-07-27T15:02:41.845] error: pyxis: child 5332 failed with error code: 1\n[2025-07-27T15:02:41.845] error: pyxis: failed to import docker image\n[2025-07-27T15:02:41.845] error: pyxis: printing enroot log file:\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Querying registry for permission grant\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Authenticating with user: <anonymous>\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO]
+    Authentication succeeded\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Fetching image manifest list\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Fetching image manifest\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Downloading 2 missing layers...\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Extracting image layers...\n[2025-07-27T15:02:41.845] error: pyxis:     [INFO] Converting whiteouts...\n[2025-07-27T15:02:41.845] error: pyxis:     enroot-aufs2ovlfs: failed to set capabilities: Operation not permitted\n[2025-07-27T15:02:41.845] error: pyxis: couldn't start container\n[2025-07-27T15:02:41.845] error: spank: required plugin spank_pyxis.so: task_init() failed with rc=-1\n[2025-07-27T15:02:41.845] error: Failed to invoke spank plugin stack\n[2025-07-27T15:02:41.879] error: pyxis: child 5480 failed with error code: 1\nsrun: error: cn01: task 0: Exited with exit code 1\n\n\U0001F494 Все еще проблемы с capabilities"
+2025-07-27 12:02:41,975 p=133756 u=master n=ansible | PLAY RECAP ****************************************************************************************************************************************************************************
+2025-07-27 12:02:41,975 p=133756 u=master n=ansible | cn01                       : ok=3    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-07-27 12:02:41,975 p=133756 u=master n=ansible | cn02                       : ok=3    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-07-27 12:02:41,975 p=133756 u=master n=ansible | sm01                       : ok=5    changed=3    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-07-27 12:02:41,975 p=133756 u=master n=ansible | sm02                       : ok=3    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | Playbook run took 0 days, 0 hours, 0 minutes, 8 seconds
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | Sunday 27 July 2025  12:02:41 +0000 (0:00:00.053)       0:00:08.405 *********** 
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | =============================================================================== 
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 🧪 Тест после исправления capabilities ------------------------------------------------------------------------------------------------------------------------------------------ 5.23s
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 📝 Создание правильной конфигурации Enroot для unprivileged пользователей ------------------------------------------------------------------------------------------------------- 2.41s
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 🔧 Проверка user namespaces на системе ------------------------------------------------------------------------------------------------------------------------------------------ 0.42s
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 🔧 Альтернативная конфигурация для старых систем -------------------------------------------------------------------------------------------------------------------------------- 0.17s
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 📊 Результат проверки namespaces ------------------------------------------------------------------------------------------------------------------------------------------------ 0.07s
+2025-07-27 12:02:41,976 p=133756 u=master n=ansible | 🎉 РЕЗУЛЬТАТ ТЕСТА CAPABILITIES ------------------------------------------------------------------------------------------------------------------------------------------------- 0.05s
+2025-07-27 12:12:51,042 p=134037 u=master n=ansible | PLAY [🔧 ПРАВИЛЬНОЕ ИСПРАВЛЕНИЕ ENROOT/PYXIS] *****************************************************************************************************************************************
+2025-07-27 12:12:51,091 p=134037 u=master n=ansible | TASK [🔧 Установка правильных capabilities на enroot] *********************************************************************************************************************************
+2025-07-27 12:12:51,092 p=134037 u=master n=ansible | Sunday 27 July 2025  12:12:51 +0000 (0:00:00.051)       0:00:00.051 *********** 
+2025-07-27 12:12:52,841 p=134037 u=master n=ansible | changed: [sm01]
+2025-07-27 12:13:01,519 p=134037 u=master n=ansible | changed: [sm02]
+2025-07-27 12:13:03,796 p=134037 u=master n=ansible | changed: [cn01]
+2025-07-27 12:13:06,392 p=134037 u=master n=ansible | changed: [cn02]
+2025-07-27 12:13:06,399 p=134037 u=master n=ansible | TASK [🔧 Настройка user namespaces и subuid/subgid] ***********************************************************************************************************************************
+2025-07-27 12:13:06,400 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:06 +0000 (0:00:15.308)       0:00:15.359 *********** 
+2025-07-27 12:13:06,683 p=134037 u=master n=ansible | changed: [sm01]
+2025-07-27 12:13:06,686 p=134037 u=master n=ansible | changed: [sm02]
+2025-07-27 12:13:06,721 p=134037 u=master n=ansible | changed: [cn01]
+2025-07-27 12:13:06,727 p=134037 u=master n=ansible | changed: [cn02]
+2025-07-27 12:13:06,736 p=134037 u=master n=ansible | TASK [📝 Создание ОКОНЧАТЕЛЬНОЙ конфигурации Enroot] **********************************************************************************************************************************
+2025-07-27 12:13:06,736 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:06 +0000 (0:00:00.336)       0:00:15.695 *********** 
+2025-07-27 12:13:06,793 p=134037 u=master n=ansible | fatal: [sm02]: FAILED! => 
+  msg: "The task includes an option with an undefined variable. The error was: 'ansible_processor_vcpus' is undefined. 'ansible_processor_vcpus' is undefined\n\nThe error appears to be in '/home/master/22Jul/slurm-hpc-cluster/playbooks/proper_fix.yml': line 70, column 7, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n\n    - name: \"\U0001F4DD Создание ОКОНЧАТЕЛЬНОЙ конфигурации Enroot\"\n      ^ here"
+2025-07-27 12:13:07,714 p=134037 u=master n=ansible | changed: [sm01]
+2025-07-27 12:13:07,723 p=134037 u=master n=ansible | changed: [cn01]
+2025-07-27 12:13:07,733 p=134037 u=master n=ansible | changed: [cn02]
+2025-07-27 12:13:07,741 p=134037 u=master n=ansible | TASK [📊 Результат настройки] *********************************************************************************************************************************************************
+2025-07-27 12:13:07,741 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:07 +0000 (0:00:01.004)       0:00:16.700 *********** 
+2025-07-27 12:13:07,776 p=134037 u=master n=ansible | ok: [sm01] => 
+  msg: "\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ЗАВЕРШЕНА НА sm01:\n\n\U0001F4CA Capabilities:\n\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ENROOT НА sm01\nНайденные enroot исполняемые файлы:\n/usr/bin/enroot-aufs2ovlfs\n/usr/bin/enroot-makeself\n/usr/bin/enroot-switchroot\n/usr/bin/enroot\n/usr/bin/enroot-mksquashovlfs\n/usr/bin/enroot-nsenter\n/usr/bin/enroot-mount\nНастройка /usr/bin/enroot-aufs2ovlfs...\nНастройка /usr/bin/enroot-makeself...\nНастройка /usr/bin/enroot-switchroot...\nНастройка /usr/bin/enroot...\nНастройка /usr/bin/enroot-mksquashovlfs...\nНастройка /usr/bin/enroot-nsenter...\nНастройка /usr/bin/enroot-mount...\nНастройка enroot-aufs2ovlfs...\nПроверка capabilities:\n/usr/bin/enroot-aufs2ovlfs: /usr/bin/enroot-aufs2ovlfs cap_sys_admin=ep\n/usr/bin/enroot-makeself:\n/usr/bin/enroot-switchroot:\n/usr/bin/enroot:\n/usr/bin/enroot-mksquashovlfs:\n/usr/bin/enroot-nsenter:\n/usr/bin/enroot-mount:\n\n\U0001F4CA User namespaces:\n\U0001F527 НАСТРОЙКА USER NAMESPACES\nUser namespaces настроены\nsubuid:
+    master:100000:65536\nsubgid: master:100000:65536"
+2025-07-27 12:13:07,780 p=134037 u=master n=ansible | ok: [cn01] => 
+  msg: "\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ЗАВЕРШЕНА НА cn01:\n\n\U0001F4CA Capabilities:\n\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ENROOT НА cn01\nНайденные enroot исполняемые файлы:\n/usr/bin/enroot-makeself\n/usr/bin/enroot-switchroot\n/usr/bin/enroot\n/usr/bin/enroot-aufs2ovlfs\n/usr/bin/enroot-mksquashovlfs\n/usr/bin/enroot-nsenter\n/usr/bin/enroot-mount\nНастройка /usr/bin/enroot-makeself...\nНастройка /usr/bin/enroot-switchroot...\nНастройка /usr/bin/enroot...\nНастройка /usr/bin/enroot-aufs2ovlfs...\nНастройка /usr/bin/enroot-mksquashovlfs...\nНастройка /usr/bin/enroot-nsenter...\nНастройка /usr/bin/enroot-mount...\nНастройка enroot-aufs2ovlfs...\nПроверка capabilities:\n/usr/bin/enroot-makeself:\n/usr/bin/enroot-switchroot:\n/usr/bin/enroot:\n/usr/bin/enroot-aufs2ovlfs: /usr/bin/enroot-aufs2ovlfs cap_sys_admin=ep\n/usr/bin/enroot-mksquashovlfs:\n/usr/bin/enroot-nsenter:\n/usr/bin/enroot-mount:\n\n\U0001F4CA User namespaces:\n\U0001F527 НАСТРОЙКА USER NAMESPACES\nUser namespaces настроены\nsubuid:
+    master:100000:65536\nsubgid: master:100000:65536"
+2025-07-27 12:13:07,795 p=134037 u=master n=ansible | ok: [cn02] => 
+  msg: "\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ЗАВЕРШЕНА НА cn02:\n\n\U0001F4CA Capabilities:\n\U0001F527 ПРАВИЛЬНАЯ НАСТРОЙКА ENROOT НА cn02\nНайденные enroot исполняемые файлы:\n/usr/bin/enroot-makeself\n/usr/bin/enroot-mksquashovlfs\n/usr/bin/enroot-nsenter\n/usr/bin/enroot-mount\n/usr/bin/enroot\n/usr/bin/enroot-switchroot\n/usr/bin/enroot-aufs2ovlfs\nНастройка /usr/bin/enroot-makeself...\nНастройка /usr/bin/enroot-mksquashovlfs...\nНастройка /usr/bin/enroot-nsenter...\nНастройка /usr/bin/enroot-mount...\nНастройка /usr/bin/enroot...\nНастройка /usr/bin/enroot-switchroot...\nНастройка /usr/bin/enroot-aufs2ovlfs...\nНастройка enroot-aufs2ovlfs...\nПроверка capabilities:\n/usr/bin/enroot-makeself:\n/usr/bin/enroot-mksquashovlfs:\n/usr/bin/enroot-nsenter:\n/usr/bin/enroot-mount:\n/usr/bin/enroot:\n/usr/bin/enroot-switchroot:\n/usr/bin/enroot-aufs2ovlfs: /usr/bin/enroot-aufs2ovlfs cap_sys_admin=ep\n\n\U0001F4CA User namespaces:\n\U0001F527 НАСТРОЙКА USER NAMESPACES\nUser namespaces настроены\nsubuid:
+    master:100000:65536\nsubgid: master:100000:65536"
+2025-07-27 12:13:07,866 p=134037 u=master n=ansible | PLAY [🧪 ФИНАЛЬНЫЙ ТЕСТ ПРАВИЛЬНОГО РЕШЕНИЯ] ******************************************************************************************************************************************
+2025-07-27 12:13:07,910 p=134037 u=master n=ansible | TASK [🧪 Тест после ПРАВИЛЬНОГО исправления] ******************************************************************************************************************************************
+2025-07-27 12:13:07,910 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:07 +0000 (0:00:00.169)       0:00:16.870 *********** 
+2025-07-27 12:13:18,088 p=134037 u=master n=ansible | changed: [sm01]
+2025-07-27 12:13:18,097 p=134037 u=master n=ansible | TASK [🎉 РЕЗУЛЬТАТ ПРАВИЛЬНОГО РЕШЕНИЯ] ***********************************************************************************************************************************************
+2025-07-27 12:13:18,097 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:18 +0000 (0:00:10.186)       0:00:27.056 *********** 
+2025-07-27 12:13:18,126 p=134037 u=master n=ansible | ok: [sm01] => 
+  msg: "\U0001F9EA ФИНАЛЬНЫЙ ТЕСТ ПРАВИЛЬНОГО РЕШЕНИЯ:\n\U0001F9EA ФИНАЛЬНЫЙ ТЕСТ ПОСЛЕ ПРАВИЛЬНОГО ИСПРАВЛЕНИЯ\nПользователь: master\n\n=== Проверка системы ===\nUser namespaces: 1\nMax namespaces: 65536\nsubuid: master:100000:65536\n\n=== ТЕСТ ПРОСТОГО КОНТЕЙНЕРА ===\nsrun: fatal: No command given to execute.\n\n=== ТЕСТ UBUNTU КОНТЕЙНЕРА ===\npyxis: importing docker image: docker://ubuntu:22.04\n[2025-07-27T15:13:11.121] error: pyxis: child 6576 failed with error code: 1\n[2025-07-27T15:13:11.121] error: pyxis: failed to import docker image\n[2025-07-27T15:13:11.121] error: pyxis: printing enroot log file:\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Querying registry for permission grant\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Authenticating with user: <anonymous>\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Authentication succeeded\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Fetching image manifest list\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO]
+    Fetching image manifest\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Found all layers in cache\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Extracting image layers...\n[2025-07-27T15:13:11.121] error: pyxis:     [INFO] Converting whiteouts...\n[2025-07-27T15:13:11.121] error: pyxis:     enroot-aufs2ovlfs: failed to set capabilities: Operation not permitted\n[2025-07-27T15:13:11.121] error: pyxis: couldn't start container\n[2025-07-27T15:13:11.121] error: spank: required plugin spank_pyxis.so: task_init() failed with rc=-1\n[2025-07-27T15:13:11.121] error: Failed to invoke spank plugin stack\n[2025-07-27T15:13:11.159] error: pyxis: child 6679 failed with error code: 1\nsrun: error: cn01: task 0: Exited with exit code 1\n\n=== ТЕСТ СЛОЖНОГО КОНТЕЙНЕРА ===\npyxis: importing docker image: docker://ubuntu:22.04\n[2025-07-27T15:13:18.003] error: pyxis: child 3933 failed with error code: 1\n[2025-07-27T15:13:18.003] error: pyxis: failed to import docker image\n[2025-07-27T15:13:18.003]
+    error: pyxis: printing enroot log file:\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Querying registry for permission grant\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Authenticating with user: <anonymous>\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Authentication succeeded\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Fetching image manifest list\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Fetching image manifest\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Downloading 2 missing layers...\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Extracting image layers...\n[2025-07-27T15:13:18.004] error: pyxis:     [INFO] Converting whiteouts...\n[2025-07-27T15:13:18.004] error: pyxis:     enroot-aufs2ovlfs: failed to set capabilities: Operation not permitted\n[2025-07-27T15:13:18.004] error: pyxis: couldn't start container\n[2025-07-27T15:13:18.004] error: spank: required plugin spank_pyxis.so: task_init() failed with rc=-1\n[2025-07-27T15:13:18.004]
+    error: Failed to invoke spank plugin stack\n[2025-07-27T15:13:18.054] error: pyxis: child 4121 failed with error code: 1\nsrun: error: cn02: task 0: Exited with exit code 1\n\n\U0001F494 Все еще проблемы с capabilities - нужно проверить setcap"
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | PLAY RECAP ****************************************************************************************************************************************************************************
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | cn01                       : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | cn02                       : ok=4    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | sm01                       : ok=6    changed=4    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | sm02                       : ok=2    changed=2    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0   
+2025-07-27 12:13:18,151 p=134037 u=master n=ansible | Playbook run took 0 days, 0 hours, 0 minutes, 27 seconds
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | Sunday 27 July 2025  12:13:18 +0000 (0:00:00.054)       0:00:27.111 *********** 
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | =============================================================================== 
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 🔧 Установка правильных capabilities на enroot --------------------------------------------------------------------------------------------------------------------------------- 15.31s
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 🧪 Тест после ПРАВИЛЬНОГО исправления ------------------------------------------------------------------------------------------------------------------------------------------ 10.19s
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 📝 Создание ОКОНЧАТЕЛЬНОЙ конфигурации Enroot ----------------------------------------------------------------------------------------------------------------------------------- 1.00s
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 🔧 Настройка user namespaces и subuid/subgid ------------------------------------------------------------------------------------------------------------------------------------ 0.34s
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 📊 Результат настройки ---------------------------------------------------------------------------------------------------------------------------------------------------------- 0.17s
+2025-07-27 12:13:18,152 p=134037 u=master n=ansible | 🎉 РЕЗУЛЬТАТ ПРАВИЛЬНОГО РЕШЕНИЯ ------------------------------------------------------------------------------------------------------------------------------------------------ 0.05s

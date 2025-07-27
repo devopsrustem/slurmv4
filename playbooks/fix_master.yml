@@ -1,0 +1,69 @@
+# fix_master.yml
+---
+- name: "🔧 ИСПРАВЛЕНИЕ МАСТЕРА - УСТАНОВКА PYXIS"
+  hosts: slurm_master
+  become: true
+  gather_facts: false
+  
+  tasks:
+    - name: "📦 Установка pyxis на мастер"
+      shell: |
+        echo "🔧 УСТАНОВКА PYXIS НА МАСТЕР"
+        
+        # Проверяем headers
+        if [ ! -f /opt/slurm/include/slurm/spank.h ]; then
+          echo "❌ Headers не найдены!"
+          exit 1
+        fi
+        
+        # Установка зависимостей
+        apt update
+        apt install -y build-essential pkg-config
+        
+        # Подготовка build директории
+        mkdir -p /tmp/pyxis-build
+        cd /tmp/pyxis-build
+        rm -rf *
+        
+        # Скачивание и компиляция
+        wget -q https://github.com/NVIDIA/pyxis/archive/v0.20.0.tar.gz
+        tar -xf v0.20.0.tar.gz --strip-components=1
+        
+        export CPPFLAGS="-I/opt/slurm/include"
+        export LDFLAGS="-L/opt/slurm/lib"
+        
+        make clean || true
+        make
+        
+        # ОФИЦИАЛЬНАЯ УСТАНОВКА
+        make install
+        
+        echo "✅ Pyxis установлен на мастер!"
+        echo "Плагин: $(ls -la /usr/local/lib/slurm/spank_pyxis.so)"
+        echo "Конфиг: $(ls -la /usr/local/share/pyxis/pyxis.conf)"
+        
+      register: master_pyxis_install
+      
+    - name: "📊 Результат установки на мастер"
+      debug:
+        var: master_pyxis_install.stdout_lines
+        
+    - name: "🧪 ТЕСТ НА МАСТЕРЕ"
+      shell: |
+        echo "🧪 ТЕСТ КОНТЕЙНЕРА НА МАСТЕРЕ"
+        timeout 60 srun --container-image=docker://hello-world 2>&1
+      register: master_test
+      failed_when: false
+      
+    - name: "🎉 РЕЗУЛЬТАТ ТЕСТА МАСТЕРА"
+      debug:
+        msg: |
+          🧪 ТЕСТ НА МАСТЕРЕ:
+          {{ master_test.stdout }}
+          {{ master_test.stderr }}
+          
+          {% if 'Hello from Docker' in master_test.stdout %}
+          🎉🎉🎉 МАСТЕР ТОЖЕ РАБОТАЕТ! ПОЛНАЯ ПОБЕДА! 🎉🎉🎉
+          {% else %}
+          💔 Мастер еще не работает, проверяем...
+          {% endif %}
