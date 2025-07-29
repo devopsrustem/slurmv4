@@ -28,8 +28,6 @@ galaxy_info:
 dependencies:
   - role: common
     # Базовая настройка узла - MUNGE, NFS, пользователи
-  - role: slurm_build
-    # Slurm должен быть скомпилирован и установлен
 
 # Роль выполняется на всех compute и gpu узлах
 allow_duplicates: false

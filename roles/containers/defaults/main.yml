@@ -1,66 +1,82 @@
 # roles/containers/defaults/main.yml
 ---
 # =============================================================================
-# ПЕРЕМЕННЫЕ ДЛЯ ENROOT + PYXIS (ОФИЦИАЛЬНЫЙ ПОДХОД)
+# КОНТЕЙНЕРЫ DEFAULTS (DEEPOPS ПОДХОД)
 # =============================================================================
 
-# Версии компонентов
+# Версии (DeepOps совместимые)
 enroot_version: "3.5.0"
 pyxis_version: "0.20.0"
 
-# URL для скачивания
+# URLs
 enroot_download_url: "https://github.com/NVIDIA/enroot/releases/download/v{{ enroot_version }}"
-pyxis_download_url: "https://github.com/NVIDIA/pyxis/archive/v{{ pyxis_version }}.tar.gz"
+pyxis_git_repo: "https://github.com/NVIDIA/pyxis.git"
 
 # =============================================================================
-# СИСТЕМНЫЕ ПУТИ (ЕДИНООБРАЗИЕ)
+# ПУТИ (DEEPOPS СТАНДАРТ)
 # =============================================================================
-
-# Slurm installation prefix (должен совпадать с slurm_build!)
-slurm_install_prefix: "/opt/slurm"
 
 # Enroot пути
 enroot_config_dir: "/etc/enroot"
-enroot_data_dir: "/var/lib/enroot"
+enroot_data_dir: "/var/lib/enroot" 
 enroot_cache_dir: "/var/cache/enroot"
 enroot_runtime_path: "/run/enroot"
-enroot_temp_dir: "/tmp/"
-# Pyxis build директория (временная, только для компиляции)
-pyxis_build_dir: "/tmp/pyxis-build"
 
-# ОФИЦИАЛЬНАЯ конфигурация SPANK
-plugstack_config_dir: "/etc/slurm/plugstack.conf.d"
+# Slurm integration paths (СИСТЕМНЫЕ ПАКЕТЫ!)
+slurm_include_path: "/usr/include/slurm"
+slurm_lib_path: "/usr/lib/x86_64-linux-gnu"
+pyxis_install_path: "/usr/local/lib/slurm"
+
+# SPANK configuration
+spank_plugin_dir: "/usr/local/lib/slurm"
+plugstack_config_path: "/etc/slurm/plugstack.conf"
 
 # =============================================================================
-# ENROOT НАСТРОЙКИ
+# NVIDIA CONTAINER TOOLKIT
 # =============================================================================
 
-# Runtime настройки
-enroot_mount_home: true
-enroot_mount_tmp: true
-pyxis_run_tmpfs_size: "16G"
+# NVIDIA settings
+nvidia_container_toolkit_enabled: true
+nvidia_container_runtime_enabled: true
 
-# Storage mapping
-enroot_bind_mounts:
+# GPU detection
+gpu_support_enabled: true
+nvidia_visible_devices: "all"
+nvidia_driver_capabilities: "compute,utility"
+
+# =============================================================================
+# ENROOT КОНФИГУРАЦИЯ (DEEPOPS ОПТИМИЗИРОВАННАЯ)
+# =============================================================================
+
+# Storage settings
+enroot_squashfs_support: true
+enroot_gzip_program: "pigz"
+
+# Security (DeepOps defaults)
+enroot_allow_privileged: true
+enroot_allow_setuid: true
+enroot_restrict_dev: false
+
+# Mount настройки
+enroot_mount_binds:
   - "/home:/home"
   - "/sw:/sw"
   - "/opt/slurm:/opt/slurm:ro"
 
-# GPU settings
-enroot_restrict_dev: true
-enroot_gpu_support: true
-enroot_allow_privileged: true
-enroot_allow_setuid: true
+# Runtime limits
+enroot_max_containers_per_user: 100
+enroot_max_processors: "{{ ansible_processor_vcpus | default(4) }}"
+enroot_max_memory: "{{ ((ansible_memtotal_mb | default(8000)) * 0.8) | int }}M"
 
-# Container registry settings
-container_registry_default: "docker.io"
-container_squashfs_support: true
+# Networking
+enroot_mount_nvidia: true
+enroot_mount_home: true
 
 # =============================================================================
-# СИСТЕМНЫЕ ЗАВИСИМОСТИ
+# СИСТЕМНЫЕ ПАКЕТЫ
 # =============================================================================
 
-# Пакеты для Enroot
+# Основные зависимости (DeepOps список)
 enroot_system_packages:
   - fuse3
   - squashfs-tools
@@ -70,48 +86,100 @@ enroot_system_packages:
   - zstd
   - pigz
   - pv
+  - jq
 
-# Build зависимости для Pyxis (минимальные)
+# Build зависимости для Pyxis
 pyxis_build_packages:
   - build-essential
   - pkg-config
+  - libslurm-dev  # UBUNTU СИСТЕМНЫЙ ПАКЕТ!
+  - git
+
+# NVIDIA пакеты
+nvidia_packages:
+  - nvidia-container-toolkit
+  - nvidia-container-runtime
 
 # =============================================================================
-# ПРОИЗВОДИТЕЛЬНОСТЬ И ЛИМИТЫ
+# ЛОГИРОВАНИЕ И ОТЛАДКА
 # =============================================================================
 
-# Limits
-enroot_max_containers_per_user: 10
-enroot_max_processors: "{{ ansible_processor_vcpus }}"
-enroot_max_memory: "{{ (ansible_memtotal_mb * 0.8) | int }}M"
-
-# Логирование
+# Logging levels
 enroot_log_level: "INFO"
-pyxis_log_level: "info"
+containers_debug_enabled: false
 
-# =============================================================================
-# ПРОВЕРКИ
-# =============================================================================
-
-# Включить проверки после установки
+# Verification settings
 containers_verify_installation: true
-containers_test_nvidia_runtime: true
+containers_run_tests: true
 
 # =============================================================================
-# УДАЛЕННЫЕ ПЕРЕМЕННЫЕ (больше не нужны!)
+# DEEPOPS СПЕЦИФИЧНЫЕ НАСТРОЙКИ
 # =============================================================================
 
-# ❌ pyxis_library_path - плагин устанавливается в /usr/local/lib/slurm/
-# ❌ pyxis_spank_config - используется plugstack.conf.d/
-# ❌ slurm_prolog_dir, slurm_epilog_dir - не нужны для базовой функциональности  
-# ❌ enroot_prolog_enabled, enroot_epilog_enabled - упрощаем
+# Use system packages where possible (DeepOps approach)
+use_system_slurm_packages: true
+
+# Build from source only when necessary
+force_pyxis_rebuild: false
+
+# Container registry settings
+default_container_registry: "docker.io"
+
+# Performance settings
+enroot_parallel_downloads: true
+enroot_cache_timeout: 3600
+
+# =============================================================================
+# ИНТЕГРАЦИЯ С SLURM
+# =============================================================================
+
+# SPANK plugin settings
+spank_plugin_required: true
+spank_plugin_load_type: "required"
+
+# Slurm restart behavior
+restart_slurm_after_install: true
+slurm_restart_delay: 5
+
+# =============================================================================
+# ПРОВЕРКИ И ВАЛИДАЦИЯ
+# =============================================================================
+
+# Pre-installation checks
+check_slurm_headers: true
+check_gpu_availability: true
+check_disk_space: true
+
+# Post-installation tests
+test_enroot_basic: true
+test_pyxis_integration: true
+test_container_run: true
+
+# Test containers
+test_containers:
+  - "docker://hello-world"
+  - "docker://ubuntu:22.04"
+
+# =============================================================================
+# TROUBLESHOOTING
+# =============================================================================
+
+# Debug settings
+enable_debug_output: false
+save_build_logs: true
+build_log_dir: "/var/log/containers-build"
+
+# Cleanup settings
+cleanup_temp_files: true
+cleanup_failed_builds: true
 
 # =============================================================================
 # КОММЕНТАРИИ
 # =============================================================================
 
-# Этот файл настроен для официального подхода установки Pyxis:
-# 1. make install - устанавливает плагин в /usr/local/lib/slurm/
-# 2. готовый конфиг в /usr/local/share/pyxis/pyxis.conf
-# 3. символическая ссылка в /etc/slurm/plugstack.conf.d/pyxis.conf
-# 4. установка на compute И login узлы (согласно документации SPANK)
+# Этот файл настроен для DeepOps подхода:
+# 1. Использование системных пакетов Slurm вместо самостоятельной компиляции
+# 2. Правильная установка NVIDIA Container Toolkit
+# 3. Официальная компиляция Pyxis с правильными путями
+# 4. DeepOps совместимые настройки безопасности и производительности
+# 5. Надежная интеграция с systemd

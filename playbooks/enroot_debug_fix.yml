@@ -1,0 +1,219 @@
+---
+- name: "🔍 ДИАГНОСТИКА И ИСПРАВЛЕНИЕ ENROOT"
+  hosts: slurm_compute
+  become: true
+  gather_facts: false
+  
+  tasks:
+    - name: "🔍 Полная диагностика enroot"
+      shell: |
+        echo "=== ДИАГНОСТИКА ENROOT ==="
+        echo "User namespaces: $(cat /proc/sys/kernel/unprivileged_userns_clone)"
+        echo "Max namespaces: $(cat /proc/sys/user/max_user_namespaces)"
+        echo ""
+        
+        echo "Права директорий:"
+        ls -la /var/cache/enroot /var/lib/enroot /run/enroot
+        echo ""
+        
+        echo "Конфигурация enroot:"
+        cat /etc/enroot/enroot.conf
+        echo ""
+        
+        echo "Тест enroot от пользователя:"
+        sudo -u master enroot version
+        echo ""
+        
+        echo "Проверка /proc/self/ns:"
+        ls -la /proc/self/ns/
+        echo ""
+        
+        echo "Cgroups версия:"
+        if [ -f /sys/fs/cgroup/cgroup.controllers ]; then
+          echo "cgroups v2"
+        else
+          echo "cgroups v1"
+        fi
+        
+      register: enroot_diag
+      
+    - name: "📊 Результат диагностики"
+      debug:
+        var: enroot_diag.stdout_lines
+        
+    - name: "🔧 Исправление для Ubuntu 24.04 cgroups v2"
+      shell: |
+        echo "=== ИСПРАВЛЕНИЕ CGROUPS V2 ==="
+        
+        # Проверяем cgroups v2 (проблема Ubuntu 24.04)
+        if [ -f /sys/fs/cgroup/cgroup.controllers ]; then
+          echo "Обнаружен cgroups v2 - применяем исправления"
+          
+          # Создаем systemd slice для enroot
+          cat > /etc/systemd/system/enroot.slice << 'EOF'
+        [Unit]
+        Description=Enroot container slice
+        Before=slices.target
+        
+        [Slice]
+        MemoryAccounting=yes
+        CPUAccounting=yes
+        IOAccounting=yes
+        TasksAccounting=yes
+        EOF
+          
+          systemctl daemon-reload
+          systemctl start enroot.slice
+          
+          # Обновляем enroot конфиг для cgroups v2
+          cat >> /etc/enroot/enroot.conf << 'EOF'
+        
+        # Ubuntu 24.04 cgroups v2 compatibility
+        ENROOT_SYSTEMD_USER_SLICE=enroot.slice
+        EOF
+          
+          echo "✅ cgroups v2 исправление применено"
+        else
+          echo "cgroups v1 - исправления не нужны"
+        fi
+        
+      register: cgroups_fix
+      
+    - name: "🔧 Альтернативная конфигурация enroot без проблемных фич"
+      copy:
+        dest: /etc/enroot/enroot.conf
+        content: |
+          # Минимальная конфигурация для Ubuntu 24.04
+          ENROOT_DATA_PATH /var/lib/enroot
+          ENROOT_CACHE_PATH /var/cache/enroot
+          ENROOT_RUNTIME_PATH /run/enroot
+          ENROOT_TEMP_PATH /tmp
+          
+          # User namespaces (критично)
+          ENROOT_REMAP_ROOT yes
+          
+          # Bind mounts
+          ENROOT_MOUNT_HOME /home:/home
+          ENROOT_MOUNT_HOME /sw:/sw
+          
+          # МИНИМАЛЬНАЯ БЕЗОПАСНОСТЬ
+          ENROOT_ROOTFS_WRITABLE yes
+          ENROOT_ALLOW_SETUID yes
+          ENROOT_ALLOW_PRIVILEGED yes
+          
+          # ОТКЛЮЧАЕМ ПРОБЛЕМНЫЕ ФИЧИ
+          ENROOT_RESTRICT_DEV no
+          
+          # Простейшая стратегия
+          ENROOT_SQUASH_OPTIONS -comp gzip
+        owner: root
+        group: root
+        mode: '0644'
+        
+    - name: "🔧 Создание hook для обхода проблем"
+      copy:
+        dest: /etc/enroot/hooks.d/99-ubuntu24.sh
+        content: |
+          #!/bin/bash
+          # Ubuntu 24.04 compatibility hook
+          
+          # Экспортируем переменные для обхода проблем
+          export ENROOT_FORCE_OVERRIDE=1
+          export ENROOT_LOGIN_SHELL=/bin/bash
+          
+          # Создаем runtime директории если нужно
+          mkdir -p "${ENROOT_RUNTIME_PATH}" 2>/dev/null || true
+          
+          # Убеждаемся что user namespaces доступны
+          if [ "$(cat /proc/sys/kernel/unprivileged_userns_clone)" != "1" ]; then
+            echo "WARNING: unprivileged user namespaces не включены"
+          fi
+        owner: root
+        group: root
+        mode: '0755'
+        
+    - name: "🔧 Исправление runtime прав"
+      shell: |
+        # Очищаем все runtime директории
+        rm -rf /run/enroot/* /var/cache/enroot/* 2>/dev/null || true
+        
+        # Пересоздаем с правильными правами
+        mkdir -p /var/lib/enroot /var/cache/enroot /run/enroot
+        chmod 1777 /var/cache/enroot /run/enroot
+        chmod 755 /var/lib/enroot
+        
+        # Убеждаемся что master пользователь может писать
+        chown master:master /var/cache/enroot /run/enroot 2>/dev/null || true
+        
+        echo "Runtime права исправлены"
+      register: runtime_fix
+      
+    - name: "📊 Результат исправлений"
+      debug:
+        msg: |
+          ✅ Исправления применены:
+          {{ cgroups_fix.stdout }}
+          {{ runtime_fix.stdout }}
+
+- name: "🧪 ТЕСТ ПРЯМОГО ENROOT"
+  hosts: slurm_compute
+  become: false
+  tasks:
+    - name: "🧪 Тест enroot напрямую (без slurm)"
+      shell: |
+        echo "=== ТЕСТ ENROOT НАПРЯМУЮ ==="
+        echo "Пользователь: $(whoami)"
+        echo ""
+        
+        echo "1. Тест enroot version:"
+        enroot version
+        echo ""
+        
+        echo "2. Тест простого импорта:"
+        timeout 60 enroot import docker://hello-world 2>&1 || echo "Импорт не удался"
+        echo ""
+        
+        echo "3. Список образов:"
+        enroot list 2>&1 || echo "Список не удался"
+        echo ""
+        
+        echo "4. Тест создания контейнера:"
+        if enroot list | grep -q hello-world; then
+          timeout 30 enroot create hello-world 2>&1 || echo "Создание не удалось"
+          echo ""
+          echo "5. Тест запуска:"
+          timeout 30 enroot start hello-world 2>&1 || echo "Запуск не удался"
+        else
+          echo "Образ hello-world не найден"
+        fi
+        
+      register: direct_enroot_test
+      failed_when: false
+      
+    - name: "📊 Результат теста enroot"
+      debug:
+        var: direct_enroot_test.stdout_lines
+
+- name: "🧪 ТЕСТ ЧЕРЕЗ SLURM"
+  hosts: slurm_master
+  become: false
+  tasks:
+    - name: "🧪 Финальный тест через slurm"
+      shell: |
+        echo "=== ФИНАЛЬНЫЙ ТЕСТ ЧЕРЕЗ SLURM ==="
+        timeout 60 srun --container-image=docker://hello-world 2>&1
+      register: slurm_test
+      failed_when: false
+      
+    - name: "🎉 ИТОГОВЫЙ РЕЗУЛЬТАТ"
+      debug:
+        msg: |
+          {{ slurm_test.stdout }}
+          
+          {% if 'Hello from Docker' in slurm_test.stdout %}
+          🎉🎉🎉 ПРОБЛЕМА РЕШЕНА! КОНТЕЙНЕРЫ РАБОТАЮТ! 🎉🎉🎉
+          {% elif 'couldn\'t start container' in slurm_test.stdout %}
+          💡 Попробуйте перезагрузку системы или проверьте результат теста enroot выше
+          {% else %}
+          ⚠️ Требуется дополнительная диагностика
+          {% endif %}
