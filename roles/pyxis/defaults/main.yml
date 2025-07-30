@@ -1,0 +1,33 @@
+# roles/pyxis/defaults/main.yml
+---
+# =============================================================================
+# PYXIS DEFAULTS (DEEPOPS АДАПТАЦИЯ)
+# =============================================================================
+
+# Установка Pyxis
+slurm_install_pyxis: true
+
+# Пути Slurm (адаптированы под наш проект)
+slurm_install_prefix: "/opt/slurm"  # Наш путь вместо /usr/local
+slurm_config_dir: "/etc/slurm"
+
+# Версия Pyxis
+slurm_pyxis_version: "0.20.0"  # Обновленная версия
+slurm_pyxis_tarball_url: "https://github.com/NVIDIA/pyxis/archive/v{{ slurm_pyxis_version }}.tar.gz"
+
+# Роли узлов (автоопределение)
+is_controller: "{{ inventory_hostname in groups['slurm_master'] }}"
+is_compute: "{{ inventory_hostname in groups['slurm_compute'] }}"
+
+# Зависимости
+pyxis_ubuntu_deps:
+  - "bsdmainutils"
+  - "build-essential"
+  - "pkg-config"
+
+pyxis_el_deps:
+  - "util-linux"
+
+# /run tmpfs настройки
+resize_run_partition: false
+pyxis_run_tmpfs_size: "50%"

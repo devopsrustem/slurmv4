@@ -8,6 +8,7 @@
 
 slurm_cluster_name: "hpc-cluster"
 timezone: "Europe/Moscow"
+slurm_force_rebuild: false  # По умолчанию НЕ пересобирать
 
 # =============================================================================
 # NFS НАСТРОЙКИ (АВТООПРЕДЕЛЕНИЕ)
@@ -29,11 +30,15 @@ slurm_group: "slurm"
 slurm_debug_level: "3"
 
 # =============================================================================
-# NVIDIA ENROOT КОНФИГУРАЦИЯ (DEEPOPS ПОДХОД)
+# NVIDIA ENROOT + PYXIS КОНФИГУРАЦИЯ (DEEPOPS ПОДХОД)
 # =============================================================================
 
 # Версия enroot (роль ставит 3.2.0 по умолчанию)
 enroot_version: "3.2.0"
+
+# Установка Pyxis
+slurm_install_pyxis: true
+slurm_pyxis_version: "0.20.0"
 
 # Конфигурация enroot.conf (DeepOps пути)
 enroot_config: |

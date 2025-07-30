@@ -1,0 +1,34 @@
+# roles/pyxis/meta/main.yml
+---
+# =============================================================================
+# PYXIS РОЛЬ МЕТАДАННЫЕ
+# =============================================================================
+
+galaxy_info:
+  author: DevOps Team
+  description: Pyxis container support for Slurm HPC cluster
+  company: HPC Lab
+  license: MIT
+  min_ansible_version: 2.15
+  
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 24.04
+
+  galaxy_tags:
+    - hpc
+    - slurm
+    - containers
+    - pyxis
+    - nvidia
+    - enroot
+
+# Зависимости роли
+dependencies:
+  # - role: slurm_build
+  #   # Нужны скомпилированные headers Slurm
+  - role: nvidia.enroot
+    # Нужен установленный Enroot
+
+allow_duplicates: false

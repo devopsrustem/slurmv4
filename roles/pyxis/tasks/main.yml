@@ -1,0 +1,47 @@
+# roles/pyxis/tasks/main.yml
+---
+# =============================================================================
+# PYXIS УСТАНОВКА И НАСТРОЙКА
+# =============================================================================
+
+- name: "[PYXIS] Установка зависимостей (Ubuntu)"
+  apt:
+    name: "{{ pyxis_ubuntu_deps }}"
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: "[PYXIS] Установка зависимостей (RedHat)"
+  package:
+    name: "{{ pyxis_el_deps }}"
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: "[PYXIS] Установка Slurm-PMI hook (только compute)"
+  file:
+    path: /etc/enroot/hooks.d/50-slurm-pmi.sh
+    state: link
+    src: /usr/share/enroot/hooks.d/50-slurm-pmi.sh
+  when: is_compute | bool
+  failed_when: false
+
+- name: "[PYXIS] Установка Slurm-PyTorch hook (только compute)"
+  file:
+    path: /etc/enroot/hooks.d/50-slurm-pytorch.sh
+    state: link
+    src: /usr/share/enroot/hooks.d/50-slurm-pytorch.sh
+  when: is_compute | bool
+  failed_when: false
+
+- name: "[PYXIS] Компиляция и установка Pyxis"
+  include_tasks: pyxis.yml
+  when: slurm_install_pyxis | bool
+  tags: pyxis
+
+- name: "[PYXIS] Изменение размера /run раздела (опционально)"
+  mount:
+    name: /run
+    src: tmpfs
+    opts: "size={{ pyxis_run_tmpfs_size }}"
+    fstype: tmpfs
+    state: mounted
+  when: resize_run_partition | bool

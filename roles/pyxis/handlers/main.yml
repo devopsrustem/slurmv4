@@ -1,7 +1,7 @@
-# roles/containers/handlers/main.yml
+# roles/pyxis/handlers/main.yml
 ---
 # =============================================================================
-# HANDLERS ДЛЯ РОЛИ CONTAINERS
+# PYXIS HANDLERS
 # =============================================================================
 
 - name: restart slurmctld
@@ -10,7 +10,7 @@
     state: restarted
     daemon_reload: yes
   listen: "restart slurmctld"
-  when: inventory_hostname in groups['slurm_master']
+  when: is_controller | bool
 
 - name: restart slurmd
   systemd:
@@ -18,10 +18,4 @@
     state: restarted
     daemon_reload: yes
   listen: "restart slurmd"
-  when: inventory_hostname in groups['slurm_compute']
-
-- name: reload slurm config
-  shell: scontrol reconfigure
-  listen: "reload slurm config"
-  failed_when: false
-  when: inventory_hostname in groups['slurm_master']
+  when: is_compute | bool

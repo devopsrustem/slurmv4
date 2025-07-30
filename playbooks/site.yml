@@ -68,7 +68,15 @@
   roles:
     - nvidia.enroot
 
-# ЭТАП 8: Перезапуск сервисов
+# ЭТАП 8: Установка Pyxis для контейнерной интеграции
+- name: "ЭТАП 8: Установка Pyxis"
+  hosts: slurm_cluster
+  become: true
+  gather_facts: true
+  roles:
+    - pyxis
+
+# ЭТАП 9: Перезапуск сервисов
 - name: "ЭТАП 8: Перезапуск сервисов"
   hosts: slurm_cluster
   become: true
@@ -86,7 +94,3 @@
         state: restarted
         daemon_reload: yes
       when: inventory_hostname in groups['slurm_master']
-
-    - name: "Пауза"
-      pause:
-        seconds: 5

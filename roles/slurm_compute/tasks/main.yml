@@ -294,28 +294,3 @@
   failed_when: false
   changed_when: false
   tags: verify
-
-# =============================================================================
-# FINAL STATUS
-# =============================================================================
-
-- name: "[SLURM-COMPUTE] Финальный статус узла"
-  debug:
-    msg: |
-      🎯 Slurm Compute узел {{ inventory_hostname }} настроен!
-      
-      📊 Статус сервиса:
-      {{ slurmd_check.stdout }}
-      
-      🌐 Подключение к мастеру:
-      {{ master_connection_test.stdout }}
-      
-      🔧 Следующие шаги:
-      1. Проверьте: systemctl status slurmd
-      2. На мастере: sinfo (узел должен стать idle)
-      3. Тест задачи: srun -N1 hostname
-      
-      {% if gpu_detection_enabled and nvidia_check.rc == 0 %}
-      🎮 GPU поддержка: включена ({{ gpu_count }}x {{ gpu_type }})
-      {% endif %}
-  tags: verify

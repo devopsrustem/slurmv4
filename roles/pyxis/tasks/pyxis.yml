@@ -1,0 +1,112 @@
+# roles/pyxis/tasks/pyxis.yml
+---
+# =============================================================================
+# PYXIS КОМПИЛЯЦИЯ ИЗ ИСХОДНИКОВ
+# =============================================================================
+
+- name: "[PYXIS] Создание директории исходников"
+  file:
+    path: /usr/local/src/pyxis
+    state: directory
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Скачивание и извлечение исходников Pyxis"
+  unarchive:
+    src: "{{ slurm_pyxis_tarball_url }}"
+    remote_src: yes
+    dest: /usr/local/src/pyxis
+    extra_opts:
+      - --strip-components=1
+    creates: /usr/local/src/pyxis/Makefile
+  tags: pyxis
+
+- name: "[PYXIS] Очистка предыдущей сборки"
+  command:
+    chdir: /usr/local/src/pyxis
+    argv:
+      - make
+      - clean
+  register: pyxis_make_clean
+  failed_when: false
+  changed_when: pyxis_make_clean.rc == 0
+  tags: pyxis
+
+- name: "[PYXIS] Компиляция Pyxis (адаптированная под наши пути)"
+  command:
+    chdir: /usr/local/src/pyxis
+    argv:
+      - make
+      - -j
+  environment:
+    CPPFLAGS: "-I {{ slurm_install_prefix }}/include"  # Наш путь к headers
+    LDFLAGS: "-L {{ slurm_install_prefix }}/lib"       # Наш путь к библиотекам
+  register: pyxis_build_result
+  changed_when: "pyxis_build_result.stdout != \"make: Nothing to be done for 'all'.\""
+  notify:
+    - restart slurmctld
+    - restart slurmd
+  tags: pyxis
+
+- name: "[PYXIS] Создание директории plugstack.conf.d"
+  file:
+    path: "{{ slurm_config_dir }}/plugstack.conf.d"
+    state: directory
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Создание основного plugstack.conf"
+  template:
+    src: plugstack.conf.j2
+    dest: "{{ slurm_config_dir }}/plugstack.conf"
+    mode: "0644"
+    backup: yes
+  notify:
+    - restart slurmctld
+    - restart slurmd
+  tags: pyxis
+
+- name: "[PYXIS] Создание pyxis.conf"
+  template:
+    src: pyxis.conf.j2
+    dest: "{{ slurm_config_dir }}/plugstack.conf.d/pyxis.conf"
+    mode: "0644"
+  notify:
+    - restart slurmctld
+    - restart slurmd
+  tags: pyxis
+
+- name: "[PYXIS] Установка прав доступа на spank_pyxis.so"
+  file:
+    path: "/usr/local/src/pyxis/spank_pyxis.so"
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Установка прав доступа на spank_pyxis.so"
+  file:
+    path: "/usr/local/src/pyxis/spank_pyxis.so"
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Создание директории для Slurm плагинов"
+  file:
+    path: "/usr/local/lib/slurm"
+    state: directory
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Копирование Pyxis плагина в стандартное место"
+  copy:
+    src: "/usr/local/src/pyxis/spank_pyxis.so"
+    dest: "/usr/local/lib/slurm/spank_pyxis.so"
+    remote_src: yes
+    mode: "0755"
+  tags: pyxis
+
+- name: "[PYXIS] Копирование Pyxis плагина в стандартное место"
+  copy:
+    src: "/usr/local/src/pyxis/spank_pyxis.so"
+    dest: "/usr/local/lib/slurm/spank_pyxis.so"
+    remote_src: yes
+    mode: "0755"
+  tags: pyxis

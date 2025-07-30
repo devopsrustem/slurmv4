@@ -7,9 +7,25 @@
   debug:
     msg: "🔧 Сборка Slurm {{ slurm_version }} с JWT поддержкой на {{ inventory_hostname }}"
 
-- name: "[SLURM_BUILD] Очистка старой сборки"
+- name: "[SLURM_BUILD] Очистка старой сборки (при необходимости)"
   shell: rm -rf {{ slurm_build_dir }}
-  when: inventory_hostname in groups['slurm_master']
+  when: 
+    - inventory_hostname in groups['slurm_master']  # ← ДОБАВИТЬ!
+    - slurm_force_rebuild | bool
+
+- name: "[SLURM_BUILD] Проверка готовой сборки"
+  stat:
+    path: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}/src/slurmctld/slurmctld"
+  register: slurm_binary_exists
+  when: inventory_hostname in groups['slurm_master']  # ← ДОБАВИТЬ!
+
+- name: "[SLURM_BUILD] Компиляция Slurm (это займет время...)"
+  shell: make -j$(nproc)
+  when: >
+    inventory_hostname in groups['slurm_master'] and (  
+    not slurm_binary_exists.stat.exists or 
+    (slurm_force_rebuild | bool)
+    )
 
 # =============================================================================
 # ПОДГОТОВКА К СБОРКЕ (ТОЛЬКО НА MASTER)
