@@ -71,6 +71,43 @@
   notify: restart slurmd
   tags: config
 
+# =============================================================================
+# КОПИРОВАНИЕ PROLOG/EPILOG СКРИПТОВ
+# =============================================================================
+
+- name: "[SLURM-COMPUTE] Создание директорий для prolog/epilog"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/slurm/prolog.d
+    - /etc/slurm/epilog.d
+
+- name: "[SLURM-COMPUTE] Ожидание prolog/epilog скриптов на NFS"
+  wait_for:
+    path: "{{ nfs_config_path }}/{{ item }}"
+    timeout: 30
+  loop:
+    - prolog.sh
+    - epilog.sh
+
+- name: "[SLURM-COMPUTE] Копирование prolog/epilog скриптов из NFS"
+  copy:
+    src: "{{ nfs_config_path }}/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'
+    backup: yes
+  loop:
+    - { src: "prolog.sh", dest: "/etc/slurm/prolog.d/prolog.sh" }
+    - { src: "epilog.sh", dest: "/etc/slurm/epilog.d/epilog.sh" }
+  notify: restart slurmd
+
 - name: "[SLURM-COMPUTE] Создание символических ссылок на команды"
   file:
     src: "/opt/slurm/bin/{{ item }}"

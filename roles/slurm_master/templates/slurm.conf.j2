@@ -76,10 +76,17 @@ KillWait=30
 Waittime=0
 
 # =============================================================================
-# PROCESS TRACKING
+# PROCESS TRACKING (DEEPOPS КОНФИГУРАЦИЯ!)
 # =============================================================================
 ProctrackType=proctrack/cgroup
-TaskPlugin=task/cgroup,task/affinity
+TaskPlugin=task/affinity,task/cgroup
+
+# =============================================================================
+# PROLOG/EPILOG НАСТРОЙКИ (DEEPOPS!)
+# =============================================================================
+PrologFlags=Alloc,Serial
+Prolog=/etc/slurm/prolog.d/prolog.sh
+Epilog=/etc/slurm/epilog.d/epilog.sh
 
 # =============================================================================
 # SLURM PLUGINS

@@ -11,15 +11,18 @@ Type=simple
 ExecStart=/usr/sbin/slurmd -D
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
+
+# ИСПРАВЛЕНИЯ ДЛЯ КОНТЕЙНЕРОВ
 TasksMax=infinity
+Delegate=yes
 
 # Restart settings
 Restart=on-failure
 RestartSec=5s
 StartLimitInterval=0
 
-# Security settings
-NoNewPrivileges=true
+# Security settings (УБИРАЕМ ОГРАНИЧЕНИЯ!)
+NoNewPrivileges=false
 PrivateTmp=true
 
 [Install]

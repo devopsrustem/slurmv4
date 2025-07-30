@@ -29,6 +29,33 @@ slurm_group: "slurm"
 slurm_debug_level: "3"
 
 # =============================================================================
+# NVIDIA ENROOT КОНФИГУРАЦИЯ (DEEPOPS ПОДХОД)
+# =============================================================================
+
+# Версия enroot (роль ставит 3.2.0 по умолчанию)
+enroot_version: "3.2.0"
+
+# Конфигурация enroot.conf (DeepOps пути)
+enroot_config: |
+  ENROOT_CONFIG_PATH ${HOME}/.config/enroot
+  ENROOT_SQUASH_OPTIONS -noI -noD -noF -noX -no-duplicates
+  ENROOT_MOUNT_HOME n
+  ENROOT_RESTRICT_DEV y
+  ENROOT_ROOTFS_WRITABLE y
+  ENROOT_RUNTIME_PATH /run/enroot/user-$(id -u)
+  ENROOT_CACHE_PATH /var/lib/enroot-cache/group-$(id -g)
+  ENROOT_DATA_PATH /tmp/enroot-data/user-$(id -u)
+
+# Дополнительные environ файлы (если нужны)
+enroot_environ_config_files: []
+
+# Hook файлы (если нужны)  
+enroot_hook_config_files: []
+
+# Mount файлы (если нужны)
+enroot_mount_config_files: []
+
+# =============================================================================
 # ПРИМЕР ПЕРЕОПРЕДЕЛЕНИЯ ЧЕРЕЗ INVENTORY
 # =============================================================================
 

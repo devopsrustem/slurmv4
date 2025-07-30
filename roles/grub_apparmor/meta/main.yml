@@ -1,0 +1,24 @@
+# roles/grub_apparmor/meta/main.yml
+---
+# Метаданные роли grub_apparmor
+
+galaxy_info:
+  author: DevOps Team
+  description: Disable AppArmor via GRUB for container support
+  license: MIT
+  min_ansible_version: 2.15
+  
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 24.04
+
+  galaxy_tags:
+    - grub
+    - apparmor
+    - containers
+    - reboot
+
+dependencies: []
+
+allow_duplicates: false

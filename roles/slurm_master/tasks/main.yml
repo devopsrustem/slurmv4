@@ -34,6 +34,63 @@
   include_tasks: services.yml
 
 # =============================================================================
+# PROLOG/EPILOG СКРИПТЫ ДЛЯ ENROOT (DEEPOPS ПОДХОД)
+# =============================================================================
+
+- name: "[SLURM-MASTER] Создание директорий для prolog/epilog"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/slurm/prolog.d
+    - /etc/slurm/epilog.d
+
+- name: "[SLURM-MASTER] Создание Enroot prolog скрипта"
+  template:
+    src: prolog.sh.j2
+    dest: /etc/slurm/prolog.d/prolog.sh
+    owner: root
+    group: root
+    mode: '0755'
+  notify: restart slurmctld
+
+- name: "[SLURM-MASTER] Создание Enroot epilog скрипта"
+  template:
+    src: epilog.sh.j2
+    dest: /etc/slurm/epilog.d/epilog.sh
+    owner: root
+    group: root
+    mode: '0755'
+  notify: restart slurmctld
+
+- name: "[SLURM-MASTER] Копирование prolog/epilog скриптов на NFS для распространения"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - { src: "/etc/slurm/prolog.d/prolog.sh", dest: "/sw/config/prolog.sh" }
+    - { src: "/etc/slurm/epilog.d/epilog.sh", dest: "/sw/config/epilog.sh" }
+
+- name: "[SLURM-MASTER] Создание базовых enroot директорий"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /run/enroot
+    - /tmp/enroot-data
+    - /var/lib/enroot-cache
+
+# =============================================================================
 # ФИНАЛЬНАЯ ИНФОРМАЦИЯ
 # =============================================================================
 

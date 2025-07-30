@@ -1,0 +1,68 @@
+#!/bin/bash
+# roles/slurm_master/templates/epilog.sh.j2
+#
+# Slurm Epilog для очистки Enroot директорий после задания
+# DeepOps подход - точная очистка только завершенных jobs
+#
+
+set -e
+
+# Переменные окружения Slurm
+export SLURM_JOB_ID="${SLURM_JOB_ID:-unknown}"
+export SLURM_JOB_USER="${SLURM_JOB_USER:-unknown}" 
+export SLURM_JOB_UID="${SLURM_JOB_UID:-1000}"
+export SLURM_JOB_GID="${SLURM_JOB_GID:-1000}"
+
+# Проверяем наличие enroot
+if ! command -v enroot >/dev/null 2>&1; then
+    exit 0
+fi
+
+# =============================================================================
+# ОЧИСТКА JOB-СПЕЦИФИЧНЫХ ДИРЕКТОРИЙ
+# =============================================================================
+
+# Job-специфичные пути для очистки
+JOB_RUNTIME_PATH="/run/enroot/user-${SLURM_JOB_UID}/${SLURM_JOB_ID}"
+JOB_DATA_PATH="/tmp/enroot-data/user-${SLURM_JOB_UID}/${SLURM_JOB_ID}"
+
+# Убиваем все активные процессы enroot этого задания
+if pgrep -f "enroot.*${SLURM_JOB_ID}" >/dev/null 2>&1; then
+    pkill -TERM -f "enroot.*${SLURM_JOB_ID}" 2>/dev/null || true
+    sleep 2
+    pkill -KILL -f "enroot.*${SLURM_JOB_ID}" 2>/dev/null || true
+fi
+
+# Размонтируем все bind mounts этого задания
+if mount | grep -q "${JOB_RUNTIME_PATH}"; then
+    mount | grep "${JOB_RUNTIME_PATH}" | awk '{print $3}' | sort -r | while read mountpoint; do
+        umount "${mountpoint}" 2>/dev/null || umount -l "${mountpoint}" 2>/dev/null || true
+    done
+fi
+
+# Удаляем job-специфичные директории
+if [[ -d "${JOB_RUNTIME_PATH}" ]]; then
+    rm -rf "${JOB_RUNTIME_PATH}" 2>/dev/null || true
+fi
+
+if [[ -d "${JOB_DATA_PATH}" ]]; then
+    rm -rf "${JOB_DATA_PATH}" 2>/dev/null || true
+fi
+
+# =============================================================================
+# ОЧИСТКА ПУСТЫХ ПОЛЬЗОВАТЕЛЬСКИХ ДИРЕКТОРИЙ (ОПЦИОНАЛЬНО)
+# =============================================================================
+
+# Удаляем пользовательские директории если они пустые
+USER_RUNTIME_DIR="/run/enroot/user-${SLURM_JOB_UID}"
+USER_DATA_DIR="/tmp/enroot-data/user-${SLURM_JOB_UID}"
+
+if [[ -d "${USER_RUNTIME_DIR}" ]] && [[ -z "$(ls -A "${USER_RUNTIME_DIR}")" ]]; then
+    rmdir "${USER_RUNTIME_DIR}" 2>/dev/null || true
+fi
+
+if [[ -d "${USER_DATA_DIR}" ]] && [[ -z "$(ls -A "${USER_DATA_DIR}")" ]]; then
+    rmdir "${USER_DATA_DIR}" 2>/dev/null || true
+fi
+
+exit 0

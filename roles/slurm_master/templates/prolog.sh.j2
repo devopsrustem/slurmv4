@@ -1,0 +1,59 @@
+#!/bin/bash
+# roles/slurm_master/templates/prolog.sh.j2
+#
+# Slurm Prolog для динамического создания Enroot директорий
+# DeepOps подход - создание только когда нужно
+#
+
+set -e
+
+# Переменные окружения Slurm
+export SLURM_JOB_ID="${SLURM_JOB_ID:-unknown}"
+export SLURM_JOB_USER="${SLURM_JOB_USER:-unknown}"
+export SLURM_JOB_UID="${SLURM_JOB_UID:-1000}"
+export SLURM_JOB_GID="${SLURM_JOB_GID:-1000}"
+
+# Проверяем наличие enroot
+if ! command -v enroot >/dev/null 2>&1; then
+    exit 0
+fi
+
+# =============================================================================
+# СОЗДАНИЕ ПОЛЬЗОВАТЕЛЬСКИХ ДИРЕКТОРИЙ ENROOT
+# =============================================================================
+
+# Создаем базовые пользовательские директории
+USER_RUNTIME_DIR="/run/enroot/user-${SLURM_JOB_UID}"
+USER_DATA_DIR="/tmp/enroot-data/user-${SLURM_JOB_UID}"
+USER_CACHE_DIR="/var/lib/enroot-cache/group-${SLURM_JOB_GID}"
+
+# Создаем директории если не существуют
+mkdir -p "${USER_RUNTIME_DIR}"
+mkdir -p "${USER_DATA_DIR}"  
+mkdir -p "${USER_CACHE_DIR}"
+
+# Job-специфичные директории для полной изоляции
+JOB_RUNTIME_DIR="${USER_RUNTIME_DIR}/${SLURM_JOB_ID}"
+JOB_DATA_DIR="${USER_DATA_DIR}/${SLURM_JOB_ID}"
+
+mkdir -p "${JOB_RUNTIME_DIR}"
+mkdir -p "${JOB_DATA_DIR}"
+
+# =============================================================================
+# УСТАНОВКА ПРАВИЛЬНЫХ ПРАВ ДОСТУПА
+# =============================================================================
+
+# Пользовательские директории
+chown "${SLURM_JOB_UID}:${SLURM_JOB_GID}" "${USER_RUNTIME_DIR}"
+chown "${SLURM_JOB_UID}:${SLURM_JOB_GID}" "${USER_DATA_DIR}"
+chown "${SLURM_JOB_UID}:${SLURM_JOB_GID}" "${USER_CACHE_DIR}"
+
+# Job-специфичные директории  
+chown "${SLURM_JOB_UID}:${SLURM_JOB_GID}" "${JOB_RUNTIME_DIR}"
+chown "${SLURM_JOB_UID}:${SLURM_JOB_GID}" "${JOB_DATA_DIR}"
+
+# Права доступа
+chmod 755 "${USER_RUNTIME_DIR}" "${USER_DATA_DIR}" "${USER_CACHE_DIR}"
+chmod 755 "${JOB_RUNTIME_DIR}" "${JOB_DATA_DIR}"
+
+exit 0

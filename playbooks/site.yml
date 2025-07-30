@@ -52,16 +52,24 @@
   roles:
     - slurm_login
 
-# ЭТАП 6: Установка контейнеров НА ВСЕХ
-- name: "ЭТАП 6: Установка контейнеров"
+# ЭТАП 6: Отключение AppArmor на compute узлах
+- name: "ЭТАП 6: Отключение AppArmor"
+  hosts: slurm_compute
+  become: true
+  gather_facts: true
+  roles:
+    - grub_apparmor
+
+# ЭТАП 7: Установка Enroot через nvidia.enroot роль
+- name: "ЭТАП 7: Установка Enroot"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
-    - containers
+    - nvidia.enroot
 
-# ЭТАП 7: Перезапуск сервисов
-- name: "ЭТАП 7: Перезапуск сервисов"
+# ЭТАП 8: Перезапуск сервисов
+- name: "ЭТАП 8: Перезапуск сервисов"
   hosts: slurm_cluster
   become: true
   tasks:
@@ -82,31 +90,3 @@
     - name: "Пауза"
       pause:
         seconds: 5
-
-# ЭТАП 8: Финальный тест
-- name: "ЭТАП 8: Тестирование"
-  hosts: slurm_master
-  become: true
-  tasks:
-    - name: "Тест кластера"
-      shell: |
-        echo "=== ТЕСТ КЛАСТЕРА ==="
-        scontrol ping || echo "Controller запускается..."
-        sinfo || echo "Узлы регистрируются..."
-        srun -N1 hostname || echo "Тест задачи..."
-        srun --container-image=docker://hello-world || echo "Контейнеры настраиваются..."
-      register: cluster_test
-      failed_when: false
-      changed_when: false
-
-    - name: "Результат"
-      debug:
-        msg: |
-          {{ cluster_test.stdout }}
-          
-          🎉 КЛАСТЕР УСТАНОВЛЕН!
-          
-          Команды для тестирования:
-          - sinfo
-          - srun hostname
-          - srun --container-image=docker://hello-world

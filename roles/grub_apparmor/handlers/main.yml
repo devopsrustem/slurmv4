@@ -1,0 +1,13 @@
+# roles/grub_apparmor/handlers/main.yml
+---
+# Handlers для роли grub_apparmor
+
+- name: update grub
+  command: update-grub
+  listen: "update grub"
+
+- name: reboot system
+  reboot:
+    reboot_timeout: 300
+    test_command: uptime
+  listen: "reboot system"

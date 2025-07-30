@@ -1,0 +1,134 @@
+# =============================================================================
+# ANSIBLE PROJECT .GITIGNORE
+# =============================================================================
+
+# Ansible logs
+ansible.log
+*.log
+
+# Temporary directories
+/tmp/
+tmp/
+.tmp/
+
+# Ansible retry files
+*.retry
+
+# Ansible vault files (if any contain real passwords)
+# vault.yml
+# secrets.yml
+
+# =============================================================================
+# ANSIBLE SPECIFIC
+# =============================================================================
+
+# Ansible galaxy installed roles (if using requirements.yml)
+roles/downloaded/
+roles/external/
+
+# Ansible collections cache
+collections/
+
+# Ansible facts cache
+./tmp/ansible_facts_cache/
+ansible_facts_cache/
+
+# Host key checking bypass files
+.ssh/
+
+# Inventory with real IPs/passwords (keep templates)
+# inventory.prod
+# inventory.real
+
+# =============================================================================
+# DEVELOPMENT FILES
+# =============================================================================
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Python bytecode
+*.pyc
+*.pyo
+__pycache__/
+
+# =============================================================================
+# BUILD AND DEPLOYMENT
+# =============================================================================
+
+# Build artifacts
+build/
+dist/
+*.tar.gz
+*.zip
+
+# SSH keys (never commit!)
+*.pem
+*.key
+id_rsa*
+*.p12
+
+# =============================================================================
+# BACKUP FILES
+# =============================================================================
+
+# Backup files created by Ansible
+*.backup
+*.bak
+*.orig
+
+# Vim backup files
+*~
+.*.swp
+.*.swo
+
+# =============================================================================
+# LOCAL DEVELOPMENT
+# =============================================================================
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Local test files
+test_output/
+debug/
+scratch/
+
+# Personal notes
+NOTES.md
+TODO.md
+notes/
+
+# =============================================================================
+# PROJECT SPECIFIC
+# =============================================================================
+
+# Slurm specific temporary files
+slurm-*.tar.bz2
+pyxis-*.tar.gz
+enroot_*.deb
+enroot+caps_*.deb
+
+# Downloaded packages
+*.deb
+*.rpm
+
+# Generated SSL certificates
+*.crt
+*.csr
+*.pem
