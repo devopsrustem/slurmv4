@@ -20,64 +20,80 @@
   roles:
     - common
 
-# ЭТАП 2: Компиляция и распространение Slurm 
-- name: "ЭТАП 2: Компиляция и распространение Slurm"
+# ЭТАП 2: Установка PMIx на всех узлах
+- name: "ЭТАП 2: Установка PMIx"
+  hosts: slurm_cluster
+  become: true
+  gather_facts: true
+  roles:
+    - pmix
+
+# ЭТАП 2.1: Установка OpenMPI только на compute узлах
+- name: "ЭТАП 2.1: Установка OpenMPI"
+  hosts: slurm_compute
+  become: true
+  gather_facts: true
+  roles:
+    - openmpi
+
+# ЭТАП 3: Компиляция и распространение Slurm 
+- name: "ЭТАП 3: Компиляция и распространение Slurm"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - slurm_build
 
-# ЭТАП 3: Настройка master
-- name: "ЭТАП 3: Настройка master"
+# ЭТАП 4: Настройка master
+- name: "ЭТАП 4: Настройка master"
   hosts: slurm_master
   become: true
   gather_facts: true
   roles:
     - slurm_master
 
-# ЭТАП 4: Настройка compute узлов
-- name: "ЭТАП 4: Настройка compute"
+# ЭТАП 5: Настройка compute узлов
+- name: "ЭТАП 5: Настройка compute"
   hosts: slurm_compute
   become: true
   gather_facts: true
   roles:
     - slurm_compute
 
-# ЭТАП 5: Настройка login узлов
-- name: "ЭТАП 5: Настройка login"
+# ЭТАП 6: Настройка login узлов
+- name: "ЭТАП 6: Настройка login"
   hosts: slurm_login
   become: true
   gather_facts: true
   roles:
     - slurm_login
 
-# ЭТАП 6: Отключение AppArmor на compute узлах
-- name: "ЭТАП 6: Отключение AppArmor"
+# ЭТАП 7: Отключение AppArmor на compute узлах
+- name: "ЭТАП 7: Отключение AppArmor"
   hosts: slurm_compute
   become: true
   gather_facts: true
   roles:
     - grub_apparmor
 
-# ЭТАП 7: Установка Enroot через nvidia.enroot роль
-- name: "ЭТАП 7: Установка Enroot"
+# ЭТАП 8: Установка Enroot через nvidia.enroot роль
+- name: "ЭТАП 8: Установка Enroot"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - nvidia.enroot
 
-# ЭТАП 8: Установка Pyxis для контейнерной интеграции
-- name: "ЭТАП 8: Установка Pyxis"
+# ЭТАП 9: Установка Pyxis для контейнерной интеграции
+- name: "ЭТАП 9: Установка Pyxis"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - pyxis
 
-# ЭТАП 9: Перезапуск сервисов
-- name: "ЭТАП 8: Перезапуск сервисов"
+# ЭТАП 10: Перезапуск сервисов
+- name: "ЭТАП 10: Перезапуск сервисов"
   hosts: slurm_cluster
   become: true
   tasks:

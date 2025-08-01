@@ -7,25 +7,7 @@
   debug:
     msg: "🔧 Сборка Slurm {{ slurm_version }} с JWT поддержкой на {{ inventory_hostname }}"
 
-- name: "[SLURM_BUILD] Очистка старой сборки (при необходимости)"
-  shell: rm -rf {{ slurm_build_dir }}
-  when: 
-    - inventory_hostname in groups['slurm_master']  # ← ДОБАВИТЬ!
-    - slurm_force_rebuild | bool
 
-- name: "[SLURM_BUILD] Проверка готовой сборки"
-  stat:
-    path: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}/src/slurmctld/slurmctld"
-  register: slurm_binary_exists
-  when: inventory_hostname in groups['slurm_master']  # ← ДОБАВИТЬ!
-
-- name: "[SLURM_BUILD] Компиляция Slurm (это займет время...)"
-  shell: make -j$(nproc)
-  when: >
-    inventory_hostname in groups['slurm_master'] and (  
-    not slurm_binary_exists.stat.exists or 
-    (slurm_force_rebuild | bool)
-    )
 
 # =============================================================================
 # ПОДГОТОВКА К СБОРКЕ (ТОЛЬКО НА MASTER)
@@ -71,12 +53,17 @@
   tags:
     - download
 
+- name: "[SLURM_BUILD] Принудительная очистка сборки"
+  shell: rm -rf {{ slurm_build_dir }}/slurm-{{ slurm_version }}
+  when: 
+    - inventory_hostname in groups['slurm_master']
+    - slurm_force_rebuild | bool
+
 - name: "[SLURM_BUILD] Извлечение исходников Slurm"
   unarchive:
     src: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
     dest: "{{ slurm_build_dir }}"
     remote_src: yes
-    creates: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
   when: inventory_hostname in groups['slurm_master']
   tags:
     - build
@@ -85,30 +72,42 @@
 # КОНФИГУРАЦИЯ И СБОРКА
 # =============================================================================
 
+- name: "[SLURM_BUILD] Проверка установки PMIx"
+  stat:
+    path: "/opt/pmix/lib/libpmix.so"
+  register: pmix_check
+  when: inventory_hostname in groups['slurm_master']
+
+- name: "[SLURM_BUILD] Ошибка - PMIx не найден"
+  fail:
+    msg: "PMIx не установлен в /opt/pmix. Установите PMIx на master узле."
+  when: 
+    - inventory_hostname in groups['slurm_master']
+    - not pmix_check.stat.exists
+
 - name: "[SLURM_BUILD] Конфигурация сборки Slurm с JWT поддержкой"
   shell: |
+    export PKG_CONFIG_PATH=/opt/pmix/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+    export LD_LIBRARY_PATH=/opt/pmix/lib:/usr/lib/x86_64-linux-gnu
+    export CPPFLAGS="-I/opt/pmix/include $CPPFLAGS"
+    export LDFLAGS="-L/opt/pmix/lib -Wl,-rpath,/opt/pmix/lib $LDFLAGS"
     cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
     ./configure \
       --prefix={{ slurm_install_prefix }} \
       --sysconfdir=/etc/slurm \
-      --enable-mysql \
-      --with-mysql_config=/usr/bin \
+      --without-mysql \
       --with-munge \
       --with-hwloc \
       --with-json \
-      --with-ssl \
       --with-jwt \
-      --enable-multiple-scontrollers \
       --enable-pam \
       --with-pam_dir=/lib/x86_64-linux-gnu/security/ \
-      --with-pmix \
-      --with-systemd \
+      --with-pmix=/opt/pmix \
       --enable-slurmrestd \
       --enable-debug \
       --enable-developer
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
-    creates: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}/config.log"
   when: inventory_hostname in groups['slurm_master']
   register: slurm_configure
   tags:

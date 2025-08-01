@@ -1,0 +1,71 @@
+---
+- name: Install OpenMPI dependencies
+  package:
+    name:
+      - build-essential
+      - gfortran
+      - libhwloc-dev
+      - libevent-dev
+      - zlib1g-dev
+    state: present
+
+- name: Create OpenMPI build directory
+  file:
+    path: "{{ openmpi_build_dir }}"
+    state: directory
+
+- name: Download OpenMPI source
+  get_url:
+    url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-{{ openmpi_version }}.tar.gz"
+    dest: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}.tar.gz"
+
+- name: Extract OpenMPI source
+  unarchive:
+    src: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}.tar.gz"
+    dest: "{{ openmpi_build_dir }}"
+    remote_src: yes
+
+- name: Configure OpenMPI with PMIx
+  shell: |
+    export PKG_CONFIG_PATH={{ pmix_prefix }}/lib/pkgconfig:$PKG_CONFIG_PATH
+    export LD_LIBRARY_PATH={{ pmix_prefix }}/lib:$LD_LIBRARY_PATH
+    ./configure --prefix={{ openmpi_prefix }} \
+      --with-pmix={{ pmix_prefix }} \
+      --with-hwloc \
+      --enable-mpi-fortran \
+      --enable-shared \
+      --disable-static
+  args:
+    chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
+    creates: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}/Makefile"
+
+- name: Build OpenMPI
+  shell: |
+    export LD_LIBRARY_PATH={{ pmix_prefix }}/lib:$LD_LIBRARY_PATH
+    make -j$(nproc)
+  args:
+    chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
+
+- name: Install OpenMPI
+  shell: "make install"
+  args:
+    chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
+
+- name: Add OpenMPI to library path
+  lineinfile:
+    path: /etc/ld.so.conf.d/openmpi.conf
+    line: "{{ openmpi_prefix }}/lib"
+    create: yes
+  notify: update ldconfig
+
+- name: Add OpenMPI to PATH
+  lineinfile:
+    path: /etc/environment
+    regexp: '^PATH='
+    line: 'PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:{{ pmix_prefix }}/bin:{{ openmpi_prefix }}/bin"'
+    backup: yes
+
+- name: Cleanup build directory
+  file:
+    path: "{{ openmpi_build_dir }}"
+    state: absent

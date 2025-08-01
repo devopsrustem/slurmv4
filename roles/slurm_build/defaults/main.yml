@@ -25,7 +25,7 @@ slurm_configure_options:
   - "--enable-pam"
   - "--with-pam_dir=/lib/x86_64-linux-gnu/security/"
   - "--without-shared-libslurm"
-  - "--with-pmix"
+  - "--with-pmix=/opt/pmix"
   - "--with-systemd"
   - "--with-jwt"
   - "--with-mysql_config=/usr/bin/mariadb_config"

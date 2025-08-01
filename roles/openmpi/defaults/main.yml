@@ -1,0 +1,5 @@
+---
+openmpi_version: "5.0.8"
+openmpi_prefix: "/opt/openmpi"
+openmpi_build_dir: "/tmp/openmpi-build"
+pmix_prefix: "/opt/pmix"

@@ -1,0 +1,4 @@
+---
+pmix_version: "5.0.3"
+pmix_prefix: "/opt/pmix"
+pmix_build_dir: "/tmp/pmix-build"

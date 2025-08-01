@@ -8,7 +8,7 @@
 
 slurm_cluster_name: "hpc-cluster"
 timezone: "Europe/Moscow"
-slurm_force_rebuild: false  # По умолчанию НЕ пересобирать
+slurm_force_rebuild: true  # Пересобирать для интеграции с PMIx
 
 # =============================================================================
 # NFS НАСТРОЙКИ (АВТООПРЕДЕЛЕНИЕ)
