@@ -1,3 +1,4 @@
+# roles/pmix/defaults/main.yml - PMIx configuration variables
 ---
 pmix_version: "5.0.3"
 pmix_prefix: "/opt/pmix"

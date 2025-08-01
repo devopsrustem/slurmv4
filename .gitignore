@@ -132,3 +132,4 @@ enroot+caps_*.deb
 *.crt
 *.csr
 *.pem
+deepops-argo

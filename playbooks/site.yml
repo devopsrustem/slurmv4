@@ -1,110 +1,99 @@
-# site.yml - Общий playbook установки кластера
+# playbooks/site.yml - Main cluster deployment playbook
 ---
-- name: "🚀 УСТАНОВКА SLURM HPC КЛАСТЕРА"
+- name: "Deploy Slurm HPC cluster"
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: "Информация о развертывании"
+    - name: "Display deployment info"
       debug:
         msg: |
-          🚀 Установка Slurm HPC кластера
-          📍 Master:  {{ groups['slurm_master'] | join(', ') }}
-          📍 Login:   {{ groups['slurm_login'] | join(', ') }}
-          📍 Compute: {{ groups['slurm_compute'] | join(', ') }}
+          Deploying Slurm HPC cluster
+          Master nodes: {{ groups['slurm_master'] | join(', ') }}
+          Login nodes:  {{ groups['slurm_login'] | join(', ') }}
+          Compute nodes: {{ groups['slurm_compute'] | join(', ') }}
 
-# ЭТАП 1: Базовая подготовка
-- name: "ЭТАП 1: Базовая подготовка"
+- name: "Base system preparation"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - common
 
-# ЭТАП 2: Установка PMIx на всех узлах
-- name: "ЭТАП 2: Установка PMIx"
+- name: "Install PMIx on all nodes"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - pmix
 
-# ЭТАП 2.1: Установка OpenMPI только на compute узлах
-- name: "ЭТАП 2.1: Установка OpenMPI"
+- name: "Install OpenMPI on compute nodes"
   hosts: slurm_compute
   become: true
   gather_facts: true
   roles:
     - openmpi
 
-# ЭТАП 3: Компиляция и распространение Slurm 
-- name: "ЭТАП 3: Компиляция и распространение Slurm"
+- name: "Build and distribute Slurm"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - slurm_build
 
-# ЭТАП 4: Настройка master
-- name: "ЭТАП 4: Настройка master"
+- name: "Configure master nodes"
   hosts: slurm_master
   become: true
   gather_facts: true
   roles:
     - slurm_master
 
-# ЭТАП 5: Настройка compute узлов
-- name: "ЭТАП 5: Настройка compute"
+- name: "Configure compute nodes"
   hosts: slurm_compute
   become: true
   gather_facts: true
   roles:
     - slurm_compute
 
-# ЭТАП 6: Настройка login узлов
-- name: "ЭТАП 6: Настройка login"
+- name: "Configure login nodes"
   hosts: slurm_login
   become: true
   gather_facts: true
   roles:
     - slurm_login
 
-# ЭТАП 7: Отключение AppArmor на compute узлах
-- name: "ЭТАП 7: Отключение AppArmor"
+- name: "Disable AppArmor on compute nodes"
   hosts: slurm_compute
   become: true
   gather_facts: true
   roles:
     - grub_apparmor
 
-# ЭТАП 8: Установка Enroot через nvidia.enroot роль
-- name: "ЭТАП 8: Установка Enroot"
+- name: "Install Enroot container runtime"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - nvidia.enroot
 
-# ЭТАП 9: Установка Pyxis для контейнерной интеграции
-- name: "ЭТАП 9: Установка Pyxis"
+- name: "Install Pyxis container integration"
   hosts: slurm_cluster
   become: true
   gather_facts: true
   roles:
     - pyxis
 
-# ЭТАП 10: Перезапуск сервисов
-- name: "ЭТАП 10: Перезапуск сервисов"
+- name: "Restart Slurm services"
   hosts: slurm_cluster
   become: true
   tasks:
-    - name: "Перезапуск slurmd"
+    - name: "Restart slurmd service"
       systemd:
         name: slurmd
         state: restarted
         daemon_reload: yes
       when: inventory_hostname in groups['slurm_compute']
 
-    - name: "Перезапуск slurmctld"
+    - name: "Restart slurmctld service"
       systemd:
         name: slurmctld
         state: restarted

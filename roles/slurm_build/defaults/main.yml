@@ -1,24 +1,13 @@
-# roles/slurm_build/defaults/main.yml
+# roles/slurm_build/defaults/main.yml - Slurm build configuration variables
 ---
-# Переменные по умолчанию для роли slurm_build (БЕЗ ХАРДКОДА)
 
-# =============================================================================
-# ВЕРСИИ И ПУТИ
-# =============================================================================
-
-# Версия Slurm
+# Version and paths
 slurm_version: "25.05.1"
 slurm_download_url: "https://download.schedmd.com/slurm/slurm-{{ slurm_version }}.tar.bz2"
-
-# ИСПРАВЛЕННЫЕ ПУТИ - ЕДИНООБРАЗИЕ С CONTAINERS!
 slurm_build_dir: "/tmp/slurm-build"
 slurm_install_prefix: "/opt/slurm"
 
-# =============================================================================
-# ПАРАМЕТРЫ СБОРКИ
-# =============================================================================
-
-# Опции конфигурации Slurm
+# Build parameters
 slurm_configure_options:
   - "--prefix={{ slurm_install_prefix }}"
   - "--sysconfdir=/etc/slurm"
@@ -34,14 +23,10 @@ slurm_configure_options:
   - "--enable-slurmrestd"
   - "--enable-x11"
 
-# Количество ядер для компиляции
 slurm_make_jobs: "$(nproc)"
 
-# =============================================================================
-# БИНАРНИКИ SLURM
-# =============================================================================
-
-# Пользовательские команды Slurm
+# Slurm binaries
+slurm_force_rebuild: false
 slurm_user_commands:
   - sinfo
   - squeue
@@ -58,50 +43,36 @@ slurm_user_commands:
   - sreport
   - sacctmgr
 
-# Демоны Slurm
 slurm_daemons:
   - slurmctld
   - slurmd
   - slurmdbd
   - slurmrestd
 
-# =============================================================================
-# ЗАВИСИМОСТИ СБОРКИ (ИСПРАВЛЕНО ДЛЯ UBUNTU 24.04)
-# =============================================================================
-
-# Основные зависимости сборки 
+# Build dependencies 
 slurm_build_dependencies:
-  # Основные компиляторы и утилиты
   - build-essential
   - libmunge-dev
   - pkg-config
-  # MariaDB/MySQL (исправлено для Ubuntu 24.04)
   - libmariadb-dev
   - mariadb-client
-  # JSON и JWT поддержка  
   - libjson-c-dev
   - libjwt-dev
   - libhttp-parser-dev
   - libyaml-dev
-  # SSL и безопасность
   - libssl-dev
   - libcurl4-openssl-dev
-  # NVIDIA GPU поддержка (КРИТИЧНО!)
   - libnvidia-ml-dev
-  # PAM и системная интеграция
   - libpam0g-dev
   - libdbus-1-dev
   - libsystemd-dev
-  # Дополнительные библиотеки
   - libhwloc-dev
-  - libpmix-dev
   - libncurses-dev
   - libreadline-dev
   - librrd-dev
   - liblua5.3-dev
   - libperl-dev
   - libgtk2.0-dev
-  # Утилиты
   - python3-dev
   - python3-minimal
   - ruby-dev
@@ -109,25 +80,11 @@ slurm_build_dependencies:
   - man2html-base
   - bash-completion
 
-# =============================================================================
-# ПРОВЕРКИ И ВАЛИДАЦИЯ
-# =============================================================================
-
-# Проверять ли сборку после компиляции
+# Verification and cleanup
 slurm_verify_build: true
-
-# Создавать ли резервную копию старой версии
 slurm_backup_old_version: true
-
-# Очищать ли временные файлы после сборки
 slurm_cleanup_build_dir: false
 
-# =============================================================================
-# РАСПРОСТРАНЕНИЕ
-# =============================================================================
-
-# Метод распространения: archive, rsync, nfs
+# Distribution
 slurm_distribution_method: "archive"
-
-# Таймаут для операций копирования (секунды)
 slurm_copy_timeout: 600

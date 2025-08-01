@@ -1,5 +1,6 @@
+# roles/pmix/tasks/main.yml - PMIx installation and configuration
 ---
-- name: Install PMIx dependencies
+- name: Install PMIx build dependencies
   package:
     name:
       - build-essential

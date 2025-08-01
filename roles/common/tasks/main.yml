@@ -1,41 +1,24 @@
-# roles/common/tasks/main.yml
+# roles/common/tasks/main.yml - Base system configuration for all cluster nodes
 ---
-# Роль: common - базовая настройка всех узлов кластера
-# Ubuntu 24.04 + Slurm 25.05.1 (БЕЗ ХАРДКОДА IP)
-
-- name: "[COMMON] Начало выполнения роли common"
+- name: "Display common role start"
   debug:
-    msg: "🔧 Настройка базовых компонентов на {{ inventory_hostname }}"
+    msg: "Configuring base components on {{ inventory_hostname }}"
 
-# =============================================================================
-# БАЗОВАЯ ПОДГОТОВКА СИСТЕМЫ
-# =============================================================================
-
-- name: "[COMMON] Обновление apt cache"
+- name: "Update apt cache"
   apt:
     update_cache: yes
     cache_valid_time: 3600
-  tags: 
-    - system
-    - packages
 
-- name: "[COMMON] Установка базовых пакетов"
+- name: "Install base packages"
   apt:
     name: "{{ common_base_packages }}"
     state: present
-  tags: 
-    - system
-    - packages
 
-- name: "[COMMON] Настройка timezone"
+- name: "Configure timezone"
   timezone:
     name: "{{ timezone }}"
-  tags: 
-    - system
 
-# УБРАНА ЗАДАЧА hostname resolution - предполагается что /etc/hosts настроен отдельно
-
-- name: "[COMMON] Создание пользователя slurm"
+- name: "Create slurm user"
   user:
     name: "{{ slurm_user }}"
     uid: "{{ slurm_uid }}"
@@ -43,39 +26,27 @@
     shell: /bin/false
     home: /var/lib/slurm
     create_home: yes
-  tags:
-    - users
 
-# =============================================================================
-# MUNGE УСТАНОВКА И НАСТРОЙКА (ИСПРАВЛЕННАЯ ВЕРСИЯ)
-# =============================================================================
-
-- name: "[COMMON] Установка MUNGE"
+- name: "Install MUNGE"
   apt:
     name: 
       - munge
       - libmunge-dev
     state: present
-  tags:
-    - munge
 
-- name: "[COMMON] Остановка MUNGE перед настройкой"
+- name: "Stop MUNGE before configuration"
   systemd:
     name: munge
     state: stopped
     enabled: no
-  tags:
-    - munge
 
-- name: "[COMMON] Создание MUNGE ключа на master узле"
+- name: "Create MUNGE key on master node"
   command:
     cmd: /usr/sbin/create-munge-key
     creates: /etc/munge/munge.key
   when: inventory_hostname in groups['slurm_master']
-  tags:
-    - munge
 
-- name: "[COMMON] Настройка прав доступа MUNGE директорий"
+- name: "Configure MUNGE directory permissions"
   file:
     path: "{{ item.path }}"
     owner: "{{ item.owner }}"
@@ -87,20 +58,15 @@
     - { path: /var/log/munge, owner: munge, group: munge, mode: '0700' }
     - { path: /var/lib/munge, owner: munge, group: munge, mode: '0700' }
     - { path: /run/munge, owner: munge, group: munge, mode: '0755' }
-  tags:
-    - munge
 
-# ИСПРАВЛЕННОЕ распространение ключей - delegate_to
-- name: "[COMMON] Получение MUNGE ключа с мастера"
+- name: "Fetch MUNGE key from master"
   slurp:
     src: /etc/munge/munge.key
   register: munge_key_from_master
   delegate_to: "{{ groups['slurm_master'][0] }}"
   when: inventory_hostname not in groups['slurm_master']
-  tags:
-    - munge
 
-- name: "[COMMON] Создание MUNGE ключа на остальных узлах"
+- name: "Create MUNGE key on other nodes"
   copy:
     content: "{{ munge_key_from_master.content | b64decode }}"
     dest: /etc/munge/munge.key
@@ -108,89 +74,48 @@
     group: munge
     mode: '0400'
   when: inventory_hostname not in groups['slurm_master']
-  tags:
-    - munge
 
-- name: "[COMMON] Настройка прав доступа на ключ MUNGE (мастер)"
+- name: "Set MUNGE key permissions on master"
   file:
     path: /etc/munge/munge.key
     owner: munge
     group: munge
     mode: '0400'
   when: inventory_hostname in groups['slurm_master']
-  tags:
-    - munge
 
-- name: "[COMMON] Запуск и включение MUNGE"
+- name: "Start and enable MUNGE"
   systemd:
     name: munge
     state: started
     enabled: yes
     daemon_reload: yes
-  tags:
-    - munge
 
-- name: "[COMMON] Проверка работы MUNGE"
+- name: "Test MUNGE functionality"
   command: munge -n
   register: munge_test
   changed_when: false
-  tags:
-    - munge
-    - verify
 
-- name: "[COMMON] Результат проверки MUNGE"
-  debug:
-    msg: "MUNGE работает корректно на {{ inventory_hostname }}"
-  when: munge_test.rc == 0
-  tags:
-    - munge
-    - verify
-
-# =============================================================================
-# HWLOC УСТАНОВКА
-# =============================================================================
-
-- name: "[COMMON] Установка HWLOC"
+- name: "Install HWLOC"
   apt:
     name:
       - hwloc
       - libhwloc-dev
     state: present
-  tags:
-    - hwloc
 
-- name: "[COMMON] Проверка HWLOC"
+- name: "Verify HWLOC installation"
   command: lstopo --version
   register: hwloc_version
   changed_when: false
-  tags:
-    - hwloc
-    - verify
 
-- name: "[COMMON] Версия HWLOC"
-  debug:
-    msg: "Установлена версия HWLOC: {{ hwloc_version.stdout }}"
-  tags:
-    - hwloc
-    - verify
-
-# =============================================================================
-# NFS НАСТРОЙКА (АВТООПРЕДЕЛЕНИЕ IP)
-# =============================================================================
-
-# NFS Server (только на master узле)
-- name: "[COMMON] Установка NFS server на master"
+- name: "Install NFS server on master"
   apt:
     name:
       - nfs-kernel-server
       - nfs-common
     state: present
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Создание директорий для экспорта NFS"
+- name: "Create NFS export directories"
   file:
     path: "{{ item }}"
     state: directory
@@ -201,11 +126,8 @@
     - /home
     - /sw
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Очистка старых экспортов"
+- name: "Clean old NFS exports"
   lineinfile:
     path: /etc/exports
     regexp: "^{{ item }}.*"
@@ -214,12 +136,8 @@
     - /home
     - /sw
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-# АВТООПРЕДЕЛЕНИЕ IP клиентов для NFS экспорта
-- name: "[COMMON] Настройка экспорта NFS (автоопределение IP)"
+- name: "Configure NFS exports"
   lineinfile:
     path: /etc/exports
     line: "{{ item.path }} {{ item.client_ip }}({{ nfs_export_options }})"
@@ -237,54 +155,30 @@
   notify: 
     - restart nfs-server
     - reload nfs-exports
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Запуск и включение NFS server"
+- name: "Start and enable NFS server"
   systemd:
     name: nfs-kernel-server
     state: started
     enabled: yes
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Принудительная перезагрузка экспортов NFS"
+- name: "Reload NFS exports"
   command: exportfs -ra
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Проверка активных экспортов"
+- name: "Verify NFS exports"
   command: exportfs -v
   register: nfs_exports_check
   when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
 
-- name: "[COMMON] Показать активные экспорты"
-  debug:
-    var: nfs_exports_check.stdout_lines
-  when: inventory_hostname in groups['nfs_server']
-  tags:
-    - nfs
-    - nfs-server
-
-# NFS Client (на всех остальных узлах)
-- name: "[COMMON] Установка NFS client"
+- name: "Install NFS client"
   apt:
     name: nfs-common
     state: present
   when: inventory_hostname in groups['nfs_client']
-  tags:
-    - nfs
-    - nfs-client
 
-- name: "[COMMON] Создание точек монтирования NFS"
+- name: "Create NFS mount points"
   file:
     path: "{{ item }}"
     state: directory
@@ -294,12 +188,8 @@
   loop:
     - /sw
   when: inventory_hostname in groups['nfs_client']
-  tags:
-    - nfs
-    - nfs-client
 
-# АВТООПРЕДЕЛЕНИЕ NFS сервера
-- name: "[COMMON] Монтирование NFS shares (автоопределение сервера)"
+- name: "Mount NFS shares"
   mount:
     path: "{{ item.path }}"
     src: "{{ groups['nfs_server'][0] }}:{{ item.src }}"
@@ -310,12 +200,8 @@
     - { path: /home, src: /home }
     - { path: /sw, src: /sw }
   when: inventory_hostname in groups['nfs_client']
-  tags:
-    - nfs
-    - nfs-client
 
-# Установка MariaDB на master
-- name: "[COMMON] Установка MariaDB"
+- name: "Install MariaDB on master"
   apt:
     name:
       - mariadb-server
@@ -323,21 +209,8 @@
       - python3-pymysql
     state: present
   when: inventory_hostname in groups['slurm_master']
-  tags:
-    - mariadb
 
-- name: "[COMMON] Установка python3-pymysql для Ansible mysql модулей"
-  apt:
-    name: python3-pymysql
-    state: present
-  when: inventory_hostname in groups['slurm_master']
-  tags: mariadb
-
-# =============================================================================
-# БАЗОВЫЕ ДИРЕКТОРИИ SLURM
-# =============================================================================
-
-- name: "[COMMON] Создание базовых директорий Slurm"
+- name: "Create Slurm base directories"
   file:
     path: "{{ item.path }}"
     state: directory
@@ -351,12 +224,3 @@
     - { path: /var/spool/slurm/d, owner: slurm, group: slurm, mode: '0755' }
     - { path: /etc/slurm, owner: root, group: root, mode: '0755' }
     - { path: /var/lib/slurm, owner: slurm, group: slurm, mode: '0755' }
-  tags:
-    - slurm
-    - directories
-
-- name: "[COMMON] Роль common выполнена успешно"
-  debug:
-    msg: "✅ Узел {{ inventory_hostname }} готов для установки Slurm"
-  tags:
-    - verify

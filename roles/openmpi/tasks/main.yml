@@ -1,5 +1,6 @@
+# roles/openmpi/tasks/main.yml - OpenMPI installation with PMIx integration
 ---
-- name: Install OpenMPI dependencies
+- name: Install OpenMPI build dependencies
   package:
     name:
       - build-essential

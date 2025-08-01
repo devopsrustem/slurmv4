@@ -1,3 +1,4 @@
+# roles/openmpi/defaults/main.yml - OpenMPI configuration variables
 ---
 openmpi_version: "5.0.8"
 openmpi_prefix: "/opt/openmpi"

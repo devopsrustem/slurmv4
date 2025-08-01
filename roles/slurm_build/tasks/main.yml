@@ -1,19 +1,12 @@
-# roles/slurm_build/tasks/main.yml
+# roles/slurm_build/tasks/main.yml - Slurm compilation and distribution
 ---
-# Роль: slurm_build - компиляция Slurm 25.05.1 с JWT поддержкой
-# Ubuntu 24.04 + ИСПРАВЛЕННОЕ РАСПРОСТРАНЕНИЕ HEADERS
-
-- name: "[SLURM_BUILD] Начало сборки Slurm"
+- name: "Display build information"
   debug:
-    msg: "🔧 Сборка Slurm {{ slurm_version }} с JWT поддержкой на {{ inventory_hostname }}"
+    msg: "Building Slurm {{ slurm_version }} with PMIx support on {{ inventory_hostname }}"
 
 
 
-# =============================================================================
-# ПОДГОТОВКА К СБОРКЕ (ТОЛЬКО НА MASTER)
-# =============================================================================
-
-- name: "[SLURM_BUILD] Установка дополнительных зависимостей для сборки"
+- name: "Install Slurm build dependencies"
   apt:
     name: "{{ slurm_build_dependencies }}"
     state: present
@@ -21,7 +14,7 @@
   tags:
     - dependencies
 
-- name: "[SLURM_BUILD] Создание временной директории для сборки"
+- name: "Create Slurm build directory"
   file:
     path: "{{ slurm_build_dir }}"
     state: directory
@@ -33,15 +26,13 @@
     - download
     - build
 
-- name: "[SLURM_BUILD] Проверка существования исходников"
+- name: "Check for existing Slurm source"
   stat:
     path: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
   register: slurm_tarball
   when: inventory_hostname in groups['slurm_master']
-  tags:
-    - download
 
-- name: "[SLURM_BUILD] Скачивание исходников Slurm {{ slurm_version }}"
+- name: "Download Slurm source"
   get_url:
     url: "{{ slurm_download_url }}"
     dest: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
@@ -50,42 +41,34 @@
   when: 
     - inventory_hostname in groups['slurm_master']
     - not slurm_tarball.stat.exists
-  tags:
-    - download
 
-- name: "[SLURM_BUILD] Принудительная очистка сборки"
+- name: "Clean previous build if forced rebuild"
   shell: rm -rf {{ slurm_build_dir }}/slurm-{{ slurm_version }}
   when: 
     - inventory_hostname in groups['slurm_master']
     - slurm_force_rebuild | bool
 
-- name: "[SLURM_BUILD] Извлечение исходников Slurm"
+- name: "Extract Slurm source"
   unarchive:
     src: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
     dest: "{{ slurm_build_dir }}"
     remote_src: yes
   when: inventory_hostname in groups['slurm_master']
-  tags:
-    - build
 
-# =============================================================================
-# КОНФИГУРАЦИЯ И СБОРКА
-# =============================================================================
-
-- name: "[SLURM_BUILD] Проверка установки PMIx"
+- name: "Verify PMIx installation"
   stat:
     path: "/opt/pmix/lib/libpmix.so"
   register: pmix_check
   when: inventory_hostname in groups['slurm_master']
 
-- name: "[SLURM_BUILD] Ошибка - PMIx не найден"
+- name: "Fail if PMIx not found"
   fail:
-    msg: "PMIx не установлен в /opt/pmix. Установите PMIx на master узле."
+    msg: "PMIx not installed in /opt/pmix. Install PMIx on master node first."
   when: 
     - inventory_hostname in groups['slurm_master']
     - not pmix_check.stat.exists
 
-- name: "[SLURM_BUILD] Конфигурация сборки Slurm с JWT поддержкой"
+- name: "Configure Slurm build"
   shell: |
     export PKG_CONFIG_PATH=/opt/pmix/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
     export LD_LIBRARY_PATH=/opt/pmix/lib:/usr/lib/x86_64-linux-gnu
@@ -113,7 +96,7 @@
   tags:
     - build
 
-- name: "[SLURM_BUILD] Компиляция Slurm (это займет время...)"
+- name: "Build Slurm"
   shell: |
     cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
     make -j$(nproc)
@@ -121,11 +104,8 @@
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}/src/slurmctld/slurmctld"
   when: inventory_hostname in groups['slurm_master']
-  register: slurm_compile
-  tags:
-    - build
 
-- name: "[SLURM_BUILD] Установка Slurm на master"
+- name: "Install Slurm on master"
   shell: |
     cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
     make install
@@ -133,135 +113,69 @@
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_install_prefix }}/sbin/slurmctld"
   when: inventory_hostname in groups['slurm_master']
-  register: slurm_install
-  tags:
-    - build
 
-- name: "[SLURM_BUILD] Установка development файлов (headers для Pyxis)"
+- name: "Install Slurm development headers"
   shell: |
     cd {{ slurm_build_dir }}/slurm-{{ slurm_version }}
-    # Копируем headers в правильное место
     mkdir -p {{ slurm_install_prefix }}/include/slurm
     cp -r slurm/*.h {{ slurm_install_prefix }}/include/slurm/
-    # Копируем главный header из src
     cp src/slurmd/slurmd.h {{ slurm_install_prefix }}/include/slurm/ 2>/dev/null || true
-    echo "Headers установлены в {{ slurm_install_prefix }}/include/slurm/"
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_install_prefix }}/include/slurm/spank.h"
   when: inventory_hostname in groups['slurm_master']
-  register: slurm_dev_install
-  tags:
-    - build
-    - dev
 
-# =============================================================================
-# СОЗДАНИЕ NFS АРХИВА ДЛЯ РАСПРОСТРАНЕНИЯ (ИСПРАВЛЕНО!)
-# =============================================================================
-
-- name: "[SLURM_BUILD] Создание директории Slurm на всех узлах"
+- name: "Create Slurm directory on all nodes"
   file:
     path: "{{ slurm_install_prefix }}"
     state: directory
     owner: root
     group: root
     mode: '0755'
-  tags:
-    - distribute
 
-- name: "[SLURM_BUILD] Создание полного архива Slurm в NFS"
+- name: "Create Slurm distribution archive"
   shell: |
     set -e
-    echo "=== СОЗДАНИЕ АРХИВА SLURM + HEADERS ==="
-    
-    # Очистка старого архива
     rm -rf /sw/slurm-complete
     mkdir -p /sw/slurm-complete
-    
-    # Копируем ВСЁ из /opt/slurm
-    echo "Копируем binaries..."
     cp -r {{ slurm_install_prefix }}/* /sw/slurm-complete/
     
-    # КРИТИЧНО: Проверяем что headers скопированы!
     if [ -f /sw/slurm-complete/include/slurm/spank.h ]; then
-      echo "✅ Headers включены в архив: $(find /sw/slurm-complete/include -name '*.h' | wc -l) файлов"
+      echo "Headers included in archive: $(find /sw/slurm-complete/include -name '*.h' | wc -l) files"
     else
-      echo "❌ ОШИБКА: Headers не найдены в архиве!"
+      echo "ERROR: Headers not found in archive!"
       exit 1
     fi
     
-    # Устанавливаем права
     chown -R root:root /sw/slurm-complete
     chmod -R 755 /sw/slurm-complete/bin /sw/slurm-complete/sbin
     chmod -R 644 /sw/slurm-complete/include
-    
-    echo "=== АРХИВ ГОТОВ ==="
-    echo "Binaries: $(ls /sw/slurm-complete/bin | wc -l) файлов"
-    echo "Daemons: $(ls /sw/slurm-complete/sbin | wc -l) файлов"
-    echo "Headers: $(find /sw/slurm-complete/include -name '*.h' | wc -l) файлов"
-    echo "Libs: $(ls /sw/slurm-complete/lib | wc -l) файлов"
   when: inventory_hostname in groups['slurm_master']
-  register: archive_creation
-  tags:
-    - distribute
 
-- name: "[SLURM_BUILD] Результат создания архива"
-  debug:
-    var: archive_creation.stdout_lines
-  when: inventory_hostname in groups['slurm_master']
-  tags:
-    - distribute
-
-- name: "[SLURM_BUILD] Ожидание готовности архива"
+- name: "Wait for archive to be ready"
   wait_for:
     path: "/sw/slurm-complete/include/slurm/spank.h"
     timeout: 30
   when: inventory_hostname not in groups['slurm_master']
-  tags:
-    - distribute
 
-- name: "[SLURM_BUILD] Установка Slurm на все узлы из архива"
+- name: "Install Slurm from archive on nodes"
   shell: |
     set -e
-    echo "=== УСТАНОВКА SLURM ИЗ АРХИВА ==="
-    
-    # Останавливаем slurmd если запущен
     systemctl stop slurmd 2>/dev/null || true
-    
-    # Копируем всё из архива
     cp -r /sw/slurm-complete/* {{ slurm_install_prefix }}/
-    
-    # Устанавливаем права
     chown -R root:root {{ slurm_install_prefix }}
     chmod -R 755 {{ slurm_install_prefix }}/bin {{ slurm_install_prefix }}/sbin
     chmod -R 644 {{ slurm_install_prefix }}/include
     
-    # Проверяем что headers установлены
     if [ -f {{ slurm_install_prefix }}/include/slurm/spank.h ]; then
-      echo "✅ Headers установлены: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) файлов"
+      echo "Headers installed: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) files"
     else
-      echo "❌ ОШИБКА: Headers не установлены!"
+      echo "ERROR: Headers not installed!"
       exit 1
     fi
-    
-    echo "=== УСТАНОВКА ЗАВЕРШЕНА ==="
   when: inventory_hostname not in groups['slurm_master']
-  register: slurm_install_nodes
-  tags:
-    - distribute
 
-- name: "[SLURM_BUILD] Результат установки на узлах"
-  debug:
-    var: slurm_install_nodes.stdout_lines
-  when: inventory_hostname not in groups['slurm_master']
-  tags:
-    - distribute
-
-# =============================================================================
-# НАСТРОЙКА ПУТЕЙ И СИСТЕМНЫХ ФАЙЛОВ
-# =============================================================================
-
-- name: "[SLURM_BUILD] Создание символических ссылок для пользовательских команд Slurm"
+- name: "Create symlinks for Slurm user commands"
   file:
     src: "{{ slurm_install_prefix }}/bin/{{ item }}"
     dest: "/usr/bin/{{ item }}"
@@ -286,10 +200,8 @@
     - sbcast
     - sshare
     - sview
-  tags:
-    - links
 
-- name: "[SLURM_BUILD] Создание символических ссылок для системных демонов Slurm"
+- name: "Create symlinks for Slurm system daemons"
   file:
     src: "{{ slurm_install_prefix }}/sbin/{{ item }}"
     dest: "/usr/sbin/{{ item }}"
@@ -301,60 +213,29 @@
     - slurmdbd
     - slurmrestd
     - slurmstepd
-  tags:
-    - links
 
-- name: "[SLURM_BUILD] Обновление библиотечного кеша"
+- name: "Update library cache"
   shell: ldconfig
-  tags:
-    - links
 
-# =============================================================================
-# ПРОВЕРКА УСТАНОВКИ
-# =============================================================================
-
-- name: "[SLURM_BUILD] Проверка версии Slurm"
+- name: "Verify Slurm version"
   command: "{{ slurm_install_prefix }}/bin/sinfo -V"
   register: slurm_version_check
   changed_when: false
   failed_when: false
-  tags:
-    - verify
 
-- name: "[SLURM_BUILD] Проверка поддержки JWT"
+- name: "Verify JWT support"
   shell: "{{ slurm_install_prefix }}/sbin/slurmctld -V 2>&1 | grep -i jwt || echo 'JWT support check'"
   register: jwt_check
   changed_when: false
   failed_when: false
-  tags:
-    - verify
 
-- name: "[SLURM_BUILD] Проверка headers (КРИТИЧНО ДЛЯ PYXIS!)"
+- name: "Verify development headers"
   shell: |
     if [ -f {{ slurm_install_prefix }}/include/slurm/spank.h ]; then
-      echo "✅ Headers найдены: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) файлов"
-      echo "✅ spank.h: $(ls -la {{ slurm_install_prefix }}/include/slurm/spank.h)"
+      echo "Headers found: $(find {{ slurm_install_prefix }}/include -name '*.h' | wc -l) files"
     else
-      echo "❌ Headers НЕ НАЙДЕНЫ - Pyxis НЕ СКОМПИЛИРУЕТСЯ!"
+      echo "Headers not found - Pyxis will not compile!"
     fi
   register: headers_check
   changed_when: false
   failed_when: false
-  tags:
-    - verify
-
-- name: "[SLURM_BUILD] Результаты проверки"
-  debug:
-    msg: |
-      ✅ Slurm успешно установлен на {{ inventory_hostname }}
-      📋 Версия: {{ slurm_version_check.stdout }}
-      🔐 JWT поддержка: {{ jwt_check.stdout }}
-      📁 Headers: {{ headers_check.stdout }}
-      📍 Путь установки: {{ slurm_install_prefix }}
-      🔗 Команды доступны в /usr/bin/, демоны в /usr/sbin/
-  tags:
-    - verify
-
-- name: "[SLURM_BUILD] Сборка завершена успешно"
-  debug:
-    msg: "🎉 Slurm {{ slurm_version }} с headers готов к установке контейнеров на {{ inventory_hostname }}"
