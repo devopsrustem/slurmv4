@@ -1,4 +1,4 @@
-# group_vars/slurm_cluster.yml
+# group_vars/slurm_cluster.yml 444
 ---
 # Переменные для всего Slurm кластера (БЕЗ ХАРДКОДА)
 
