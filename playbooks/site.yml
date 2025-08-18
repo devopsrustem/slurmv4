@@ -99,3 +99,20 @@
         state: restarted
         daemon_reload: yes
       when: inventory_hostname in groups['slurm_master']
+
+- name: "Resume compute nodes"
+  hosts: slurm_master
+  become: true
+  tasks:
+    - name: "Wait for slurmd to be ready on compute nodes"
+      wait_for:
+        port: 6818
+        host: "{{ item }}"
+        timeout: 60
+      loop: "{{ groups['slurm_compute'] }}"
+      ignore_errors: yes
+
+    - name: "Resume all compute nodes"
+      shell: scontrol update NodeName={{ item }} State=RESUME
+      loop: "{{ groups['slurm_compute'] }}"
+      ignore_errors: yes

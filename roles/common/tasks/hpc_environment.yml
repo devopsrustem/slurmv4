@@ -1,0 +1,88 @@
+# roles/common/tasks/hpc_environment.yml - HPC user environment setup
+---
+- name: "Create global Slurm profile"
+  copy:
+    dest: /etc/profile.d/slurm.sh
+    content: |
+      # Slurm HPC environment
+      export PATH="/opt/slurm/bin:/opt/slurm/sbin:$PATH"
+      export LD_LIBRARY_PATH="/opt/slurm/lib:/opt/slurm/lib64:$LD_LIBRARY_PATH"
+      export MANPATH="/opt/slurm/share/man:$MANPATH"
+      
+      # Slurm useful aliases
+      alias si='sinfo -o "%20N %10T %4c %8z %15C %8O %8m %18f %19E"'
+      alias sq='squeue -o "%.7i %.12j %.8u %.8T %.10M %.9l %.6D %R"'
+      alias sa='sacct --format=JobID,JobName,User,State,Start,End,Elapsed,CPUTime,ReqMem,MaxRSS'
+      alias sj='scontrol show job'
+      alias sn='scontrol show node'
+      alias sp='scontrol show partition'
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: "Create cluster status script"
+  copy:
+    dest: /usr/local/bin/cluster-status
+    content: |
+      #!/bin/bash
+      # HPC Cluster status check
+      
+      echo "=== HPC Cluster Status ==="
+      echo "Time: $(date)"
+      echo "Uptime: $(uptime -p)"
+      echo
+      
+      if command -v sinfo &> /dev/null; then
+          echo "=== Slurm Nodes ==="
+          sinfo -N -o "%20N %10T %4c %8z %15C %8O %8m"
+          echo
+          
+          echo "=== Slurm Queue ==="
+          squeue -o "%.7i %.12j %.8u %.8T %.10M %.9l %.6D %R" | head -20
+          echo
+      fi
+      
+      echo "=== System Load ==="
+      echo "CPU: $(nproc) cores"
+      echo "Memory: $(free -h | grep Mem | awk '{print $3"/"$2}')"
+      echo "Load: $(cat /proc/loadavg | cut -d' ' -f1-3)"
+      echo
+      
+      if ls /dev/nvidia* &> /dev/null; then
+          echo "=== GPU Status ==="
+          nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used,memory.total,temperature.gpu --format=csv,noheader,nounits | head -8
+      fi
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Create HPC cluster MOTD"
+  copy:
+    dest: /etc/motd
+    content: |
+      ================================================================================
+      
+         ██╗  ██╗██████╗  ██████╗     ██████╗██╗     ██╗   ██╗███████╗████████╗███████╗██████╗ 
+         ██║  ██║██╔══██╗██╔════╝    ██╔════╝██║     ██║   ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+         ███████║██████╔╝██║         ██║     ██║     ██║   ██║███████╗   ██║   █████╗  ██████╔╝
+         ██╔══██║██╔═══╝ ██║         ██║     ██║     ██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗
+         ██║  ██║██║     ╚██████╗    ╚██████╗███████╗╚██████╔╝███████║   ██║   ███████╗██║  ██║
+         ╚═╝  ╚═╝╚═╝      ╚═════╝     ╚═════╝╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
+      
+      ================================================================================
+      
+      Welcome to the HPC Cluster!
+      
+      Useful commands:
+        cluster-status     - Check cluster status
+        si                 - Show node information (sinfo)
+        sq                 - Show job queue (squeue)
+        sa                 - Show job accounting (sacct)
+      
+      Documentation: /shared/docs/
+      Support: Create ticket in helpdesk
+      
+      ================================================================================
+    owner: root
+    group: root
+    mode: '0644'

@@ -1,0 +1,23 @@
+# roles/slurm_master/templates/slurmrestd.service.j2 - Slurm REST API service
+[Unit]
+Description=Slurm REST daemon
+After=network.target munge.service slurmctld.service
+Wants=slurmctld.service
+
+[Service]
+Type=simple
+User=slurmrest
+Group=slurmrest
+Environment="SLURM_CONF=/etc/slurm/slurm.conf"
+EnvironmentFile=-/etc/default/slurmrestd
+ExecStart=/opt/slurm/sbin/slurmrestd $SLURMRESTD_OPTIONS -vvv 0.0.0.0:6820
+ExecReload=/bin/kill -HUP $MAINPID
+PIDFile=/var/run/slurmrestd.pid
+KillMode=process
+LimitNOFILE=131072
+LimitMEMLOCK=infinity
+LimitSTACK=infinity
+Delegate=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+# roles/slurm_compute/tasks/gpu_topology.yml - GPU topology detection for H100 nodes
+---
+- name: "Check if nvidia-smi is available"
+  command: which nvidia-smi
+  register: nvidia_smi_check
+  failed_when: false
+  changed_when: false
+
+- name: "Generate GPU topology file"
+  shell: nvidia-smi topo -m > /etc/slurm/gpu_topology.conf
+  when: nvidia_smi_check.rc == 0
+  ignore_errors: yes
+
+- name: "Set GPU topology file permissions"
+  file:
+    path: /etc/slurm/gpu_topology.conf
+    owner: root
+    group: root
+    mode: '0644'
+  when: nvidia_smi_check.rc == 0

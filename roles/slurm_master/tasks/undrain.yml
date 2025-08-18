@@ -1,0 +1,26 @@
+# roles/slurm_master/tasks/undrain.yml - Resume all compute nodes after deployment
+---
+- name: "Wait for slurmd to be ready on compute nodes"
+  wait_for:
+    port: 6818
+    host: "{{ item }}"
+    timeout: 300
+  loop: "{{ groups['slurm_compute'] }}"
+  when: inventory_hostname in groups['slurm_master']
+  ignore_errors: yes
+
+- name: "Resume all compute nodes"
+  shell: scontrol update NodeName={{ item }} State=RESUME
+  loop: "{{ groups['slurm_compute'] }}"
+  when: inventory_hostname in groups['slurm_master']
+  ignore_errors: yes
+
+- name: "Verify node states"
+  shell: sinfo -N -o "%N %T %E"
+  register: node_states
+  when: inventory_hostname in groups['slurm_master']
+
+- name: "Display node states"
+  debug:
+    var: node_states.stdout_lines
+  when: inventory_hostname in groups['slurm_master']

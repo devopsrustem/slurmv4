@@ -1,15 +1,11 @@
-# roles/slurm_compute/tasks/main.yml
+# roles/slurm_compute/tasks/main.yml - Slurm compute node configuration
 ---
-# =============================================================================
-# SLURM COMPUTE NODE CONFIGURATION
-# =============================================================================
-
-- name: "[SLURM-COMPUTE] Начало настройки Slurm Compute узла"
+- name: "Display compute node configuration start"
   debug:
-    msg: |
-      🎯 Настройка Slurm Compute узла: {{ inventory_hostname }}
-      🔗 Master: {{ slurm_master_host }} ({{ slurm_master_addr }})
-      🖥️  GPU: {{ gpu_count }}x {{ gpu_type }}
+    msg: "Configuring Slurm compute node: {{ inventory_hostname }}"
+
+- include_tasks: gpu_topology.yml
+- include_tasks: prolog_epilog.yml
 
 # =============================================================================
 # УСТАНОВКА SLURM BINARIES

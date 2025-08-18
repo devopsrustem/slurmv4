@@ -1,0 +1,29 @@
+# roles/slurm_master/tasks/jwt_config.yml - JWT authentication setup for OpenOnDemand
+---
+- name: "Generate JWT signing key"
+  shell: openssl rand -base64 32 > /etc/slurm/jwt_hs256.key
+  args:
+    creates: /etc/slurm/jwt_hs256.key
+
+- name: "Set JWT key permissions"
+  file:
+    path: /etc/slurm/jwt_hs256.key
+    owner: slurm
+    group: slurm
+    mode: '0600'
+
+- name: "Create slurmrestd configuration"
+  template:
+    src: slurmrestd.service.j2
+    dest: /etc/systemd/system/slurmrestd.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart slurmrestd
+
+- name: "Enable and start slurmrestd"
+  systemd:
+    name: slurmrestd
+    enabled: yes
+    state: started
+    daemon_reload: yes

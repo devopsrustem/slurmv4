@@ -8,7 +8,7 @@ ConditionPathExists={{ slurm_config_dir }}/slurm.conf
 
 [Service]
 Type=simple
-ExecStart=/usr/sbin/slurmd -D
+ExecStart=/opt/slurm/sbin/slurmd -D
 ExecReload=/bin/kill -HUP $MAINPID
 LimitNOFILE=65536
 

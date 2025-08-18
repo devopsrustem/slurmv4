@@ -1,0 +1,25 @@
+# roles/slurm_master/tasks/fix_permissions.yml - Fix Slurm file permissions
+---
+- name: "Create slurmrest user for REST API"
+  user:
+    name: slurmrest
+    system: yes
+    shell: /bin/false
+    create_home: no
+
+- name: "Fix Slurm directory permissions"
+  file:
+    path: "{{ item }}"
+    owner: slurm
+    group: slurm
+    recurse: yes
+  loop:
+    - /var/spool/slurm
+    - /var/log/slurm
+
+- name: "Set JWT key permissions for slurmrest"
+  file:
+    path: /etc/slurm/jwt_hs256.key
+    owner: slurmrest
+    group: slurmrest
+    mode: '0600'

@@ -4,6 +4,11 @@
   debug:
     msg: "Configuring base components on {{ inventory_hostname }}"
 
+- include_tasks: wait_for_apt.yml
+- include_tasks: infiniband.yml
+- include_tasks: network_tuning.yml
+- include_tasks: hpc_environment.yml
+
 - name: "Update apt cache"
   apt:
     update_cache: yes

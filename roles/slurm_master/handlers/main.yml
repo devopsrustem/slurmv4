@@ -24,3 +24,9 @@
     name: mariadb
     state: restarted
     enabled: true
+
+- name: restart slurmrestd
+  systemd:
+    name: slurmrestd
+    state: restarted
+    daemon_reload: yes

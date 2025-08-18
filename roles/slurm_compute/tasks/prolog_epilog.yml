@@ -1,0 +1,32 @@
+# roles/slurm_compute/tasks/prolog_epilog.yml - Install prolog/epilog scripts
+---
+- name: "Create prolog/epilog directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/slurm/prolog.d
+    - /etc/slurm/epilog.d
+
+- name: "Install prolog scripts"
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/slurm/prolog.d/"
+    owner: root
+    group: root
+    mode: '0755'
+  with_fileglob:
+    - "prolog.d/*"
+
+- name: "Install epilog scripts"
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/slurm/epilog.d/"
+    owner: root
+    group: root
+    mode: '0755'
+  with_fileglob:
+    - "epilog.d/*"

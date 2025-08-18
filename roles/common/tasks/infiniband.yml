@@ -1,0 +1,42 @@
+# roles/common/tasks/infiniband.yml - InfiniBand/RDMA support for HPC cluster
+---
+- name: "Install InfiniBand packages"
+  apt:
+    name:
+      - rdma-core
+      - libibverbs-dev
+      - librdmacm-dev
+      - infiniband-diags
+      - perftest
+      - ibutils
+    state: present
+
+- name: "Load InfiniBand kernel modules"
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ib_core
+    - ib_uverbs
+    - rdma_cm
+    - mlx5_core
+    - mlx5_ib
+
+- name: "Configure InfiniBand modules to load at boot"
+  lineinfile:
+    path: /etc/modules-load.d/infiniband.conf
+    line: "{{ item }}"
+    create: yes
+  loop:
+    - ib_core
+    - ib_uverbs
+    - rdma_cm
+    - mlx5_core
+    - mlx5_ib
+
+- name: "Start and enable rdma service"
+  systemd:
+    name: rdma-hw
+    state: started
+    enabled: yes
+  ignore_errors: yes

@@ -33,6 +33,12 @@
 - name: "[SLURM-MASTER] Настройка systemd сервисов"
   include_tasks: services.yml
 
+- name: "Configure JWT authentication for OpenOnDemand"
+  include_tasks: jwt_config.yml
+
+- name: "Fix permissions and create users"
+  include_tasks: fix_permissions.yml
+
 # =============================================================================
 # PROLOG/EPILOG СКРИПТЫ ДЛЯ ENROOT (DEEPOPS ПОДХОД)
 # =============================================================================
@@ -94,10 +100,6 @@
 # ФИНАЛЬНАЯ ИНФОРМАЦИЯ
 # =============================================================================
 
-- name: "[SLURM-MASTER] Завершение настройки"
+- name: "Display master configuration completion"
   debug:
-    msg: |
-      ✅ Slurm Master настроен!
-      🔧 Кластер: {{ slurm_cluster_name | default('hpc-cluster') }}
-      🎛️ Controller: {{ inventory_hostname }}:{{ slurm_controller_port | default(6817) }}
-      💾 Database: {{ slurm_db_enabled | default(true) | ternary('включена', 'отключена') }}
+    msg: "Slurm master node configured successfully on {{ inventory_hostname }}"
