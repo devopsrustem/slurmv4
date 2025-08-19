@@ -1,0 +1,19 @@
+# roles/slurm_web/templates/gateway.ini.j2 - Slurm-web gateway configuration
+[service]
+interface={{ slurm_web_interface | default('0.0.0.0') }}
+
+[agents]
+url=http://localhost:5012
+
+[ui]
+host=http://{{ ansible_default_ipv4.address }}:5011
+
+[authentication]
+enabled={{ slurm_web_auth_enabled | default(false) | ternary('yes', 'no') }}
+
+{% if slurm_web_auth_enabled | default(false) %}
+[ldap]
+uri={{ slurm_web_ldap_uri | default('ldap://localhost') }}
+user_base={{ slurm_web_ldap_user_base | default('ou=people,dc=example,dc=com') }}
+group_base={{ slurm_web_ldap_group_base | default('ou=groups,dc=example,dc=com') }}
+{% endif %}

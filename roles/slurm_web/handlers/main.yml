@@ -1,0 +1,11 @@
+# roles/slurm_web/handlers/main.yml - Slurm-web handlers
+---
+- name: restart slurm-web-agent
+  systemd:
+    name: slurm-web-agent
+    state: restarted
+
+- name: restart slurm-web-gateway
+  systemd:
+    name: slurm-web-gateway
+    state: restarted

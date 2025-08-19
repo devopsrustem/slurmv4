@@ -18,6 +18,10 @@ ControlAddr={{ slurm_controller_addr }}
 AuthType=auth/munge
 CredType=cred/munge
 
+# JWT Authentication for REST API
+AuthAltTypes=auth/jwt
+AuthAltParameters=jwt_key=/var/spool/slurm/jwt_hs256.key
+
 # =============================================================================
 # USERS AND PERMISSIONS
 # =============================================================================

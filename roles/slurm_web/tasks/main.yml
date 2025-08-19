@@ -1,0 +1,75 @@
+# roles/slurm_web/tasks/main.yml - Slurm-web installation and configuration
+---
+- name: "Display Slurm-web installation start"
+  debug:
+    msg: "Installing Slurm-web on {{ inventory_hostname }}"
+
+- name: "Install repository signing key"
+  shell: |
+    curl -sS https://pkgs.rackslab.io/keyring.asc | gpg --dearmor | tee /usr/share/keyrings/rackslab.gpg > /dev/null
+  args:
+    creates: /usr/share/keyrings/rackslab.gpg
+
+- name: "Create APT sources file"
+  copy:
+    dest: /etc/apt/sources.list.d/rackslab.sources
+    content: |
+      Types: deb
+      URIs: https://pkgs.rackslab.io/deb
+      Suites: ubuntu24.04
+      Components: main slurmweb-5
+      Architectures: amd64
+      Signed-By: /usr/share/keyrings/rackslab.gpg
+
+- name: "Update package repositories"
+  apt:
+    update_cache: yes
+
+- name: "Install Slurm-web packages"
+  apt:
+    name:
+      - slurm-web-agent
+      - slurm-web-gateway
+    state: present
+
+- name: "Create agent configuration"
+  template:
+    src: agent.ini.j2
+    dest: /etc/slurm-web/agent.ini
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart slurm-web-agent
+
+- name: "Create gateway configuration"
+  template:
+    src: gateway.ini.j2
+    dest: /etc/slurm-web/gateway.ini
+    owner: root
+    group: root
+    mode: '0644'
+  notify: restart slurm-web-gateway
+
+- name: "Generate Slurm-web JWT key"
+  command: /usr/libexec/slurm-web/slurm-web-gen-jwt-key
+  args:
+    creates: /var/lib/slurm-web/jwt.key
+
+- name: "Copy Slurm JWT key for slurmrestd authentication"
+  copy:
+    src: /var/spool/slurm/jwt_hs256.key
+    dest: /var/lib/slurm-web/slurmrestd.key
+    owner: slurm-web
+    group: slurm-web
+    mode: '0400'
+    remote_src: yes
+
+- name: "Enable and start Slurm-web services"
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+    daemon_reload: yes
+  loop:
+    - slurm-web-agent
+    - slurm-web-gateway

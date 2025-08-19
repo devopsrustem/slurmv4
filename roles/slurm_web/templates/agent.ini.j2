@@ -1,0 +1,18 @@
+# roles/slurm_web/templates/agent.ini.j2 - Slurm-web agent configuration
+[service]
+cluster={{ slurm_cluster_name }}
+
+[slurmrestd]
+uri=unix:/run/slurmrestd/slurmrestd.socket
+
+[racksdb]
+enabled=no
+
+[cache]
+enabled={{ slurm_web_cache_enabled | default(false) | ternary('yes', 'no') }}
+
+[metrics]
+enabled={{ slurm_web_metrics_enabled | default(false) | ternary('yes', 'no') }}
+restrict=
+  127.0.0.1/32
+  {{ ansible_default_ipv4.address }}/32

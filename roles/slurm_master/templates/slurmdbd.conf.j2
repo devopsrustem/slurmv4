@@ -13,6 +13,10 @@
 AuthType=auth/munge
 AuthInfo=/var/run/munge/munge.socket.2
 
+# JWT Authentication for REST API
+AuthAltTypes=auth/jwt
+AuthAltParameters=jwt_key=/var/spool/slurm/jwt_hs256.key
+
 # User/Group
 SlurmUser={{ slurm_user }}
 

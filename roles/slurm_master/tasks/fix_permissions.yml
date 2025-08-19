@@ -19,7 +19,7 @@
 
 - name: "Set JWT key permissions for slurmrest"
   file:
-    path: /etc/slurm/jwt_hs256.key
+    path: /var/spool/slurm/jwt_hs256.key
     owner: slurmrest
     group: slurmrest
     mode: '0600'

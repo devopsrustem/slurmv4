@@ -1,0 +1,24 @@
+# playbooks/slurm-web.yml - Slurm-web installation playbook
+---
+- name: "Install Slurm-web dashboard"
+  hosts: slurm_master
+  become: true
+  gather_facts: true
+  roles:
+    - slurm_web
+
+- name: "Display Slurm-web access information"
+  hosts: slurm_master
+  gather_facts: true
+  tasks:
+    - name: "Show Slurm-web access URL"
+      debug:
+        msg: |
+          🌐 Slurm-web dashboard is available at:
+          http://{{ ansible_default_ipv4.address }}:5011
+          
+          📊 Metrics endpoint (for Prometheus):
+          http://{{ ansible_default_ipv4.address }}:5012/metrics
+          
+          🔧 Test connection with:
+          sudo /usr/libexec/slurm-web/slurm-web-connect-check

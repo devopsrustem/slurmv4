@@ -10,7 +10,10 @@ User=slurmrest
 Group=slurmrest
 Environment="SLURM_CONF=/etc/slurm/slurm.conf"
 EnvironmentFile=-/etc/default/slurmrestd
-ExecStart=/opt/slurm/sbin/slurmrestd $SLURMRESTD_OPTIONS -vvv 0.0.0.0:6820
+ExecStart=/opt/slurm/sbin/slurmrestd $SLURMRESTD_OPTIONS -a rest_auth/jwt unix:/run/slurmrestd/slurmrestd.socket
+RuntimeDirectory=slurmrestd
+RuntimeDirectoryMode=0755
+Environment="SLURM_JWT=daemon"
 ExecReload=/bin/kill -HUP $MAINPID
 PIDFile=/var/run/slurmrestd.pid
 KillMode=process

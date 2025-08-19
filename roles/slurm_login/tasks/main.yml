@@ -153,7 +153,7 @@
       
       # Show cluster info on login
       if [ -t 1 ] && command -v sinfo >/dev/null 2>&1; then
-        echo "🎯 HPC Cluster Status:"
+        echo "### HPC Cluster Status: ###"
         sinfo --summarize 2>/dev/null || echo "Cluster information unavailable"
         echo ""
       fi
@@ -236,7 +236,7 @@
     mode: '0644'
     content: |
       ================================================================================
-      🎯 HPC CLUSTER LOGIN NODE
+      HPC CLUSTER LOGIN NODE
       ================================================================================
       
       Welcome to {{ inventory_hostname }} - Slurm HPC Cluster Login Node

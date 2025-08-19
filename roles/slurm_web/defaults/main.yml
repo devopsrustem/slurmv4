@@ -1,0 +1,12 @@
+# roles/slurm_web/defaults/main.yml - Slurm-web default variables
+---
+# Web interface settings
+slurm_web_interface: "0.0.0.0"
+slurm_web_cache_enabled: false
+slurm_web_metrics_enabled: true
+
+# Authentication settings
+slurm_web_auth_enabled: false
+slurm_web_ldap_uri: "ldap://localhost"
+slurm_web_ldap_user_base: "ou=people,dc=example,dc=com"
+slurm_web_ldap_group_base: "ou=groups,dc=example,dc=com"
