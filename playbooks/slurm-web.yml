@@ -20,5 +20,7 @@
           📊 Metrics endpoint (for Prometheus):
           http://{{ ansible_default_ipv4.address }}:5012/metrics
           
+          🗄️  Redis cache: configurable via slurm_web_cache_enabled variable
+          
           🔧 Test connection with:
           sudo /usr/libexec/slurm-web/slurm-web-connect-check

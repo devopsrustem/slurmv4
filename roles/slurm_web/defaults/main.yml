@@ -5,6 +5,11 @@ slurm_web_interface: "0.0.0.0"
 slurm_web_cache_enabled: false
 slurm_web_metrics_enabled: true
 
+# Cache settings (Redis)
+slurm_web_cache_host: "localhost"
+slurm_web_cache_port: 6379
+slurm_web_cache_timeout: 300
+
 # Authentication settings
 slurm_web_auth_enabled: false
 slurm_web_ldap_uri: "ldap://localhost"

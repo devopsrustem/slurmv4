@@ -32,6 +32,19 @@
       - slurm-web-gateway
     state: present
 
+- name: "Install Redis for caching"
+  apt:
+    name: redis-server
+    state: present
+  when: slurm_web_cache_enabled
+
+- name: "Start and enable Redis"
+  systemd:
+    name: redis-server
+    state: started
+    enabled: yes
+  when: slurm_web_cache_enabled
+
 - name: "Create agent configuration"
   template:
     src: agent.ini.j2

@@ -10,9 +10,15 @@ enabled=no
 
 [cache]
 enabled={{ slurm_web_cache_enabled | default(false) | ternary('yes', 'no') }}
+{% if slurm_web_cache_enabled | default(false) %}
+host={{ slurm_web_cache_host | default('localhost') }}
+port={{ slurm_web_cache_port | default(6379) }}
+timeout={{ slurm_web_cache_timeout | default(300) }}
+{% endif %}
 
 [metrics]
 enabled={{ slurm_web_metrics_enabled | default(false) | ternary('yes', 'no') }}
+job=slurm-web
 restrict=
   127.0.0.1/32
   {{ ansible_default_ipv4.address }}/32
