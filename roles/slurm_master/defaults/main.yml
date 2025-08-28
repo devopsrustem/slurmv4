@@ -1,4 +1,4 @@
-# roles/slurm_master/defaults/main.yml
+# roles/master_nodes/defaults/main.yml
 ---
 # =============================================================================
 # SLURM MASTER DEFAULTS (автоопределение ресурсов)
@@ -60,7 +60,7 @@ slurm_node_defaults:
 slurm_default_partition: "compute"
 slurm_partitions:
   - name: "compute"
-    nodes: "{{ groups['slurm_compute'] | join(',') }}"
+    nodes: "{{ groups['compute_nodes'] | join(',') }}"
     default: true
     max_time: "INFINITE"
     state: "UP"

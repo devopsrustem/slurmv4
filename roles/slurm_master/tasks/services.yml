@@ -1,4 +1,4 @@
-# roles/slurm_master/tasks/services.yml
+# roles/master_nodes/tasks/services.yml
 ---
 # =============================================================================
 # SYSTEMD SERVICES (упрощенная версия)
@@ -54,8 +54,8 @@
 - name: "[SERVICES] Сервисы запущены"
   debug:
     msg: |
-      🎛️ Slurm сервисы:
+      Slurm сервисы:
       ✅ slurmdbd запущен
       ✅ slurmctld запущен
-      🔧 Проверьте: systemctl status slurmctld slurmdbd
+       Проверьте: systemctl status slurmctld slurmdbd
   tags: services

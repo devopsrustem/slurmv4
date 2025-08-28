@@ -1,4 +1,4 @@
-# roles/slurm_compute/tasks/prolog_epilog.yml - Install prolog/epilog scripts
+# roles/compute_nodes/tasks/prolog_epilog.yml - Install prolog/epilog scripts
 ---
 - name: "Create prolog/epilog directories"
   file:

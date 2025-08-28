@@ -16,8 +16,8 @@ slurm_pyxis_version: "0.20.0"  # Обновленная версия
 slurm_pyxis_tarball_url: "https://github.com/NVIDIA/pyxis/archive/v{{ slurm_pyxis_version }}.tar.gz"
 
 # Роли узлов (автоопределение)
-is_controller: "{{ inventory_hostname in groups['slurm_master'] }}"
-is_compute: "{{ inventory_hostname in groups['slurm_compute'] }}"
+is_controller: "{{ inventory_hostname in groups['master_nodes'] }}"
+is_compute: "{{ inventory_hostname in groups['compute_nodes'] }}"
 
 # Зависимости
 pyxis_ubuntu_deps:

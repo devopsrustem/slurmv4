@@ -1,5 +1,15 @@
 # roles/pmix/tasks/main.yml - PMIx installation and configuration
 ---
+- name: Check if PMIx is already installed
+  stat:
+    path: "{{ pmix_prefix }}/bin/pmix_info"
+  register: pmix_installed
+
+- name: Skip PMIx build if already installed
+  debug:
+    msg: "PMIx already installed at {{ pmix_prefix }}"
+  when: pmix_installed.stat.exists and not pmix_force_rebuild
+
 - name: Install PMIx build dependencies
   package:
     name:
@@ -12,16 +22,19 @@
       - libhwloc-dev
       - zlib1g-dev
     state: present
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Create PMIx build directory
   file:
     path: "{{ pmix_build_dir }}"
     state: directory
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Download PMIx source
   get_url:
     url: "https://github.com/openpmix/openpmix/releases/download/v{{ pmix_version }}/pmix-{{ pmix_version }}.tar.gz"
     dest: "{{ pmix_build_dir }}/pmix-{{ pmix_version }}.tar.gz"
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Extract PMIx source
   unarchive:
@@ -30,6 +43,7 @@
     remote_src: yes
     extra_opts:
       - --strip-components=1
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Configure PMIx
   command: >
@@ -39,16 +53,19 @@
   args:
     chdir: "{{ pmix_build_dir }}"
     creates: "{{ pmix_build_dir }}/pmix-{{ pmix_version }}/Makefile"
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Build PMIx
   shell: "make -j$(nproc) > build.log 2>&1"
   args:
     chdir: "{{ pmix_build_dir }}"
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Install PMIx
   shell: "make -j$(nproc) install >> build.log 2>&1"
   args:
     chdir: "{{ pmix_build_dir }}"
+  when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Add PMIx to library path
   lineinfile:

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  xdmod:
+    build: .
+    container_name: xdmod-container
+    hostname: xdmod.local
+
+    ports:
+      - "8443:443"  # HTTPS на порту 8443
+      - "8080:80"   # HTTP на порту 8080
+
+    volumes:
+      # Персистентные данные MySQL
+      - xdmod_mysql:/var/lib/mysql
+
+      # Логи Open XDMoD
+      - xdmod_logs:/var/log/xdmod
+
+      # Данные и бэкапы
+      - xdmod_data:/opt/xdmod-data
+
+      # SLURM директории (если есть - раскомментируйте)
+      - /var/log/slurm:/var/log/slurm:ro
+      - /var/spool/slurm:/var/spool/slurm:ro
+      - /etc/slurm:/etc/slurm:ro
+      - /opt/slurm:/opt/slurm:ro
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=secure_root_password_123
+      - XDMOD_DB_PASSWORD=secure_xdmod_password_123
+      - TZ=Europe/Moscow
+
+    # Ресурсы
+    mem_limit: 4g
+    cpus: 2.0
+
+    # Политика перезапуска
+    restart: unless-stopped
+
+volumes:
+  xdmod_mysql:
+    driver: local
+  xdmod_logs:
+    driver: local
+  xdmod_data:
+    driver: local

@@ -1,4 +1,4 @@
-# roles/slurm_compute/tasks/main.yml - Slurm compute node configuration
+# roles/compute_nodes/tasks/main.yml - Slurm compute node configuration
 ---
 - name: "Display compute node configuration start"
   debug:
@@ -28,7 +28,7 @@
 
 - name: "[SLURM-COMPUTE] Проверка доступности мастер узла"
   wait_for:
-    host: "{{ slurm_master_addr }}"
+    host: "{{ master_nodes_addr }}"
     port: 6817
     timeout: 10
   ignore_errors: true
@@ -38,8 +38,8 @@
 - name: "[SLURM-COMPUTE] Предупреждение о мастер узле"
   debug:
     msg: |
-      ⚠️  Мастер узел {{ slurm_master_host }}:6817 недоступен
-      🔧 Продолжаем настройку, но slurmd может не запуститься
+        Мастер узел {{ master_nodes_host }}:6817 недоступен
+       Продолжаем настройку, но slurmd может не запуститься
   when: master_connectivity.failed | default(false)
   tags: verify
 
@@ -148,7 +148,7 @@
       🎮 GPU обнаружены:
       {{ nvidia_check.stdout_lines | join('\n') }}
       {% else %}
-      ⚠️  GPU не обнаружены или nvidia-smi недоступен
+        GPU не обнаружены или nvidia-smi недоступен
       📝 Будет использоваться конфигурация по умолчанию
       {% endif %}
   when: gpu_detection_enabled
@@ -195,7 +195,7 @@
   debug:
     msg: |
       🗂️  Cgroup версия: {{ cgroup_version.stdout | default('не определена') }}
-      📁 Точка монтирования: /sys/fs/cgroup
+       Точка монтирования: /sys/fs/cgroup
   when: cgroup_enabled
   tags: cgroup
 
@@ -280,11 +280,11 @@
 - name: "[SLURM-COMPUTE] Тест подключения к мастеру"
   shell: |
     # Попробуем подключиться к slurmctld
-    timeout 10 telnet {{ slurm_master_addr }} 6817 </dev/null >/dev/null 2>&1
+    timeout 10 telnet {{ master_nodes_addr }} 6817 </dev/null >/dev/null 2>&1
     if [ $? -eq 0 ]; then
       echo "✅ Подключение к мастеру работает"
     else
-      echo "⚠️  Подключение к мастеру недоступно"
+      echo "  Подключение к мастеру недоступно"
     fi
   register: master_connection_test
   failed_when: false

@@ -1,4 +1,4 @@
-# roles/slurm_master/tasks/mariadb.yml
+# roles/master_nodes/tasks/mariadb.yml
 ---
 # =============================================================================
 # MARIADB SETUP FOR SLURM (только shell команды, НЕ ansible модули)
@@ -15,7 +15,7 @@
     msg: "🐬 MariaDB версия: {{ mariadb_version.stdout_lines[1] | default('unknown') }}"
   tags: mariadb
 
-- name: "[MARIADB] Создание пользователя и базы Slurm (исправленная версия)"
+- name: "[MARIADB] Создание пользователя и базы Slurm"
   shell: |
     sudo mysql -e "CREATE USER IF NOT EXISTS '{{ slurm_db_user }}'@'localhost' IDENTIFIED BY '{{ slurm_db_password }}';"
     sudo mysql -e "CREATE USER IF NOT EXISTS '{{ slurm_db_user }}'@'%' IDENTIFIED BY '{{ slurm_db_password }}';"
@@ -29,9 +29,9 @@
 - name: "[MARIADB] Результат создания пользователя"
   debug:
     msg: |
-      📝 Создание пользователя: {{ mariadb_setup.rc == 0 | ternary('✅ УСПЕХ', '❌ ошибка') }}
+        Создание пользователя: {{ mariadb_setup.rc == 0 | ternary('✅ УСПЕХ', '❌ ошибка') }}
       {% if mariadb_setup.rc != 0 %}
-      ⚠️  Ошибка: {{ mariadb_setup.stderr }}
+        Ошибка: {{ mariadb_setup.stderr }}
       {% endif %}
   tags: mariadb
 
@@ -79,14 +79,14 @@
     msg: |
       🐬 MariaDB настройка завершена:
       👤 Пользователь: {{ slurm_db_user }}
-      📊 База: {{ slurm_db_name }}
+       База: {{ slurm_db_name }}
       ✅ Подключение: {{ slurm_test.rc == 0 | ternary('РАБОТАЕТ!', 'ошибка') }}
       
-      📋 Доступные базы:
+       Доступные базы:
       {{ databases_list.stdout | default('не получены') }}
       
       {% if slurm_test.rc == 0 %}
-      🎉 ГОТОВ ДЛЯ SLURM!
+       ГОТОВ ДЛЯ SLURM!
       {% else %}
       ❌ Проблема: {{ slurm_test.stderr | default('неизвестно') }}
       {% endif %}

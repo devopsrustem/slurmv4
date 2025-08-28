@@ -1,4 +1,4 @@
-# roles/slurm_compute/handlers/main.yml
+# roles/compute_nodes/handlers/main.yml
 ---
 # =============================================================================
 # SLURM COMPUTE HANDLERS

@@ -1,0 +1,16 @@
+---
+# roles/common/tasks/disable_cloud_init.yml - Remove cloud-init for HPC
+- name: "Check if cloud-init packages are installed"
+  package_facts:
+    manager: apt
+
+- name: "Remove cloud-init packages completely"
+  apt:
+    name:
+      - cloud-init
+      - cloud-guest-utils
+      - cloud-initramfs-copymods
+      - cloud-initramfs-dyn-netconf
+    state: absent
+    purge: yes
+  when: "'cloud-init' in ansible_facts.packages"

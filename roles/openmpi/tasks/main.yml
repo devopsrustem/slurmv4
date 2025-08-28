@@ -1,5 +1,15 @@
 # roles/openmpi/tasks/main.yml - OpenMPI installation with PMIx integration
 ---
+- name: Check if OpenMPI is already installed
+  stat:
+    path: "{{ openmpi_prefix }}/bin/mpirun"
+  register: openmpi_installed
+
+- name: Skip OpenMPI build if already installed
+  debug:
+    msg: "OpenMPI already installed at {{ openmpi_prefix }}"
+  when: openmpi_installed.stat.exists and not openmpi_force_rebuild
+
 - name: Install OpenMPI build dependencies
   package:
     name:
@@ -9,22 +19,26 @@
       - libevent-dev
       - zlib1g-dev
     state: present
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Create OpenMPI build directory
   file:
     path: "{{ openmpi_build_dir }}"
     state: directory
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Download OpenMPI source
   get_url:
     url: "https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-{{ openmpi_version }}.tar.gz"
     dest: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}.tar.gz"
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Extract OpenMPI source
   unarchive:
     src: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}.tar.gz"
     dest: "{{ openmpi_build_dir }}"
     remote_src: yes
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Configure OpenMPI with PMIx
   shell: |
@@ -39,6 +53,7 @@
   args:
     chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
     creates: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}/Makefile"
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Build OpenMPI
   shell: |
@@ -46,11 +61,13 @@
     make -j$(nproc)
   args:
     chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Install OpenMPI
   shell: "make install"
   args:
     chdir: "{{ openmpi_build_dir }}/openmpi-{{ openmpi_version }}"
+  when: not openmpi_installed.stat.exists or openmpi_force_rebuild
 
 - name: Add OpenMPI to library path
   lineinfile:

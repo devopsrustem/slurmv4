@@ -1,7 +1,7 @@
 
-# roles/slurm_compute/meta/main.yml
+# roles/compute_nodes/meta/main.yml
 ---
-# Метаданные роли slurm_compute
+# Метаданные роли compute_nodes
 
 galaxy_info:
   author: DevOps Team

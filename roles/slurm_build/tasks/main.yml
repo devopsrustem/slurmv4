@@ -10,7 +10,7 @@
   apt:
     name: "{{ slurm_build_dependencies }}"
     state: present
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
   tags:
     - dependencies
 
@@ -21,7 +21,7 @@
     owner: root
     group: root
     mode: '0755'
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
   tags:
     - download
     - build
@@ -30,7 +30,7 @@
   stat:
     path: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
   register: slurm_tarball
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Download Slurm source"
   get_url:
@@ -39,13 +39,13 @@
     mode: '0644'
     timeout: 300
   when: 
-    - inventory_hostname in groups['slurm_master']
+    - inventory_hostname in groups['master_nodes']
     - not slurm_tarball.stat.exists
 
 - name: "Clean previous build if forced rebuild"
   shell: rm -rf {{ slurm_build_dir }}/slurm-{{ slurm_version }}
   when: 
-    - inventory_hostname in groups['slurm_master']
+    - inventory_hostname in groups['master_nodes']
     - slurm_force_rebuild | bool
 
 - name: "Extract Slurm source"
@@ -53,19 +53,19 @@
     src: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}.tar.bz2"
     dest: "{{ slurm_build_dir }}"
     remote_src: yes
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Verify PMIx installation"
   stat:
     path: "/opt/pmix/lib/libpmix.so"
   register: pmix_check
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Fail if PMIx not found"
   fail:
     msg: "PMIx not installed in /opt/pmix. Install PMIx on master node first."
   when: 
-    - inventory_hostname in groups['slurm_master']
+    - inventory_hostname in groups['master_nodes']
     - not pmix_check.stat.exists
 
 - name: "Configure Slurm build"
@@ -91,7 +91,7 @@
       --enable-developer
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
   register: slurm_configure
   tags:
     - build
@@ -103,7 +103,7 @@
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}/src/slurmctld/slurmctld"
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Install Slurm on master"
   shell: |
@@ -112,7 +112,7 @@
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_install_prefix }}/sbin/slurmctld"
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Install Slurm development headers"
   shell: |
@@ -123,7 +123,7 @@
   args:
     chdir: "{{ slurm_build_dir }}/slurm-{{ slurm_version }}"
     creates: "{{ slurm_install_prefix }}/include/slurm/spank.h"
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Create Slurm directory on all nodes"
   file:
@@ -150,13 +150,13 @@
     chown -R root:root /sw/slurm-complete
     chmod -R 755 /sw/slurm-complete/bin /sw/slurm-complete/sbin
     chmod -R 644 /sw/slurm-complete/include
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Wait for archive to be ready"
   wait_for:
     path: "/sw/slurm-complete/include/slurm/spank.h"
     timeout: 30
-  when: inventory_hostname not in groups['slurm_master']
+  when: inventory_hostname not in groups['master_nodes']
 
 - name: "Install Slurm from archive on nodes"
   shell: |
@@ -173,7 +173,7 @@
       echo "ERROR: Headers not installed!"
       exit 1
     fi
-  when: inventory_hostname not in groups['slurm_master']
+  when: inventory_hostname not in groups['master_nodes']
 
 - name: "Create symlinks for Slurm user commands"
   file:

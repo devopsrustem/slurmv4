@@ -1,4 +1,4 @@
-# roles/slurm_master/tasks/fix_permissions.yml - Fix Slurm file permissions
+# roles/master_nodes/tasks/fix_permissions.yml - Fix Slurm file permissions
 ---
 - name: "Create slurmrest user for REST API"
   user:

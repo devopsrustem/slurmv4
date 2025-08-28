@@ -1,23 +1,17 @@
-# roles/common/tasks/wait_for_apt.yml - Disable unattended-upgrades for HPC
+# roles/common/tasks/wait_for_apt.yml - Remove unattended-upgrades for HPC
 ---
-- name: "Stop unattended-upgrades service"
-  systemd:
+- name: "Check if unattended-upgrades package is installed"
+  package_facts:
+    manager: apt
+
+- name: "Remove unattended-upgrades package completely"
+  apt:
     name: unattended-upgrades
-    state: stopped
-    enabled: no
-  ignore_errors: yes
+    state: absent
+    purge: yes
+  when: "'unattended-upgrades' in ansible_facts.packages"
 
-- name: "Kill any running unattended-upgrades processes"
-  shell: pkill -f unattended-upgr
-  failed_when: false
-  changed_when: false
 
-- name: "Disable unattended-upgrades configuration"
-  lineinfile:
-    path: /etc/apt/apt.conf.d/20auto-upgrades
-    regexp: '^APT::Periodic::Unattended-Upgrade'
-    line: 'APT::Periodic::Unattended-Upgrade "0";'
-    create: yes
 
 - name: "Wait for apt lock to be released"
   shell: |

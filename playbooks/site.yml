@@ -8,9 +8,9 @@
       debug:
         msg: |
           Deploying Slurm HPC cluster
-          Master nodes: {{ groups['slurm_master'] | join(', ') }}
-          Login nodes:  {{ groups['slurm_login'] | join(', ') }}
-          Compute nodes: {{ groups['slurm_compute'] | join(', ') }}
+          Master nodes: {{ groups['master_nodes'] | join(', ') }}
+          Login nodes:  {{ groups['login_nodes'] | join(', ') }}
+          Compute nodes: {{ groups['compute_nodes'] | join(', ') }}
 
 - name: "Base system preparation"
   hosts: slurm_cluster
@@ -27,7 +27,7 @@
     - pmix
 
 - name: "Install OpenMPI on compute nodes"
-  hosts: slurm_compute
+  hosts: compute_nodes
   become: true
   gather_facts: true
   roles:
@@ -41,28 +41,28 @@
     - slurm_build
 
 - name: "Configure master nodes"
-  hosts: slurm_master
+  hosts: master_nodes
   become: true
   gather_facts: true
   roles:
-    - slurm_master
+    - master_nodes
 
 - name: "Configure compute nodes"
-  hosts: slurm_compute
+  hosts: compute_nodes
   become: true
   gather_facts: true
   roles:
-    - slurm_compute
+    - compute_nodes
 
 - name: "Configure login nodes"
-  hosts: slurm_login
+  hosts: login_nodes
   become: true
   gather_facts: true
   roles:
-    - slurm_login
+    - login_nodes
 
 - name: "Disable AppArmor on compute nodes"
-  hosts: slurm_compute
+  hosts: compute_nodes
   become: true
   gather_facts: true
   roles:
@@ -91,17 +91,17 @@
         name: slurmd
         state: restarted
         daemon_reload: yes
-      when: inventory_hostname in groups['slurm_compute']
+      when: inventory_hostname in groups['compute_nodes']
 
     - name: "Restart slurmctld service"
       systemd:
         name: slurmctld
         state: restarted
         daemon_reload: yes
-      when: inventory_hostname in groups['slurm_master']
+      when: inventory_hostname in groups['master_nodes']
 
 - name: "Resume compute nodes"
-  hosts: slurm_master
+  hosts: master_nodes
   become: true
   tasks:
     - name: "Wait for slurmd to be ready on compute nodes"
@@ -109,10 +109,10 @@
         port: 6818
         host: "{{ item }}"
         timeout: 60
-      loop: "{{ groups['slurm_compute'] }}"
+      loop: "{{ groups['compute_nodes'] }}"
       ignore_errors: yes
 
     - name: "Resume all compute nodes"
       shell: scontrol update NodeName={{ item }} State=RESUME
-      loop: "{{ groups['slurm_compute'] }}"
+      loop: "{{ groups['compute_nodes'] }}"
       ignore_errors: yes

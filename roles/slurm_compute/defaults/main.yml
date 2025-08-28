@@ -1,4 +1,4 @@
-# roles/slurm_compute/defaults/main.yml
+# roles/compute_nodes/defaults/main.yml
 ---
 # =============================================================================
 # SLURM COMPUTE NODE DEFAULTS
@@ -14,8 +14,8 @@ slurm_daemon_port: 6818
 slurm_debug_level: "3"
 
 # Controller connection
-slurm_master_host: "{{ groups['slurm_master'][0] }}"
-slurm_master_addr: "{{ hostvars[groups['slurm_master'][0]]['ansible_default_ipv4']['address'] | default(groups['slurm_master'][0]) }}"
+master_nodes_host: "{{ groups['master_nodes'][0] }}"
+master_nodes_addr: "{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] | default(groups['master_nodes'][0]) }}"
 
 # Slurm users
 slurm_user: "slurm"

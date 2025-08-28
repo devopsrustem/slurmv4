@@ -1,6 +1,6 @@
-# roles/slurm_login/meta/main.yml
+# roles/login_nodes/meta/main.yml
 ---
-# Метаданные роли slurm_login
+# Метаданные роли login_nodes
 
 galaxy_info:
   author: DevOps Team

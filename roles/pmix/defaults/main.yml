@@ -1,5 +1,6 @@
-# roles/pmix/defaults/main.yml - PMIx configuration variables
+# roles/pmix/defaults/main.yml
 ---
 pmix_version: "5.0.3"
 pmix_prefix: "/opt/pmix"
 pmix_build_dir: "/tmp/pmix-build"
+pmix_force_rebuild: false

@@ -1,13 +1,13 @@
-# roles/slurm_login/tasks/main.yml
+# roles/login_nodes/tasks/main.yml
 ---
-# Роль: slurm_login - настройка Login узла для пользователей
+# Роль: login_nodes - настройка Login узла для пользователей
 
 - name: "[SLURM-LOGIN] Начало настройки Slurm Login узла"
   debug:
     msg: |
-      🔑 Настройка Slurm Login узла: {{ inventory_hostname }}
-      🔗 Master: {{ slurm_master_host }}
-      👥 Пользовательский доступ к кластеру
+      Configuring Slurm Login node: {{ inventory_hostname }}
+      Master: {{ master_nodes_host }}
+      Setting up user access to cluster
 
 # =============================================================================
 # УСТАНОВКА ДОПОЛНИТЕЛЬНЫХ ПАКЕТОВ ДЛЯ ПОЛЬЗОВАТЕЛЕЙ
@@ -200,7 +200,7 @@
         esac
         
         if [[ $cur == -* ]]; then
-          COMPREPLY=($(compgen -W "-p --partition -N --nodes -n --ntasks -t --time -J --job-name" -- "$cur"))
+          COMPREPLY=($(compgen -W "-p --partition -N -_nodes -n --ntasks -t --time -J --job-name" -- "$cur"))
         fi
       }
       
@@ -291,19 +291,7 @@
 - name: "[SLURM-LOGIN] Завершение настройки Login узла"
   debug:
     msg: |
-      ✅ Slurm Login узел {{ inventory_hostname }} настроен!
-      
-      👥 Пользователи могут:
-      - Подключаться по SSH
-      - Запускать задачи: sbatch, srun, salloc
-      - Просматривать кластер: sinfo, squeue
-      - Управлять задачами: scancel, scontrol
-      
-      📁 Доступные директории:
-      {{ user_directories | join(', ') }}
-      
-      🔧 Команды Slurm установлены в /usr/bin/
-      📋 Конфигурация синхронизирована с {{ slurm_master_host }}
-      🎯 Алиасы и автодополнение настроены
-      
-      🚀 Login узел готов к работе!
+      Slurm Login node {{ inventory_hostname }} configured successfully.
+      Master: {{ master_nodes_host }}
+      User directories: {{ user_directories | join(', ') }}
+      Slurm commands available in {{ slurm_install_prefix }}/bin

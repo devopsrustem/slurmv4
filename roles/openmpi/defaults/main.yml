@@ -1,6 +1,7 @@
-# roles/openmpi/defaults/main.yml - OpenMPI configuration variables
+# roles/openmpi/defaults/main.yml
 ---
-openmpi_version: "5.0.8"
+openmpi_version: "5.0.5"
 openmpi_prefix: "/opt/openmpi"
 openmpi_build_dir: "/tmp/openmpi-build"
 pmix_prefix: "/opt/pmix"
+openmpi_force_rebuild: false

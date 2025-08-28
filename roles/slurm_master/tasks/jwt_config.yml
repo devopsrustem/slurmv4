@@ -1,4 +1,4 @@
-# roles/slurm_master/tasks/jwt_config.yml - JWT authentication setup for OpenOnDemand
+# roles/master_nodes/tasks/jwt_config.yml - JWT authentication setup for OpenOnDemand
 ---
 - name: "Generate JWT signing key"
   shell: openssl rand -base64 32 > /var/spool/slurm/jwt_hs256.key

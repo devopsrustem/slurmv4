@@ -1,4 +1,4 @@
-# roles/slurm_login/defaults/main.yml
+# roles/login_nodes/defaults/main.yml
 ---
 # =============================================================================
 # SLURM LOGIN NODE DEFAULTS
@@ -10,7 +10,7 @@ slurm_config_dir: "/etc/slurm"
 slurm_log_dir: "/var/log/slurm"
 
 # Master node for config sync
-slurm_master_host: "{{ groups['slurm_master'][0] }}"
+master_nodes_host: "{{ groups['master_nodes'][0] }}"
 
 # Slurm client commands to install
 slurm_client_commands:

@@ -4,8 +4,10 @@
   debug:
     msg: "Configuring base components on {{ inventory_hostname }}"
 
+- include_tasks: disable_cloud_init.yml
+- include_tasks: hosts.yml
 - include_tasks: wait_for_apt.yml
-- include_tasks: infiniband.yml
+# - include_tasks: infiniband.yml
 - include_tasks: network_tuning.yml
 - include_tasks: hpc_environment.yml
 
@@ -49,7 +51,7 @@
   command:
     cmd: /usr/sbin/create-munge-key
     creates: /etc/munge/munge.key
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Configure MUNGE directory permissions"
   file:
@@ -68,8 +70,8 @@
   slurp:
     src: /etc/munge/munge.key
   register: munge_key_from_master
-  delegate_to: "{{ groups['slurm_master'][0] }}"
-  when: inventory_hostname not in groups['slurm_master']
+  delegate_to: "{{ groups['master_nodes'][0] }}"
+  when: inventory_hostname not in groups['master_nodes']
 
 - name: "Create MUNGE key on other nodes"
   copy:
@@ -78,7 +80,7 @@
     owner: munge
     group: munge
     mode: '0400'
-  when: inventory_hostname not in groups['slurm_master']
+  when: inventory_hostname not in groups['master_nodes']
 
 - name: "Set MUNGE key permissions on master"
   file:
@@ -86,7 +88,7 @@
     owner: munge
     group: munge
     mode: '0400'
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Start and enable MUNGE"
   systemd:
@@ -192,28 +194,32 @@
     mode: '0755'
   loop:
     - /sw
-  when: inventory_hostname in groups['nfs_client']
+  when: 
+    - inventory_hostname in groups['nfs_client']
+    - inventory_hostname not in groups['nfs_server']
 
 - name: "Mount NFS shares"
   mount:
     path: "{{ item.path }}"
-    src: "{{ groups['nfs_server'][0] }}:{{ item.src }}"
+    src: "{{ hostvars[groups['nfs_server'][0]]['ansible_default_ipv4']['address'] | default(groups['nfs_server'][0]) }}:{{ item.src }}"
     fstype: nfs
     opts: "{{ nfs_mount_options }}"
     state: mounted
   loop:
     - { path: /home, src: /home }
     - { path: /sw, src: /sw }
-  when: inventory_hostname in groups['nfs_client']
+  when: 
+    - inventory_hostname in groups['nfs_client']
+    - inventory_hostname not in groups['nfs_server']
 
 - name: "Install MariaDB on master"
   apt:
     name:
-      - mariadb-server
-      - mariadb-client  
+      - mariadb_server
+      - mariadb_client  
       - python3-pymysql
     state: present
-  when: inventory_hostname in groups['slurm_master']
+  when: inventory_hostname in groups['master_nodes']
 
 - name: "Create Slurm base directories"
   file:

@@ -25,39 +25,38 @@ sm02
 # =============================================================================
 
 # Slurm controller + database
-[slurm_master]
+[master_nodes]
 sm01
 
 # Slurm login nodes
-[slurm_login]
+[login_nodes]
 sm02
 
 # Slurm compute nodes
-[slurm_compute]
+[compute_nodes]
 cn[01:02]
 
 # =============================================================================
 # ГРУППЫ СЕРВИСОВ
 # =============================================================================
 
-# NFS server (обычно на master ноде)
+# NFS server
 [nfs_server]
-sm01
+sm02
 
-# NFS clients (все остальные ноды)
+# NFS clients
 [nfs_client:children]
-#slurm_login
-slurm_compute
-slurm_login 
+master_nodes
+compute_nodes
 
 # Узлы с GPU (для Enroot + Pyxis)
 [gpu_nodes:children]
-slurm_compute
+compute_nodes
 
 # Узлы для JWT токенов (master + login)
 [jwt_nodes:children]
-slurm_master
-slurm_login
+master_nodes
+login_nodes
 
 # =============================================================================
 # ОБЩИЕ ГРУППЫ
@@ -65,9 +64,9 @@ slurm_login
 
 # Весь Slurm кластер
 [slurm_cluster:children]
-slurm_master
-slurm_login
-slurm_compute
+master_nodes
+login_nodes
+compute_nodes
 
 # Все ноды для общих задач
 [cluster_nodes:children]
@@ -91,16 +90,16 @@ timezone=Europe/Moscow
 # ГРУППО-СПЕЦИФИЧНЫЕ ПЕРЕМЕННЫЕ
 # =============================================================================
 
-[slurm_master:vars]
+[master_nodes:vars]
 # Master node специфичные настройки
 slurm_controller_role=primary
 
-[slurm_compute:vars]
+[compute_nodes:vars]
 # Compute nodes специфичные настройки
 slurm_node_role=compute
 gpu_count=8
 gpu_type=h100
 
-[slurm_login:vars]
+[login_nodes:vars]
 # Login nodes специфичные настройки
 slurm_node_role=login

@@ -14,8 +14,8 @@ slurm_force_rebuild: false
 # NFS НАСТРОЙКИ (АВТООПРЕДЕЛЕНИЕ)
 # =============================================================================
 
-# NFS сервер автоматически определится как первый в группе slurm_master
-# nfs_server: "{{ groups['slurm_master'][0] }}"
+# NFS сервер автоматически определится как первый в группе master_nodes
+# nfs_server: "{{ groups['master_nodes'][0] }}"
 
 # NFS экспорты автоматически создадутся для всех узлов в nfs_client группе
 nfs_export_options: "rw,sync,no_root_squash"

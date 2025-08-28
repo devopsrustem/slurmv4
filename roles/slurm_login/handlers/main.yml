@@ -1,4 +1,4 @@
-# roles/slurm_login/handlers/main.yml
+# roles/login_nodes/handlers/main.yml
 ---
 # =============================================================================
 # SLURM LOGIN HANDLERS
