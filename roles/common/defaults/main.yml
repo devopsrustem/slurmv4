@@ -28,9 +28,9 @@ common_base_packages:
 timezone: "Europe/Moscow"
 
 slurm_user: "slurm"
-slurm_uid: 1001
+slurm_uid: 59901
 slurm_group: "slurm"
-slurm_gid: 1001
+slurm_gid: 59901
 
 nfs_export_dirs:
   - /home
