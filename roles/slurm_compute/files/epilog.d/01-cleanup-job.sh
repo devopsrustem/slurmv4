@@ -3,7 +3,7 @@
 
 # Clean up job-specific temp directory
 if [ -d "/tmp/slurm-${SLURM_JOB_ID}" ]; then
-    rm -rf /tmp/slurm-${SLURM_JOB_ID}
+    rm -rf "/tmp/slurm-${SLURM_JOB_ID}"
 fi
 
 # Log job completion

@@ -56,33 +56,19 @@
     group: root
     mode: '0755'
 
-- name: "Create HPC cluster MOTD"
-  copy:
-    dest: /etc/motd
-    content: |
-      ================================================================================
-      
-         ██╗  ██╗██████╗  ██████╗     ██████╗██╗     ██╗   ██╗███████╗████████╗███████╗██████╗ 
-         ██║  ██║██╔══██╗██╔════╝    ██╔════╝██║     ██║   ██║██╔════╝╚══██╔══╝██╔════╝██╔══██╗
-         ███████║██████╔╝██║         ██║     ██║     ██║   ██║███████╗   ██║   █████╗  ██████╔╝
-         ██╔══██║██╔═══╝ ██║         ██║     ██║     ██║   ██║╚════██║   ██║   ██╔══╝  ██╔══██╗
-         ██║  ██║██║     ╚██████╗    ╚██████╗███████╗╚██████╔╝███████║   ██║   ███████╗██║  ██║
-         ╚═╝  ╚═╝╚═╝      ╚═════╝     ╚═════╝╚══════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-      
-      ================================================================================
-      
-      Welcome to the HPC Cluster!
-      
-      Useful commands:
-        cluster-status     - Check cluster status
-        si                 - Show node information (sinfo)
-        sq                 - Show job queue (squeue)
-        sa                 - Show job accounting (sacct)
-      
-      Documentation: /shared/docs/
-      Support: Create ticket in helpdesk
-      
-      ================================================================================
-    owner: root
-    group: root
+- name: "Create .hushlogin to disable Ubuntu login messages"
+  file:
+    path: /etc/skel/.hushlogin
+    state: touch
     mode: '0644'
+
+- name: "Create .hushlogin for existing users"
+  file:
+    path: "{{ item }}/.hushlogin"
+    state: touch
+    mode: '0644'
+    owner: "{{ item | basename }}"
+  loop:
+    - /home/msu-admin
+    - /root
+  ignore_errors: yes

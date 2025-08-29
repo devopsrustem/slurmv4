@@ -1,13 +1,13 @@
 #!/bin/bash
 # roles/slurm_compute/files/prolog.d/01-setup-job.sh - Job setup script
 
-# Set up job environment
-export SLURM_JOB_ID=${SLURM_JOB_ID}
-export SLURM_JOB_USER=${SLURM_JOB_USER}
+# Validate required SLURM environment variables
+[ -z "${SLURM_JOB_ID}" ] && { echo "Error: SLURM_JOB_ID not set"; exit 1; }
+[ -z "${SLURM_JOB_USER}" ] && { echo "Error: SLURM_JOB_USER not set"; exit 1; }
 
 # Create job-specific temp directory
-mkdir -p /tmp/slurm-${SLURM_JOB_ID}
-chown ${SLURM_JOB_USER}:${SLURM_JOB_USER} /tmp/slurm-${SLURM_JOB_ID}
+mkdir -p "/tmp/slurm-${SLURM_JOB_ID}"
+chown "${SLURM_JOB_USER}:${SLURM_JOB_USER}" "/tmp/slurm-${SLURM_JOB_ID}"
 
 # Set GPU visibility if GPUs allocated
 if [ -n "${SLURM_GPUS}" ]; then

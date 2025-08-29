@@ -100,6 +100,14 @@
 # ФИНАЛЬНАЯ ИНФОРМАЦИЯ
 # =============================================================================
 
+- name: "[SLURM-MASTER] Исправление прав на JWT ключ"
+  file:
+    path: /var/spool/slurm/jwt_hs256.key
+    owner: slurm
+    group: slurm
+    mode: '0600'
+  when: slurm_jwt_enabled | default(true)
+
 - name: "Display master configuration completion"
   debug:
     msg: "Slurm master node configured successfully on {{ inventory_hostname }}"

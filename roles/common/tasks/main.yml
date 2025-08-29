@@ -215,8 +215,8 @@
 - name: "Install MariaDB on master"
   apt:
     name:
-      - mariadb_server
-      - mariadb_client  
+      - mariadb-server
+      - mariadb-client  
       - python3-pymysql
     state: present
   when: inventory_hostname in groups['master_nodes']

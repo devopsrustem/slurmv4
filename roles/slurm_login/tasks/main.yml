@@ -153,7 +153,7 @@
       
       # Show cluster info on login
       if [ -t 1 ] && command -v sinfo >/dev/null 2>&1; then
-        echo "### HPC Cluster Status: ###"
+        echo "### {{ slurm_cluster_name | upper }} HPC Cluster Status: ###"
         sinfo --summarize 2>/dev/null || echo "Cluster information unavailable"
         echo ""
       fi
@@ -236,10 +236,10 @@
     mode: '0644'
     content: |
       ================================================================================
-      HPC CLUSTER LOGIN NODE
+      {{ slurm_cluster_name | upper }} - HPC CLUSTER LOGIN NODE
       ================================================================================
       
-      Welcome to {{ inventory_hostname }} - Slurm HPC Cluster Login Node
+      Welcome to {{ inventory_hostname }} - {{ slurm_cluster_name }} HPC Cluster Login Node
       
       Available commands:
         sinfo     - View cluster status  
@@ -252,6 +252,12 @@
         sq        - squeue
         si        - sinfo  
         sj        - squeue -u $USER
+        
+      NODES(A/I/O/T) в выводе sinfo означает:
+      A = Allocated - узлы, полностью занятые заданиями
+      I = Idle - свободные узлы, готовые к работе
+      O = Other - узлы в других состояниях (drain, down, etc.)
+      T = Total - общее количество узлов
         
       Documentation: Use 'man <command>' for detailed help
       

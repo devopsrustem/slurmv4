@@ -1,5 +1,5 @@
 
-# roles/compute_nodes/meta/main.yml
+# roles/slurm_compute/meta/main.yml
 ---
 # Метаданные роли compute_nodes
 

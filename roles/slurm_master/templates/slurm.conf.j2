@@ -111,7 +111,7 @@ NodeName={{ host }} \
     RealMemory={{ ((node_facts.ansible_memtotal_mb | default(12000)) * 0.9) | int }} \
     TmpDisk={{ ((node_facts.ansible_mounts | default([]) | selectattr('mount', 'equalto', '/') | map(attribute='size_total') | first | default(60000000000) ) / 1024 / 1024 * 0.8) | int }} \
 {% if host in groups['gpu_nodes'] | default([]) %}
-    Gres=gpu:h100:8 \
+    Gres=gpu:{{ hostvars[host]['gpu_type'] | default('a100') }}:{{ hostvars[host]['gpu_count'] | default(8) }} \
 {% endif %}
     State={{ slurm_node_defaults.state }}
 {% endfor %}

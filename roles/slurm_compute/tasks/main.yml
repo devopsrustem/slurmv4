@@ -38,8 +38,8 @@
 - name: "[SLURM-COMPUTE] Предупреждение о мастер узле"
   debug:
     msg: |
-        Мастер узел {{ master_nodes_host }}:6817 недоступен
-       Продолжаем настройку, но slurmd может не запуститься
+      Мастер узел {{ master_nodes_host }}:6817 недоступен
+      Продолжаем настройку, но slurmd может не запуститься
   when: master_connectivity.failed | default(false)
   tags: verify
 

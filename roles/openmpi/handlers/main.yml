@@ -1,4 +1,4 @@
 # roles/openmpi/handlers/main.yml - OpenMPI handlers
 ---
 - name: update ldconfig
-  shell: ldconfig
+  command: ldconfig

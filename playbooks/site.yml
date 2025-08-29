@@ -45,21 +45,21 @@
   become: true
   gather_facts: true
   roles:
-    - master_nodes
+    - slurm_master
 
 - name: "Configure compute nodes"
   hosts: compute_nodes
   become: true
   gather_facts: true
   roles:
-    - compute_nodes
+    - slurm_compute
 
 - name: "Configure login nodes"
   hosts: login_nodes
   become: true
   gather_facts: true
   roles:
-    - login_nodes
+    - slurm_login
 
 - name: "Disable AppArmor on compute nodes"
   hosts: compute_nodes
@@ -113,6 +113,6 @@
       ignore_errors: yes
 
     - name: "Resume all compute nodes"
-      shell: scontrol update NodeName={{ item }} State=RESUME
+      command: scontrol update NodeName={{ item }} State=RESUME
       loop: "{{ groups['compute_nodes'] }}"
       ignore_errors: yes

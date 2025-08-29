@@ -6,7 +6,7 @@
 # КЛАСТЕР НАСТРОЙКИ  
 # =============================================================================
 
-slurm_cluster_name: "hpc-cluster"
+slurm_cluster_name: "tcluster01"
 timezone: "Europe/Moscow"
 slurm_force_rebuild: false
 

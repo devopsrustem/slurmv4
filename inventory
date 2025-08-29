@@ -5,20 +5,12 @@
 
 [all]
 # Master node - контроллер Slurm
-#sm02 ansible_host=192.168.1.10 # <--- ЗАМЕНИТЕ НА АКТУАЛЬНЫЙ IP MASTER NODE
-sm01
-sm02 
+slurm-master ansible_host=10.36.80.9
 # Login node - пользовательский доступ
-#sm03 ansible_host=192.168.1.11 # <--- ЗАМЕНИТЕ НА АКТУАЛЬНЫЙ IP LOGIN NODE
-
+slurm-login ansible_host=10.36.80.10
 # Compute nodes - вычислительные узлы
-#cn[01:64] ansible_host=192.168.1.[21:84] # <--- ЗАМЕНИТЕ НА АКТУАЛЬНЫЙ ДИАПАЗОН IP-АДРЕСОВ ИЛИ ПЕРЕЧИСЛИТЕ ОТДЕЛЬНО
-#cn[01:02] ansible_host=192.168.1.[21:84]
-# Пример:
- cn01 
- cn02 
-# ...
-# cn64 ansible_host=192.168.1.84
+cn01-tc01 ansible_host=10.36.80.101
+cn02-tc01 ansible_host=10.36.80.102
 
 # =============================================================================
 # ГРУППЫ SLURM
@@ -26,15 +18,16 @@ sm02
 
 # Slurm controller + database
 [master_nodes]
-sm01
+slurm-master
 
 # Slurm login nodes
 [login_nodes]
-sm02
+slurm-login
 
 # Slurm compute nodes
 [compute_nodes]
-cn[01:02]
+cn01-tc01
+cn02-tc01
 
 # =============================================================================
 # ГРУППЫ СЕРВИСОВ
@@ -42,7 +35,7 @@ cn[01:02]
 
 # NFS server
 [nfs_server]
-sm02
+slurm-login
 
 # NFS clients
 [nfs_client:children]
@@ -98,7 +91,7 @@ slurm_controller_role=primary
 # Compute nodes специфичные настройки
 slurm_node_role=compute
 gpu_count=8
-gpu_type=h100
+gpu_type=a100
 
 [login_nodes:vars]
 # Login nodes специфичные настройки

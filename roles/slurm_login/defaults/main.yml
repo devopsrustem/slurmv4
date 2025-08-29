@@ -1,4 +1,4 @@
-# roles/login_nodes/defaults/main.yml
+# roles/slurm_login/defaults/main.yml
 ---
 # =============================================================================
 # SLURM LOGIN NODE DEFAULTS
