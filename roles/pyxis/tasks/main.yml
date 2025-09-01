@@ -45,3 +45,10 @@
     fstype: tmpfs
     state: mounted
   when: resize_run_partition | bool
+
+- name: "[PYXIS] Создание Mellanox environment файла"
+  copy:
+    dest: /etc/enroot/environ.d/20-mlx.env
+    content: |
+      MELLANOX_VISIBLE_DEVICES=all
+    mode: '0644'
