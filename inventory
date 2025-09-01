@@ -8,6 +8,8 @@
 slurm-master ansible_host=10.36.80.9
 # Login node - пользовательский доступ
 slurm-login ansible_host=10.36.80.10
+# Metrics server - мониторинг
+metrics ansible_host=10.36.80.11
 # Compute nodes - вычислительные узлы
 cn01-tc01 ansible_host=10.36.80.101
 cn02-tc01 ansible_host=10.36.80.102
@@ -28,6 +30,10 @@ slurm-login
 [compute_nodes]
 cn01-tc01
 cn02-tc01
+
+# Metrics server
+[metrics_nodes]
+metrics
 
 # =============================================================================
 # ГРУППЫ СЕРВИСОВ

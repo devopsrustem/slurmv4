@@ -60,6 +60,7 @@
   gather_facts: true
   roles:
     - slurm_login
+    - slurm_web
 
 - name: "Disable AppArmor on compute nodes"
   hosts: compute_nodes
@@ -112,7 +113,17 @@
       loop: "{{ groups['compute_nodes'] }}"
       ignore_errors: yes
 
-    - name: "Resume all compute nodes"
-      command: scontrol update NodeName={{ item }} State=RESUME
+    - name: "Check node states"
+      shell: scontrol show node {{ item }} | grep -o 'State=[A-Z]*'
       loop: "{{ groups['compute_nodes'] }}"
+      register: node_states
+      changed_when: false
+      failed_when: false
+
+    - name: "Resume nodes that need it"
+      command: scontrol update NodeName={{ item.item }} State=RESUME
+      loop: "{{ node_states.results }}"
+      when: 
+        - item.rc == 0
+        - "'State=DRAIN' in item.stdout or 'State=DOWN' in item.stdout or 'State=UNKNOWN' in item.stdout"
       ignore_errors: yes

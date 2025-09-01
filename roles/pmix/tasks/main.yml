@@ -59,12 +59,16 @@
   shell: "make -j$(nproc) > build.log 2>&1"
   args:
     chdir: "{{ pmix_build_dir }}"
+  register: pmix_build
+  failed_when: pmix_build.rc != 0
   when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Install PMIx
   shell: "make -j$(nproc) install >> build.log 2>&1"
   args:
     chdir: "{{ pmix_build_dir }}"
+  register: pmix_install
+  failed_when: pmix_install.rc != 0
   when: not pmix_installed.stat.exists or pmix_force_rebuild
 
 - name: Add PMIx to library path

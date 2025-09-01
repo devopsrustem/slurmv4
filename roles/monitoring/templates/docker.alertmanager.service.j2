@@ -1,0 +1,18 @@
+[Unit]
+Description=Alert Manager
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull {{ alertmanager_image }}
+ExecStart=/usr/bin/docker run --rm --network host --name %n \
+  -v /etc/alertmanager:/etc/alertmanager \
+  -v deepops_alertmanager_metrics:/alertmanager \
+  {{ alertmanager_image }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+---
+# Срабатывает при критических температурах в ЦОДе
+
+- name: Создаем каталог для webhook сервера
+  file:
+    path: /opt/alert_webhook
+    state: directory
+    mode: '0755'
+    owner: "{{ monitoring_user }}"
+    group: "{{ monitoring_group }}"
+
+- name: Копируем Python webhook сервер
+  template:
+    src: webhook_server.py.j2
+    dest: /opt/alert_webhook/webhook_server.py
+    mode: '0755'
+    owner: "{{ monitoring_user }}"
+    group: "{{ monitoring_group }}"
+  notify: Перезапустить cluster-poweroff
+
+- name: Копируем скрипт выключения кластера
+  template:
+    src: shutdown_cluster.sh.j2
+    dest: /usr/local/bin/shutdown_cluster.sh
+    mode: '0755'
+    owner: root
+    group: root
+  notify: Перезапустить cluster-poweroff
+
+- name: Устанавливаем systemd service для webhook
+  template:
+    src: alert_webhook.service.j2
+    dest: /etc/systemd/system/alert_webhook.service
+    mode: '0644'
+  notify: Перезапустить cluster-poweroff
+
+- name: Создаем лог файл
+  file:
+    path: /var/log/cluster_shutdown.log
+    state: touch
+    mode: '0644'
+    owner: "{{ monitoring_user }}"
+    group: "{{ monitoring_group }}"
+
+- name: "Установка Python3 и Flask из репозитория"
+  package:
+    name:
+      - python3
+      - python3-flask
+    state: present
+    update_cache: yes
+
+- name: Включаем и запускаем webhook сервер
+  systemd:
+    name: alert_webhook.service
+    enabled: true
+    state: started
+    daemon_reload: true

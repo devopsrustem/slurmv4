@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['master_nodes'] %}
+  - {{ host }}:{{ slurm_exporter_port }}
+{% endfor %}
+  labels:
+    module: slurm-exporter

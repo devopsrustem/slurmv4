@@ -1,6 +1,7 @@
 # roles/slurm_web/templates/agent.ini.j2 - Slurm-web agent configuration
 [service]
 cluster={{ slurm_cluster_name }}
+interface=0.0.0.0
 
 [slurmrestd]
 uri=unix:/run/slurmrestd/slurmrestd.socket
@@ -18,7 +19,11 @@ timeout={{ slurm_web_cache_timeout | default(300) }}
 
 [metrics]
 enabled={{ slurm_web_metrics_enabled | default(false) | ternary('yes', 'no') }}
+{% if slurm_web_metrics_enabled | default(false) %}
+host=http://{{ hostvars[groups['metrics_nodes'][0]]['ansible_default_ipv4']['address'] }}:9090
+{% endif %}
 job=slurm-web
 restrict=
   127.0.0.1/32
   {{ ansible_default_ipv4.address }}/32
+  {{ hostvars[groups['metrics_nodes'][0]]['ansible_default_ipv4']['address'] }}/32

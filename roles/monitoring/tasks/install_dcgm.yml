@@ -1,0 +1,27 @@
+---
+- name: Создаем каталог под кастомные метрики
+  file:
+    path: /opt/dcgm-exporter/nvidia-dcgm-exporter
+    state: directory
+    mode: '0755'
+
+- name: Копируем кастомные метрики
+  copy:
+    src: dcgm-custom-metrics.csv
+    dest: /opt/dcgm-exporter/nvidia-dcgm-exporter/dcgm-custom-metrics.csv
+    mode: '0644'
+  notify: Перезапустить dcgm-exporter
+
+- name: Устанавливаем systemd unit
+  template:
+    src: docker.dcgm-exporter.service.j2
+    dest: /etc/systemd/system/docker.dcgm-exporter.service
+    mode: '0644'
+  notify: Перезапустить dcgm-exporter
+
+- name: Включаем и запускаем dcgm-exporter
+  systemd:
+    name: docker.dcgm-exporter.service
+    enabled: true
+    state: started
+    daemon_reload: true

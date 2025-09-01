@@ -1,0 +1,21 @@
+---
+- name: Копируем бинарник slurm-exporter
+  copy:
+    src: prometheus-slurm-exporter
+    dest: /usr/bin/prometheus-slurm-exporter
+    mode: '0755'
+  notify: Перезапустить slurm-exporter
+
+- name: Устанавливаем systemd unit
+  template:
+    src: prometheus-slurm-exporter.service.j2
+    dest: /etc/systemd/system/prometheus-slurm-exporter.service
+    mode: '0644'
+  notify: Перезапустить slurm-exporter
+
+- name: Включаем и запускаем slurm-exporter
+  systemd:
+    name: prometheus-slurm-exporter.service
+    enabled: true
+    state: started
+    daemon_reload: true

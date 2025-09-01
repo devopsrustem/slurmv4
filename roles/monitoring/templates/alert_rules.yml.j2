@@ -1,0 +1,292 @@
+groups:
+    - name: default
+      rules:
+      - alert: InstanceDown
+        expr: up == 0
+        for: {{ alert_instance_down_for | default('5m') }}
+        labels:
+          severity: critical
+        annotations:
+          summary: {% raw %}"{{ $labels.job }} job has been down > {% endraw %}{{ alert_instance_down_for | default('5m') }}{% raw %} on 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.job }} job has been down > {% endraw %}{{ alert_instance_down_for | default('5m') }}{% raw %} on 🔥{{ $labels.instance }}"{% endraw %}
+
+#Alerts fo MSU-Argo-tech
+
+   #КРИТИЧЕСКАЯ ТЕМПЕРАТУРА В ЦОДЕ
+    - name: CLUSTER-POWEROFF
+      rules:
+      - alert: CLUSTER-POWEROFF
+        expr: avg (ipmi_temperature_celsius {name="Inlet Temp"}) > {{ cluster_poweroff_temp_threshold | default('45') }}
+        for: {{ cluster_poweroff_wait_time | default('1h') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 !!!КОНДИЦИОНЕРЫ НЕ РАБОТАЮТ!!! Средняя температура входящего потока воздуха {{ humanize $value }}°C. КЛАСТЕР БУДЕТ ВЫКЛЮЧЕН АВТОМАТИЧЕСКИ!🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+          description: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥 !!Кондиционеры не работают!!! Средняя температура входящего потока воздуха {{ humanize $value }}°C. Кластер будет выключен автоматически! 🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+
+
+    - name: quantile
+      rules:
+      - alert: InletTemperatureIncreasing
+        expr: |
+          avg (quantile_over_time(0.9, ipmi_temperature_celsius{name="Inlet Temp"}[1h]))
+          - avg (quantile_over_time(0.1, ipmi_temperature_celsius{name="Inlet Temp"}[1h])) > {{ inlet_temp_quantile_threshold | default('3') }}
+        for: 0m
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥 Температура в Маш зале растёт на {{ humanize $value }}, обратите внимание на охлаждение 🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+          description: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥 Температура Inlet Temp нестабильна и увеличилась на {{ humanize $value }}°C за последний час 🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+
+    - name: avg
+      rules:
+      - alert: InletTemperatureRising
+        expr: |
+          avg(ipmi_temperature_celsius{name="Inlet Temp"})
+          - avg(ipmi_temperature_celsius{name="Inlet Temp"} offset 1h) > {{ inlet_temp_rise_threshold | default('3') }}
+        for: 0m
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥 Температура на входе за последний час выросла на {{ humanize $value }}°C 🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+          description: {% raw %}"🔥🔥🔥🔥🔥🔥🔥🔥 В маш.зале температура поднялась более чем на 0.1 °C за час 🔥🔥🔥🔥🔥🔥🔥🔥"{% endraw %}
+
+
+   #SLURM
+      - alert: slurm_nodes_comp
+        expr: slurm_nodes_comp > 0
+        for: {{ slurm_alert_wait_time | default('10m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "NODE(S) IS COMPLEATING MORE THEN {{ slurm_alert_wait_time | default('10m') }}"
+          description: "pay attention ON SLURM NODES"
+
+      - alert: slurm_nodes_down
+        expr: slurm_nodes_down > 0
+        for: {{ slurm_alert_wait_time | default('10m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "NODE(S) IS DOWN MORE THEN {{ slurm_alert_wait_time | default('10m') }}"
+          description: "pay attention ON SLURM NODES"
+
+      - alert: slurm_nodes_fail
+        expr: slurm_nodes_fail > 0
+        for: {{ slurm_alert_wait_time | default('10m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "NODE(S) IS FAIL MORE THEN {{ slurm_alert_wait_time | default('10m') }}"
+          description: "pay attention ON SLURM NODES"
+
+      - alert: slurm_nodes_err
+        expr: slurm_nodes_err > 0
+        for: {{ slurm_alert_wait_time | default('10m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "NODE(S) IS ERROR MORE THEN {{ slurm_alert_wait_time | default('10m') }}"
+          description: "pay attention ON SLURM NODES"
+
+
+   #ALL_TEMPERATURE
+
+      - alert: CHIP_IS_HOT
+        expr: node_hwmon_temp_celsius > {{ chip_hot_threshold | default('90') }}
+        for: {{ chip_hot_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.chip }} IS VERY HOT 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.chip }} ON {{ $labels.instance }} is MORE {% endraw %}{{ chip_hot_threshold | default('90') }}{% raw %} DEGREES"{% endraw %}
+
+
+   #filesystem
+
+      - alert: READ ONLY FILE SYSTEM
+        expr: node_filesystem_readonly {job!="sfa-node-exp"}  == 1
+        for: {{ filesystem_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.device }} IS READ ONLY ON 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"FILE SYSTEM {{ $labels.device }} is NOT writeble"{% endraw %}
+
+      - alert: READ ONLY LUSTRE FILE SYSTEM
+        expr: count (node_filesystem_readonly {fstype="lustre", job="sfa-node-exp"} >0) != {{ lustre_expected_drives | default('95') }}
+        for: {{ filesystem_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "⭐️PROBLEM WITH LUSTRE DRIVE(s)⭐️"
+          description: "⭐PROBLEM WITH LUSTRE DRIVE(s)⭐"
+
+      - alert: low_disk_space
+        expr: ((node_filesystem_size_bytes{device!~"(rootfs|tmpfs|/dev/fuse)"} - node_filesystem_avail_bytes{device!~"(rootfs|tmpfs|/dev/fuse)"}) / node_filesystem_size_bytes{device!~"(rootfs|tmpfs)"}) *100 > {{ disk_space_threshold | default('90') }}
+        for: {{ filesystem_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.device }} IS LOW DISK SPACE ON 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"DISK SPACE ON {{ $labels.instance }} 🔥{{ $labels.device }} is LESS then {% endraw %}{{ disk_space_threshold | default('90') }}%"
+
+   #IPMI
+
+    - name: ipmi
+      rules:
+      - alert: Состояние блоков питания и батарейки
+        expr: ipmi_sensor_state == 2
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.name }} : Ther is NO power on 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.name }} : Ther is NO power on 🔥{{ $labels.instance }}"{% endraw %}
+
+      - alert: ipmi_chassis_power_state
+        expr: ipmi_chassis_power_state{job="ipmi_exporter"} == 0
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"Chassis Power State OFF 🔥{{ $labels.instance }}"{% endraw %}
+
+      - alert: ipmi_up
+        expr: ipmi_up{job="ipmi_exporter"} == 0
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"IPMI does not collect sensors value on 🔥{{ $labels.instance }}"{% endraw %}
+
+      - alert: Состояние куллеров
+        expr: ipmi_fan_speed_state  == 2
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.name }} speed is 0 rpm on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"Fan {{ $labels.name }} is NOT working"{% endraw %}
+
+      - alert: Температура сенсоров IPMI
+        expr: ipmi_temperature_state  == 2
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.name }} is CRITICAL on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.name }} is CRITICAL"{% endraw %}
+
+      - alert: Состояние напряжения
+        expr: ipmi_voltage_state  == 2
+        for: {{ ipmi_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.name }} is CRITICAL on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.name }} is CRITICAL"{% endraw %}
+   #RAM
+      - alert: Объем ОЗУ
+        expr: node_memory_MemTotal_bytes {job="cluster", instance!~"ufm.*"} < {{ expected_ram_bytes | default('2164301000000') }}
+        for: {{ ram_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"RAM is not 2TiB on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"RAM is not 2TiB on node 🔥{{ $labels.instance }}"{% endraw %}
+   #network
+      - alert: Состояние сетевых интерфейсов
+        expr: node_network_up{device=~"{{ network_interfaces_regex | default('ens.+|enp.+|bond0') }}", instance!~"ufm.*"} == 0
+        for: {{ network_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.device }} is DOWN on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.device }} is DOWN on node 🔥{{ $labels.instance }}"{% endraw %}
+   #IB
+      - alert: Состояние INFINIBAND
+        expr: node_infiniband_state_id {instance!~"ufm.*"} == 1
+        for: {{ ib_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"{{ $labels.device }} is DOWN on node 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"{{ $labels.device }} is DOWN on node 🔥{{ $labels.instance }}"{% endraw %}
+
+      - alert: UFM-NETWORK
+        expr: count (node_infiniband_info {instance=~"(cn.*)"}) by (instance) != {{ expected_ib_cards | default('11') }}
+        for: {{ ib_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥НЕИСПРАВНА ОДНА ИЗ КАРТ IB НА 🔥{{ $labels.instance }}"{% endraw %}
+          description: {% raw %}"🔥НЕИСПРАВНА ОДНА ИЗ КАРТ IB НА 🔥{{ $labels.instance }}"{% endraw %}
+
+      - alert: PCIE_Link_Downgraded
+        expr: pcie_link_status == 0
+        for: {{ pcie_alert_wait_time | default('10m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"PCIe Link DOWNGRADE on {{ $labels.instance }} HCA {{ $labels.rdma }} Serial: {{ $labels.serial }}"{% endraw %}
+          description: >
+            {% raw %}PCIe link on device {{ $labels.device }} ({{ $labels.name }}, RDMA: {{ $labels.rdma }})
+            is operating below its maximum width ({{ $labels.cap }} → {{ $labels.sta }}).
+            Host: {{ $labels.instance }}. Serial: {{ $labels.serial }}{% endraw %}
+
+
+   #UFM
+
+      - alert: UFM-COMPUTE-NETWORK
+        expr: count (switch_current {job="ufm", node_description!~"cn(.*)"}) != {{ ufm_compute_expected_ports | default('2032') }}
+        for: {{ ufm_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "🔥ИЗМЕНИЛОСЬ КОЛИЧЕСТВО АКТИВНЫХ ПОРТОВ COMPUTE СЕТИ🔥"
+          description: "🔥ИЗМЕНИЛОСЬ КОЛИЧЕСТВО АКТИВНЫХ ПОРТОВ COMPUTE СЕТИ🔥"
+
+      - alert: UFM-COMPUTE-NET-DOWN-PORTS
+        expr: count (switch_current {job="ufm", node_description!~"cn(.*)"}) by (node_description) !={{ ufm_compute_allowed_ports | default('33') }} !={{ ufm_compute_allowed_ports_alt1 | default('34') }} !={{ ufm_compute_allowed_ports_alt2 | default('41') }} !={{ ufm_compute_allowed_ports_alt3 | default('52') }} !={{ ufm_compute_allowed_ports_alt4 | default('1') }} !={{ ufm_compute_allowed_ports_alt5 | default('21') }}
+        for: {{ ufm_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥DOWN ports on switch 🔥{{ $labels.node_description }}"{% endraw %}
+          description: {% raw %}"🔥DOWN ports on switch 🔥{{ $labels.node_description }}"{% endraw %}
+
+##### не учтены 2 порта sl3:26 и sl4:26   
+      - alert: UFM-STORAGE-NETWORK
+        expr: count (switch_current {job="ufm-sn"}) != {{ ufm_storage_expected_ports | default('772') }}
+        for: {{ ufm_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: "🔥ИЗМЕНИЛОСЬ КОЛИЧЕСТВО АКТИВНЫХ ПОРТОВ STORAGE СЕТИ🔥"
+          description: "🔥ИЗМЕНИЛОСЬ КОЛИЧЕСТВО АКТИВНЫХ ПОРТОВ STORAGE СЕТИ🔥"
+
+
+   #UFM-SWITCHES
+
+      - alert: Состояние портов на свитчах Infiniband
+        expr: iblinkinfo_physical_state_id !=3 !=5
+        for: {{ ufm_switch_alert_wait_time | default('1m') }}
+        labels:
+          severity: page
+        annotations:
+          summary: {% raw %}"🔥 {{ $labels.src_switch }} port {{ $labels.src_port }} is DOWN"{% endraw %}
+          description: {% raw %}"🔥 {{ $labels.src_switch }} port {{ $labels.src_port }} is DOWN"{% endraw %}
+
+     #SM
+
+      - alert: SubnetManagerDown
+        expr: infiniband_sm_state == 0
+        for: {{ sm_alert_wait_time | default('2m') }}
+        labels:
+          severity: critical
+        annotations:
+          summary: {% raw %}"❌ ❌ ❌ Subnet Manager is DOWN on {{ $labels.instance }} ❌ ❌ ❌"{% endraw %}
+          description: >
+            {% raw %}Subnet Manager (SM) reported state DOWN (0) on host {{ $labels.instance }}.
+            Possible cause: SM is not running or Infiniband fabric is unreachable.{% endraw %}

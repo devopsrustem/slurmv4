@@ -1,0 +1,12 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: "Rustem Valitov"
+  description: "Monitoring stack for Slurm GPU cluster"
+  license: MIT
+  min_ansible_version: 2.13
+  platforms:
+    - name: Ubuntu
+      versions:
+        - 24.04

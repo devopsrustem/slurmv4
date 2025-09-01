@@ -1,0 +1,9 @@
+[Unit]
+Description=Run check_sm_state.sh every 30 sec
+
+[Timer]
+OnBootSec=10
+OnUnitActiveSec=30
+
+[Install]
+WantedBy=timers.target

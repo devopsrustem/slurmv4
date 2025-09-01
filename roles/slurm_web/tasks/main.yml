@@ -77,6 +77,12 @@
     mode: '0400'
     remote_src: yes
 
+- name: "Add slurm-web user to slurmrest group"
+  user:
+    name: slurm-web
+    groups: slurmrest
+    append: yes
+
 - name: "Enable and start Slurm-web services"
   systemd:
     name: "{{ item }}"

@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['compute_nodes'] %}
+  - {{ host }}:{{ dcgm_exporter_port }}
+{% endfor %}
+  labels:
+    module: dcgm-exporter

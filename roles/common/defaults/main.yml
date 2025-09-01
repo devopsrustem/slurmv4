@@ -41,3 +41,17 @@ nfs_mount_options: "defaults"
 
 common_verify_installation: true
 common_verify_timeout: 30
+
+# Master node references (used across roles)
+master_nodes_host: "{{ groups['master_nodes'][0] }}"
+master_nodes_addr: "{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] | default(groups['master_nodes'][0]) }}"
+
+# NFS paths
+nfs_slurm_path: "/sw/slurm-final"
+nfs_config_path: "/sw/config"
+
+# Slurm config files to distribute
+slurm_config_files:
+  - slurm.conf
+  - slurmdbd.conf
+  - gres.conf

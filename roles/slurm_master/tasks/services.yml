@@ -51,6 +51,15 @@
     name: slurmctld
     enabled: yes
     state: started
+  register: slurmctld_start
+  failed_when: slurmctld_start.failed
+  tags: services
+
+- name: "[SERVICES] Проверка статуса slurmctld"
+  systemd:
+    name: slurmctld
+  register: slurmctld_status
+  failed_when: slurmctld_status.status.ActiveState != 'active'
   tags: services
 
 - name: "[SERVICES] Сервисы запущены"

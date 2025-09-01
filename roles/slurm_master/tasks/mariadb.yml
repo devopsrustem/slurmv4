@@ -39,7 +39,7 @@
   shell: mysql -u{{ slurm_db_user }} -p{{ slurm_db_password }} -e "USE {{ slurm_db_name }}; SELECT 1 AS test;"
   register: slurm_test
   changed_when: false
-  failed_when: false
+  failed_when: slurm_test.rc != 0
   tags: mariadb
 
 - name: "[MARIADB] Проверка списка баз данных"

@@ -1,0 +1,6 @@
+[Unit]
+Description=Cleanup stale Prometheus node exporter metrics
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/cleanup-metrics.sh

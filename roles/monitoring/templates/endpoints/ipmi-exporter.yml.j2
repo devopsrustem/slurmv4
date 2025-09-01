@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['compute_nodes'] %}
+  - bmc.{{ host }}
+{% endfor %}
+  labels:
+    job: ipmi_exporter

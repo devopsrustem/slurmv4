@@ -17,6 +17,10 @@ slurm_controller_addr: "{{ ansible_default_ipv4.address | default(inventory_host
 slurm_controller_port: 6817
 slurm_daemon_port: 6818
 
+# Master node reference (for other roles)
+master_nodes_host: "{{ groups['master_nodes'][0] }}"
+master_nodes_addr: "{{ hostvars[groups['master_nodes'][0]]['ansible_default_ipv4']['address'] | default(groups['master_nodes'][0]) }}"
+
 # Slurm database settings
 slurm_db_enabled: true
 slurm_db_host: "{{ inventory_hostname }}"

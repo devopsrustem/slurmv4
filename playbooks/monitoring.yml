@@ -1,0 +1,115 @@
+# playbooks/monitoring.yml - Monitoring deployment playbook
+---
+- name: "Deploy monitoring stack for TCLUSTER01"
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: "Display monitoring deployment info"
+      debug:
+        msg: |
+          Deploying monitoring stack for TCLUSTER01
+          Master nodes: {{ groups['master_nodes'] | join(', ') }}
+          Compute nodes: {{ groups['compute_nodes'] | join(', ') }}
+          Login nodes: {{ groups['login_nodes'] | join(', ') }}
+          Metrics server: {{ groups['metrics_nodes'] | join(', ') }}
+
+- name: "Install Docker on all nodes"
+  hosts: slurm_cluster,metrics_nodes
+  become: true
+  gather_facts: true
+  tasks:
+    - name: "Check if Docker is installed"
+      command: docker --version
+      register: docker_check
+      failed_when: false
+      changed_when: false
+
+    - name: "Install Docker if not present"
+      block:
+        - name: "Update package cache"
+          apt:
+            update_cache: yes
+
+        - name: "Install Docker dependencies"
+          apt:
+            name:
+              - apt-transport-https
+              - ca-certificates
+              - curl
+              - gnupg
+              - lsb-release
+            state: present
+
+        - name: "Add Docker GPG key"
+          apt_key:
+            url: https://download.docker.com/linux/ubuntu/gpg
+            state: present
+
+        - name: "Add Docker repository"
+          apt_repository:
+            repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+            state: present
+
+        - name: "Install Docker"
+          apt:
+            name:
+              - docker-ce
+              - docker-ce-cli
+              - containerd.io
+            state: present
+            update_cache: yes
+
+        - name: "Start and enable Docker"
+          systemd:
+            name: docker
+            state: started
+            enabled: yes
+
+        - name: "Add user to docker group"
+          user:
+            name: "{{ ansible_user }}"
+            groups: docker
+            append: yes
+      when: docker_check.rc != 0
+
+- name: "Deploy monitoring components"
+  hosts: slurm_cluster,metrics_nodes
+  become: true
+  gather_facts: true
+  roles:
+    - monitoring
+
+- name: "Display monitoring access information"
+  hosts: metrics_nodes
+  gather_facts: true
+  tasks:
+    - name: "Show monitoring URLs"
+      debug:
+        msg: |
+          Monitoring deployment completed!
+          
+          Access URLs:
+          Grafana: http://{{ ansible_default_ipv4.address }}:3000
+             Default login: admin/admin
+          
+          Prometheus: http://{{ ansible_default_ipv4.address }}:9090
+          
+          Alertmanager: http://{{ ansible_default_ipv4.address }}:9093
+          
+          VictoriaMetrics: http://{{ ansible_default_ipv4.address }}:8428
+             (if enabled)
+          
+          Node Exporters:
+          {% for host in groups['slurm_cluster'] %}
+          - {{ host }}: http://{{ hostvars[host]['ansible_default_ipv4']['address'] }}:9100
+          {% endfor %}
+          
+          GPU Monitoring (compute nodes):
+          {% for host in groups['compute_nodes'] %}
+          - {{ host }} DCGM: http://{{ hostvars[host]['ansible_default_ipv4']['address'] }}:9400
+          {% endfor %}
+          
+          Slurm Metrics:
+          {% for host in groups['master_nodes'] %}
+          - {{ host }} Slurm: http://{{ hostvars[host]['ansible_default_ipv4']['address'] }}:8080
+          {% endfor %}

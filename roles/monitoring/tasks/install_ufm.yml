@@ -1,0 +1,5 @@
+---
+# UFM monitoring disabled for this cluster
+- name: "UFM monitoring disabled"
+  debug:
+    msg: "UFM monitoring is disabled for this cluster configuration"

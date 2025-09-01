@@ -1,0 +1,67 @@
+#!/bin/bash
+logger "🔥 Сработал алерт: кластер будет выключен!"
+
+LOCKFILE="/tmp/cluster_shutdown.lock"
+LOGFILE="/var/log/cluster_shutdown.log"
+
+# Диапазоны IP
+DATANET_PREFIX="{{ cluster_datanet_prefix | default('10.36.15') }}"
+IPMINET_PREFIX="{{ cluster_ipminet_prefix | default('10.36.0') }}"
+DATA_START={{ cluster_data_start | default('1') }}
+DATA_END={{ cluster_data_end | default('80') }}
+IPMI_START={{ cluster_ipmi_start | default('101') }}
+IPMI_END={{ cluster_ipmi_end | default('180') }}
+
+# Credentials
+IPMIUSER={{ cluster_ipmi_user | default('master') }}
+IPMIPASS={{ cluster_ipmi_password }}
+SSH_OPTS="-o StrictHostKeyChecking=no -o ConnectTimeout=5"
+
+# Анти-автозапуск (опционально)
+{% if cluster_poweroff_use_lockfile | default(false) %}
+if [ -f "$LOCKFILE" ]; then
+  echo "$(date): 🔁 Shutdown already in progress or completed. Exiting." >> "$LOGFILE"
+  exit 0
+fi
+
+touch "$LOCKFILE"
+{% endif %}
+echo "$(date): 🚨 Cluster shutdown initiated" >> "$LOGFILE"
+
+# 1. Отключаем ноды по SSH
+for i in $(seq $DATA_START $DATA_END); do
+  HOST="${DATANET_PREFIX}.${i}"
+  echo "$(date): ⏻ SSH shutdown $HOST" >> "$LOGFILE"
+  ssh $SSH_OPTS "$HOST" -l {{ cluster_ssh_user | default('master') }} 'sudo poweroff' >> "$LOGFILE" 2>&1 &
+done
+
+wait
+echo "$(date): ⏳ Waiting {{ cluster_shutdown_wait_time | default('5') }} minutes after SSH shutdown..." >> "$LOGFILE"
+sleep {{ cluster_shutdown_wait_time | default('5') * 60 }}
+
+{% if cluster_sfa_enabled | default(true) %}
+# 2. Отключаем хранилку powered by Arseniy
+clush -m sshpass-exa -w {{ cluster_sfa_vm_ip | default('10.36.1.65') }} clusterctl stop
+sleep {{ cluster_sfa_wait_time | default('600') }}
+clush -m sshpass-sfa -w @roles:servers app shutdown stack *
+sleep {{ cluster_sfa_shutdown_wait | default('300') }}
+clush -m sshpass-sfa -w @roles:servers shutdown subsystem force
+{% endif %}
+
+# 3. Проверяем через IPMI и форсируем выключение, если нужно
+for i in $(seq $IPMI_START $IPMI_END); do
+  IPMI_HOST="${IPMINET_PREFIX}.${i}"
+  echo "$(date): 🔍 Checking IPMI status for $IPMI_HOST" >> "$LOGFILE"
+
+  STATUS=$(ipmitool -I lanplus -H "$IPMI_HOST" -U $IPMIUSER -P $IPMIPASS chassis power status 2>/dev/null)
+
+  if [[ "$STATUS" == *"on"* ]]; then
+    echo "$(date): ⚡ $IPMI_HOST is still ON. Forcing shutdown..." >> "$LOGFILE"
+    ipmitool -I lanplus -H "$IPMI_HOST" -U $IPMIUSER -P $IPMIPASS chassis power off >> "$LOGFILE" 2>&1
+  else
+    echo "$(date): ✅ $IPMI_HOST is already OFF." >> "$LOGFILE"
+  fi
+done
+
+echo "$(date): ✅ Cluster shutdown completed." >> "$LOGFILE"
+exit 0

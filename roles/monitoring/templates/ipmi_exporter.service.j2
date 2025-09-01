@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus IPMI Exporter
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/ipmi_exporter --config.file=/etc/prometheus/ipmi-exporter/ipmi_remote.yml --web.listen-address={{ ansible_default_ipv4.address }}:{{ ipmi_exporter_port | default('9290') }}
+Restart=always
+RestartSec={{ ipmi_exporter_restart_sec | default('15') }}
+User={{ monitoring_user }}
+Group={{ monitoring_group }}
+
+[Install]
+WantedBy=multi-user.target

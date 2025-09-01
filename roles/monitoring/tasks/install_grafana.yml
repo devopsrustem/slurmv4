@@ -1,0 +1,23 @@
+---
+- name: Создаем каталоги для grafana
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/grafana
+    - /var/lib/grafana
+
+- name: Устанавливаем systemd unit Grafana
+  template:
+    src: docker.grafana.service.j2
+    dest: /etc/systemd/system/docker.grafana.service
+    mode: '0644'
+  notify: Перезапустить grafana
+
+- name: Включаем и запускаем Grafana
+  systemd:
+    name: docker.grafana.service
+    enabled: true
+    state: started
+    daemon_reload: true

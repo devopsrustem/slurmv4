@@ -1,0 +1,14 @@
+[Unit]
+Description=Alertmanager Webhook Server Cluster POWEROFF
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/alert_webhook/webhook_server.py
+Restart=always
+RestartSec={{ cluster_poweroff_restart_sec | default('15') }}
+WorkingDirectory=/opt/alert_webhook
+User={{ monitoring_user }}
+Group={{ monitoring_group }}
+
+[Install]
+WantedBy=multi-user.target

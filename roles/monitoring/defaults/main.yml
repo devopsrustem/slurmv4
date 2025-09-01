@@ -1,0 +1,298 @@
+---
+# defaults file for monitoring
+
+# ================================
+# DOCKER IMAGES (PUBLIC REGISTRY)
+# ================================
+node_exporter_image: "prom/node-exporter:latest"
+dcgm_exporter_image: "nvcr.io/nvidia/k8s/dcgm-exporter:3.3.5-3.4.0-ubuntu22.04"
+prometheus_image: "prom/prometheus:latest"
+alertmanager_image: "prom/alertmanager:latest"
+grafana_image: "grafana/grafana:latest"
+
+# ================================
+# NETWORK PORTS
+# ================================
+node_exporter_port: 9100
+monitoring_node_exporter_port: 9100 # Backwards compatibility
+dcgm_exporter_port: 9400
+prometheus_port: 9090
+alertmanager_port: 9093
+grafana_port: 3000
+slurm_exporter_port: 8080
+ufm_exporter_port: 9001
+
+# ================================
+# PROMETHEUS CONFIGURATION
+# ================================
+prometheus_scrape_interval: "15s"
+prometheus_evaluation_interval: "15s"
+prometheus_retention: "30d"
+prometheus_external_url: "http://{{ ansible_default_ipv4.address }}:{{ prometheus_port }}"
+prometheus_server_name: "Prometheus"
+
+# VictoriaMetrics integration
+victoriametrics_url: "http://{{ ansible_default_ipv4.address }}:8428"
+victoriametrics_remote_write_queue_capacity: 20000
+victoriametrics_remote_write_max_samples: 10000
+victoriametrics_remote_write_max_shards: 30
+
+# ================================
+# ALERTING CONFIGURATION
+# ================================
+alertmanager_smtp_smarthost: "localhost:25"
+alertmanager_smtp_from: "alertmanager@{{ ansible_domain | default('cluster.local') }}"
+alertmanager_smtp_username: "alertmanager"
+alertmanager_smtp_password: "{{ vault_smtp_password | default('password') }}"
+
+# Telegram notifications
+telegram_enabled: false
+telegram_bot_token: "{{ vault_telegram_bot_token | default('') }}"
+telegram_chat_id: "{{ vault_telegram_chat_id | default('') }}"
+
+# Alert timing
+alert_group_wait: "30s"
+alert_group_interval: "5m"
+alert_repeat_interval: "3h"
+
+# ================================
+# ALERT THRESHOLDS AND TIMING
+# ================================
+# Basic alerts
+alert_instance_down_for: "5m"
+
+# Temperature alerts
+cluster_poweroff_temp_threshold: 45
+cluster_poweroff_wait_time: "1h"
+inlet_temp_quantile_threshold: 3
+inlet_temp_rise_threshold: 3
+chip_hot_threshold: 90
+chip_hot_wait_time: "1m"
+
+# Slurm alerts
+slurm_alert_wait_time: "10m"
+
+# Storage alerts
+disk_space_threshold: 90
+filesystem_alert_wait_time: "1m"
+lustre_expected_drives: 95
+
+# Hardware alerts
+ipmi_alert_wait_time: "1m"
+ram_alert_wait_time: "1m"
+expected_ram_bytes: 2164301000000 # 2TiB
+
+# Network alerts
+network_alert_wait_time: "1m"
+network_interfaces_regex: "ens.+|enp.+|bond0"
+ib_alert_wait_time: "1m"
+expected_ib_cards: 11
+pcie_alert_wait_time: "10m"
+
+# UFM alerts
+ufm_alert_wait_time: "1m"
+ufm_compute_expected_ports: 2032
+ufm_compute_allowed_ports: 33
+ufm_compute_allowed_ports_alt1: 34
+ufm_compute_allowed_ports_alt2: 41
+ufm_compute_allowed_ports_alt3: 52
+ufm_compute_allowed_ports_alt4: 1
+ufm_compute_allowed_ports_alt5: 21
+ufm_storage_expected_ports: 772
+ufm_switch_alert_wait_time: "1m"
+
+# Subnet Manager alerts
+sm_alert_wait_time: "2m"
+
+# IPMI scraping settings
+ipmi_scrape_interval: "1m"
+ipmi_scrape_timeout: "30s"
+
+# ================================
+# MONITORING INTERVALS
+# ================================
+gpu_process_interval: "30s"
+ufm_check_interval: "30s"
+sm_state_check_interval: "30s"
+cleanup_interval: "1min"
+
+# ================================
+# DATA RETENTION & CLEANUP
+# ================================
+metrics_cleanup_enabled: true
+metrics_cleanup_age: "7d"
+
+# ================================
+# CLUSTER CONFIGURATION
+# ================================
+cluster_name: "{{ ansible_domain | default('hpc-cluster') }}"
+
+# Groups of nodes (адаптировано под наш inventory)
+monitoring_groups:
+  master_nodes: [ "slurm-master" ]
+  compute_nodes: [ "cn01-tc01", "cn02-tc01" ]
+  login_nodes: [ "slurm-login" ]
+  metrics_nodes: [ "metrics" ]  # Отдельный сервер метрик
+
+# Backwards compatibility (для старых переменных)
+groups:
+  slurm_master: "{{ monitoring_groups.master_nodes | first }}"
+  compute: "{{ monitoring_groups.compute_nodes | join(',') }}"
+  metrics: "{{ monitoring_groups.metrics_nodes | first }}"
+
+# ================================
+# UFM/INFINIBAND SETTINGS (DISABLED)
+# ================================
+ufm_enabled: false
+ufm_ha_enabled: false
+ib_monitoring_enabled: false
+infiniband_cleanup_enabled: false
+
+# ================================
+# GPU MONITORING
+# ================================
+gpu_monitoring_enabled: true
+gpu_process_monitoring_enabled: true
+dcgm_custom_metrics_enabled: true
+
+# ================================
+# DOCKER SETTINGS
+# ================================
+docker_registry_auth_enabled: false
+docker_registry_username: ""
+docker_registry_password: ""
+
+# Container resource limits
+node_exporter_cpu_limit: "0.5"
+dcgm_exporter_cpu_limit: "0.5"
+
+# ================================
+# SYSTEMD SETTINGS
+# ================================
+systemd_timeout_start: "30s"
+systemd_timeout_stop: "30s"
+systemd_restart_sec: "15s"
+
+# ================================
+# SECURITY SETTINGS
+# ================================
+monitoring_user: "nobody"
+monitoring_group: "nogroup"
+config_backup_enabled: true
+
+# ================================
+# FEATURE FLAGS
+# ================================
+health_checks_enabled: true
+pacemaker_integration_enabled: true
+
+# ================================
+# PATHS AND DIRECTORIES
+# ================================
+monitoring_config_dir: "/etc/monitoring"
+monitoring_data_dir: "/var/lib/monitoring"
+textfile_dir: "/opt/node-exporter/textfile_collector"
+
+# ================================
+# LOGGING SETTINGS
+# ================================
+cleanup_log_enabled: false
+
+# ================================
+# CLUSTER EMERGENCY POWEROFF
+# ================================
+cluster_poweroff_enabled: true
+
+# Webhook server settings
+cluster_poweroff_webhook_host: "0.0.0.0"
+cluster_poweroff_webhook_port: 5001
+cluster_poweroff_webhook_token: "{{ vault_cluster_poweroff_token | default('7b54a1cfd7db43452') }}"
+
+# Cluster network configuration  
+cluster_datanet_prefix: "10.36.15"
+cluster_ipminet_prefix: "10.36.0"
+cluster_data_start: 1
+cluster_data_end: 80
+cluster_ipmi_start: 101
+cluster_ipmi_end: 180
+
+# Authentication
+cluster_poweroff_user: "master"
+cluster_ssh_user: "master"
+cluster_ipmi_user: "master"
+cluster_ipmi_password: "{{ vault_cluster_ipmi_password | default('AWUa8xSrE8') }}"
+
+# Timing settings
+cluster_shutdown_wait_time: 5 # minutes
+cluster_poweroff_restart_sec: 15
+cluster_poweroff_use_lockfile: false # Отключена защита от повторного запуска
+
+# SFA storage settings
+cluster_sfa_enabled: true
+cluster_sfa_vm_ip: "10.36.1.65"
+cluster_sfa_wait_time: 600 # seconds
+cluster_sfa_shutdown_wait: 300 # seconds
+
+# ================================
+# IPMI EXPORTER SETTINGS
+# ================================
+ipmi_exporter_enabled: true
+ipmi_exporter_port: 9290
+ipmi_exporter_version: "1.10.0"
+ipmi_exporter_restart_sec: 15
+
+# IPMI authentication
+ipmi_default_user: "{{ vault_ipmi_user | default('monor') }}"
+ipmi_default_password: "{{ vault_ipmi_password | default('vxCPJ1V') }}"
+ipmi_default_driver: "LAN_2_0"
+ipmi_default_privilege: "user"
+ipmi_default_timeout: 10000
+
+# IPMI collectors
+ipmi_default_collectors:
+- bmc
+- ipmi
+- chassis
+
+# Excluded sensor IDs
+ipmi_exclude_sensor_ids:
+- 2
+- 29
+- 32
+- 50
+- 52
+- 55
+
+# DCMI module (optional)
+ipmi_dcmi_enabled: false
+ipmi_dcmi_user: "{{ vault_ipmi_dcmi_user | default('monor') }}"
+ipmi_dcmi_password: "{{ vault_ipmi_dcmi_password | default('vxCqJ1V') }}"
+ipmi_dcmi_privilege: "admin"
+ipmi_dcmi_driver: "LAN_2_0"
+
+# ================================
+# VICTORIAMETRICS SETTINGS
+# ================================
+victoriametrics_enabled: true
+victoriametrics_version: "1.120.0"
+victoriametrics_port: 8428
+victoriametrics_data_path: "/var/lib/victoriametrics"
+victoriametrics_retention_period: "12" # months
+victoriametrics_memory_percent: 60
+victoriametrics_restart_sec: 1
+
+# ================================
+# LOCAL FILES SERVER SETTINGS
+# ================================
+use_local_files_server: false # ← ОТКЛЮЧЕНО для внешнего кластера
+local_files_server: "http://10.81.8.5"
+
+# IPMI Exporter sources
+ipmi_exporter_use_local: "{{ use_local_files_server }}"
+ipmi_exporter_local_url: "{{ local_files_server }}/monitoring/binaries/ipmi_exporter-{{ ipmi_exporter_version }}.linux-amd64.tar.gz"
+ipmi_exporter_github_url: "https://github.com/prometheus-community/ipmi_exporter/releases/download/v{{ ipmi_exporter_version }}/ipmi_exporter-{{ ipmi_exporter_version }}.linux-amd64.tar.gz"
+
+# VictoriaMetrics sources  
+victoriametrics_use_local: "{{ use_local_files_server }}"
+victoriametrics_local_url: "{{ local_files_server }}/monitoring/binaries/victoria-metrics-linux-amd64-v1.120.0.tar.gz"
+victoriametrics_github_url: "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/download/v1.120.0/victoria-metrics-linux-amd64-v1.120.0.tar.gz"

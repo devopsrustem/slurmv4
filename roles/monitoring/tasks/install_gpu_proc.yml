@@ -1,0 +1,28 @@
+---
+- name: Копируем скрипт gpu-process-exporter
+  copy:
+    src: gpu-process-exporter.sh
+    dest: /usr/local/bin/gpu-process-exporter.sh
+    mode: '0755'
+  notify: Перезапустить gpu-process-exporter
+
+- name: Копируем systemd service для gpu-process-exporter
+  template:
+    src: gpu-process-exporter.service.j2
+    dest: /etc/systemd/system/gpu-process-exporter.service
+    mode: '0644'
+  notify: Перезапустить gpu-process-exporter
+
+- name: Копируем systemd timer для gpu-process-exporter
+  template:
+    src: gpu-process-exporter.timer.j2
+    dest: /etc/systemd/system/gpu-process-exporter.timer
+    mode: '0644'
+  notify: Перезапустить gpu-process-exporter
+
+- name: Включаем и запускаем timer gpu-process-exporter
+  systemd:
+    name: gpu-process-exporter.timer
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -1,0 +1,65 @@
+---
+# IPMI Exporter installation - ТОЛЬКО на metrics сервере
+# Для мониторинга IPMI/BMC узлов кластера
+
+- name: Установка freeipmi
+  package:
+    name: freeipmi
+    state: present
+    update_cache: true
+
+- name: Создание каталога для ipmi-exporter
+  file:
+    path: /etc/prometheus/ipmi-exporter
+    state: directory
+    mode: '0755'
+
+- name: Скачивание ipmi_exporter
+  get_url:
+    url: "{{ ipmi_exporter_use_local | bool | ternary(ipmi_exporter_local_url, ipmi_exporter_github_url) }}"
+    dest: "/tmp/ipmi_exporter-1.10.0.linux-amd64.tar.gz"
+    mode: '0644'
+
+- name: Распаковка ipmi_exporter
+  unarchive:
+    src: "/tmp/ipmi_exporter-1.10.0.linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: true
+
+- name: Копирование бинарника ipmi_exporter
+  copy:
+    src: "/tmp/ipmi_exporter-1.10.0.linux-amd64/ipmi_exporter"
+    dest: /usr/bin/ipmi_exporter
+    mode: '0755'
+    remote_src: true
+  notify: Перезапустить ipmi-exporter
+
+- name: Копирование конфигурации ipmi_remote.yml
+  template:
+    src: ipmi_remote.yml.j2
+    dest: /etc/prometheus/ipmi-exporter/ipmi_remote.yml
+    mode: '0644'
+    backup: true
+  notify: Перезапустить ipmi-exporter
+
+- name: Установка systemd unit для ipmi_exporter
+  template:
+    src: ipmi_exporter.service.j2
+    dest: /etc/systemd/system/ipmi_exporter.service
+    mode: '0644'
+  notify: Перезапустить ipmi-exporter
+
+- name: Включаем и запускаем ipmi_exporter
+  systemd:
+    name: ipmi_exporter.service
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Очистка временных файлов
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - "/tmp/ipmi_exporter-1.10.0.linux-amd64.tar.gz"
+  - "/tmp/ipmi_exporter-1.10.0.linux-amd64"

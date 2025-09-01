@@ -24,6 +24,9 @@
     chmod -R 755 /opt/slurm/bin /opt/slurm/sbin
     echo "✅ Slurm скопирован на {{ inventory_hostname }}"
   when: not slurmd_binary.stat.exists
+  register: slurm_copy
+  failed_when: slurm_copy.rc != 0
+  changed_when: true
   tags: install
 
 - name: "[SLURM-COMPUTE] Проверка доступности мастер узла"

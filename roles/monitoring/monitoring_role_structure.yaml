@@ -1,0 +1,50 @@
+monitoring/
+├── README.md
+├── defaults/
+│   └── main.yml               # переменные по умолчанию (версии образов, роли узлов)
+├── files/
+│   ├── dcgm-custom-metrics.csv       # кастомные метрики DCGM
+│   ├── gpu-process-exporter.sh       # кастомный экспортёр GPU процессов
+│   ├── ib_sw_exp.py                  # скрипт iblinkinfo-exporter
+│   ├── prometheus-slurm-exporter     # бинарник slurm-exporter
+│   ├── check_sm_state.sh             # скрипт проверки состояния SM
+│   └── cleanup-metrics.sh            # скрипт очистки textfile-метрик
+├── handlers/
+│   └── main.yml               # перезапуски docker-сервисов
+├── meta/
+│   └── main.yml               # поддержка Ubuntu 24.04
+├── tasks/
+│   ├── main.yml                      # маршрутизация по роли узла
+│   ├── install_node.yml             # Установка и запуск node-exporter
+│   ├── install_slurm.yml            # Установка и запуск slurm-exporter
+│   ├── install_dcgm.yml             # Установка и запуск dcgm-exporter
+│   ├── install_gpu_proc.yml         # Установка и запуск gpu-process-exporter
+│   ├── install_ufm.yml              # Установка на UFM-серверах (iblinkinfo, sm-state, cleanup, PCS ресурсы)
+│   ├── install_prometheus.yml       # Установка и запуск Prometheus + alertmanager
+│   ├── install_grafana.yml          # Установка и запуск Grafana
+│   └── install_cluster_poweroff.yml # Кастомный webhook скрипт для аварийного выключения
+├── templates/
+│   ├── prometheus.yml.j2            # конфиг prometheus
+│   ├── alertmanager.yml.j2          # конфиг alertmanager
+│   ├── grafana-dashboards/          # дашборды в JSON
+│   ├── docker.node-exporter.service.j2
+│   ├── docker.dcgm-exporter.service.j2
+│   ├── docker.prometheus.service.j2
+│   ├── docker.alertmanager.service.j2
+│   ├── docker.grafana.service.j2
+│   ├── iblinkinfo-exporter.service.j2
+│   ├── iblinkinfo-exporter.timer.j2
+│   ├── check-sm-state.service.j2
+│   ├── check-sm-state.timer.j2
+│   ├── cleanup-metrics.service.j2
+│   ├── cleanup-metrics.timer.j2
+│   ├── gpu-process-exporter.service.j2
+│   ├── gpu-process-exporter.timer.j2
+│   └── endpoints/
+│       └── node-exporter.yml.j2     # endpoints node-exporter для Prometheus
+├── tests/
+│   ├── inventory                    # example inventory
+│   └── test.yml                    # playbook для быстрой проверки
+└── vars/
+    └── main.yml                    # опционально, почти не нужно
+

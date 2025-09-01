@@ -1,0 +1,206 @@
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+
+  external_labels:
+    cluster: {{ cluster_name }}
+    server_name: {{ prometheus_server_name | default('Prometheus') }}
+
+{% if victoriametrics_enabled | default(false) %}
+remote_write:
+  - url: {{ victoriametrics_url }}/api/v1/write
+    queue_config:
+      max_samples_per_send: {{ victoriametrics_remote_write_max_samples }}
+      capacity: {{ victoriametrics_remote_write_queue_capacity }}
+      max_shards: {{ victoriametrics_remote_write_max_shards }}
+{% endif %}
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets: ['{{ ansible_default_ipv4.address }}:{{ alertmanager_port }}']
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  - 'rules/alert_rules.yml'
+
+scrape_configs:
+  - job_name: 'ufm'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/ufm.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ ufm_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'ufm-sn'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/ufm-sn.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ ufm_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'cluster'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/node-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ node_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:{{ prometheus_port }}']
+
+{% if victoriametrics_enabled | default(false) %}
+  - job_name: 'vm'
+    static_configs:
+      - targets: ['localhost:8428']
+{% endif %}
+
+  - job_name: 'collectd-tsdb'
+    static_configs:
+    - targets: ['10.36.0.7:9109']
+
+  - job_name: 'router'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/router.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ node_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'slurm'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/slurm-exporter.yml
+
+  - job_name: 'slurm-web'
+    scrape_interval: 30s
+    static_configs:
+      - targets: ['localhost:5012']
+
+  - job_name: 'DCGM'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/dcgm-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ dcgm_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: ipmi_exporter
+    params:
+      module: ['default']
+    scrape_interval: {{ ipmi_scrape_interval | default('1m') }}
+    scrape_timeout: {{ ipmi_scrape_timeout | default('30s') }}
+    metrics_path: /ipmi
+    scheme: http
+    file_sd_configs:
+    - files:
+      - /etc/prometheus/endpoints/ipmi-exporter.yml
+      refresh_interval: 5m
+    relabel_configs:
+    - source_labels: [__address__]
+      separator: ;
+      regex: (.*)
+      target_label: __param_target
+      replacement: ${1}
+      action: replace
+    - source_labels: [__param_target]
+      separator: ;
+      regex: (.*)
+      target_label: instance
+      replacement: ${1}
+      action: replace
+    - separator: ;
+      regex: .*
+      target_label: __address__
+      replacement: {{ ansible_default_ipv4.address }}:9290
+      action: replace
+
+###SFA storage
+
+  - job_name: 'sfa-node-exp'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/sfa-node-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ node_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'sfa-emf-exp'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/sfa-emf-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):32222'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'sfa-lustrefs-exp'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/sfa-lustrefs-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):32221'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'sfa-systemd-exp'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/sfa-systemd-exporter.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):9558'
+        replacement: '$1'
+        target_label: instance
+
+### cn49-cn80
+
+  - job_name: 'cadvisor-cn[49-80]'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/cadvisor.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):8080'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'dcgm-exporter-cn[49-80]'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/dcgm-exporter-cn49-80.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ dcgm_exporter_port }}'
+        replacement: '$1'
+        target_label: instance
+
+  - job_name: 'node-exporter-cn[49-80]'
+    file_sd_configs:
+      - files:
+        - /etc/prometheus/endpoints/node-exporter-cn49-cn80.yml
+    metric_relabel_configs:
+      - source_labels: [instance]
+        regex: '(.*):{{ node_exporter_port }}'
+        replacement: '$1'
+        target_label: instance

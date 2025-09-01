@@ -1,0 +1,248 @@
+---
+# Определяет, какой подмодуль роли выполнять в зависимости от хоста
+
+# ================================
+# ПРЕДВАРИТЕЛЬНЫЕ ПРОВЕРКИ
+# ================================
+- name: Проверка предустановленных требований
+  block:
+    - name: Проверка Docker
+      command: docker --version
+      register: docker_check
+      failed_when: docker_check.rc != 0
+      changed_when: false
+
+    - name: Проверка групп inventory
+      fail:
+        msg: "Группа {{ item }} не найдена в inventory или пуста"
+      when: groups[item] is not defined or groups[item] | length == 0
+      loop:
+        - compute_nodes
+        - master_nodes
+        - login_nodes
+
+- name: Проверка доступности портов на metrics узлах
+  wait_for:
+    port: "{{ item }}"
+    host: "{{ ansible_default_ipv4.address }}"
+    state: stopped
+    timeout: 2  # Уменьшаем таймаут
+  loop:
+    - "{{ prometheus_port }}"
+    - "{{ grafana_port }}"
+    - "{{ alertmanager_port }}"
+  when: inventory_hostname in groups['metrics_nodes']
+  failed_when: false  # Не падаем если порт занят
+  register: port_check
+
+- name: Информация о занятых портах
+  debug:
+    msg: "⚠️ Порт {{ item.item }} уже используется - сервис возможно уже установлен"
+  loop: "{{ port_check.results | default([]) }}"
+  when: 
+    - inventory_hostname in groups['metrics_nodes']
+    - item is failed
+    - item.item is defined
+  
+# ================================
+# УСТАНОВКА КОМПОНЕНТОВ
+# ================================
+- name: Установка node-exporter
+  import_tasks: install_node.yml
+
+- name: Установка DCGM exporter
+  when: inventory_hostname in groups['compute_nodes']
+  import_tasks: install_dcgm.yml
+
+- name: Установка GPU Process exporter
+  when: inventory_hostname in groups['compute_nodes']
+  import_tasks: install_gpu_proc.yml
+
+- name: Установка Slurm exporter
+  when: inventory_hostname in groups['master_nodes']
+  import_tasks: install_slurm.yml
+
+- name: Установка Prometheus и Alertmanager
+  when: inventory_hostname in groups['metrics_nodes']
+  import_tasks: install_prometheus.yml
+
+- name: Создание директорий для мониторинга
+  when: inventory_hostname in groups['metrics_nodes']
+  block:
+    - name: "Создание директорий Grafana"
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "472"
+        group: "472"
+        mode: '0755'
+      loop:
+        - /var/lib/grafana
+        - /etc/grafana
+
+    - name: "Создание конфигурации Grafana"
+      copy:
+        dest: /etc/grafana/grafana.ini
+        owner: "472"
+        group: "472"
+        mode: '0644'
+        content: |
+          [server]
+          http_port = 3000
+          [security]
+          admin_user = admin
+          admin_password = admin
+
+    - name: "Создание директорий Alertmanager"
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: '0755'
+      loop:
+        - /var/lib/alertmanager
+        - /etc/alertmanager
+
+    - name: "Создание конфигурации Alertmanager"
+      copy:
+        dest: /etc/alertmanager/alertmanager.yml
+        owner: nobody
+        group: nogroup
+        mode: '0644'
+        content: |
+          global:
+            smtp_smarthost: 'localhost:587'
+            smtp_from: 'alertmanager@tcluster01.local'
+          
+          route:
+            group_by: ['alertname']
+            group_wait: 10s
+            group_interval: 10s
+            repeat_interval: 1h
+            receiver: 'web.hook'
+          
+          receivers:
+          - name: 'web.hook'
+            webhook_configs:
+            - url: 'http://127.0.0.1:5001/alerts'
+
+    - name: "Создание директорий Prometheus"
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: nobody
+        group: nogroup
+        mode: '0755'
+      loop:
+        - /var/lib/prometheus
+        - /etc/prometheus
+
+- name: Установка Grafana
+  when: inventory_hostname in groups['metrics_nodes']
+  import_tasks: install_grafana.yml
+
+- name: Установка IPMI Exporter
+  when: inventory_hostname in groups['metrics_nodes']
+  import_tasks: install_ipmi_exporter.yml
+
+- name: Установка VictoriaMetrics
+  when: 
+    - inventory_hostname in groups['metrics_nodes']
+    - victoriametrics_enabled | default(false) | bool
+  import_tasks: install_victoriametrics.yml 
+
+- name: Установка Cluster Poweroff webhook
+  when: inventory_hostname in groups['metrics_nodes']
+  import_tasks: install_cluster_poweroff.yml
+  
+# ================================
+# HEALTH CHECKS (опционально)
+# ================================
+- name: Проверка состояния сервисов
+  when: health_checks_enabled | default(true) | bool
+  block:
+    - name: Ожидание запуска сервисов
+      pause:
+        seconds: 10
+        prompt: "Ожидаем запуска сервисов..."
+
+    - name: Проверка health endpoints
+      uri:
+        url: "http://{{ ansible_default_ipv4.address }}:{{ item.port }}{{ item.path | default('/metrics') }}"
+        method: GET
+        timeout: 10
+        status_code: 200
+      loop:
+        - { name: "node-exporter", port: "{{ node_exporter_port }}" }
+        - { name: "dcgm-exporter", port: "{{ dcgm_exporter_port }}", when: "{{ inventory_hostname in groups['compute_nodes'] }}" }
+        - { name: "prometheus", port: "{{ prometheus_port }}", path: "/-/healthy", when: "{{ inventory_hostname in groups['metrics_nodes'] }}" }
+        - { name: "grafana", port: "{{ grafana_port }}", path: "/api/health", when: "{{ inventory_hostname in groups['metrics_nodes'] }}" }
+        - { name: "alertmanager", port: "{{ alertmanager_port }}", path: "/-/healthy", when: "{{ inventory_hostname in groups['metrics_nodes'] }}" }
+        - { name: "victoriametrics", port: "{{ victoriametrics_port }}", path: "/metrics", when: "{{ inventory_hostname in groups['metrics_nodes'] and victoriametrics_enabled | default(false) | bool }}" }
+      when: item.when | default(true) | bool
+      register: health_check_results
+      ignore_errors: true
+
+    - name: Отчет о состоянии сервисов
+      debug:
+        msg: "{{ item.item.name }}: OK ({{ item.status }})"
+      loop: "{{ health_check_results.results | default([]) }}"
+      when: 
+        - item is not skipped
+        - item.status == 200
+
+    - name: Предупреждения о неработающих сервисах
+      debug:
+        msg: "{{ item.item.name }}: FAILED ({{ item.status | default('Connection failed') }})"
+      loop: "{{ health_check_results.results | default([]) }}"
+      when: 
+        - item is not skipped
+        - item.status != 200
+
+# ================================
+# ФИНАЛЬНЫЕ ПРОВЕРКИ
+# ================================
+- name: Проверка systemd сервисов
+  systemd:
+    name: "{{ item.service }}"
+    state: started
+  register: service_status
+  failed_when: false
+  loop:
+    - { service: "docker.node-exporter.service", when: true }
+    - { service: "docker.dcgm-exporter.service", when: "{{ inventory_hostname in groups['compute_nodes'] }}" }
+    - { service: "prometheus-slurm-exporter.service", when: "{{ inventory_hostname in groups['master_nodes'] }}" }
+    - { service: "docker.prometheus.service", when: "{{ inventory_hostname in groups['metrics_nodes'] }}" }
+    - { service: "docker.grafana.service", when: "{{ inventory_hostname in groups['metrics_nodes'] }}" }
+  when: item.when | default(true) | bool
+
+- name: "Итоговый отчет о развертывании"
+  debug:
+    msg: |
+      Развертывание мониторинга завершено!
+      
+      Хост: {{ inventory_hostname }}
+      Группа: {{ group_names | join(', ') }}
+      
+      Установленные компоненты:
+      {% if inventory_hostname in groups['compute_nodes'] %}
+      - Node Exporter ({{ ansible_default_ipv4.address }}:{{ node_exporter_port }})
+      - DCGM Exporter ({{ ansible_default_ipv4.address }}:{{ dcgm_exporter_port }})
+      - GPU Process Exporter (systemd timer)
+      {% endif %}
+      {% if inventory_hostname in groups['master_nodes'] %}
+      - Node Exporter ({{ ansible_default_ipv4.address }}:{{ node_exporter_port }})
+      - Slurm Exporter ({{ ansible_default_ipv4.address }}:{{ slurm_exporter_port }})
+      {% endif %}
+      {% if inventory_hostname in groups['login_nodes'] %}
+      - Node Exporter ({{ ansible_default_ipv4.address }}:{{ node_exporter_port }})
+      {% endif %}
+      {% if inventory_hostname in groups['metrics_nodes'] %}
+      - Node Exporter ({{ ansible_default_ipv4.address }}:{{ node_exporter_port }})
+      - Prometheus ({{ ansible_default_ipv4.address }}:{{ prometheus_port }})
+      - Grafana ({{ ansible_default_ipv4.address }}:{{ grafana_port }})
+      - Alertmanager ({{ ansible_default_ipv4.address }}:{{ alertmanager_port }})
+      - Cluster Poweroff Webhook
+      {% endif %}
+      

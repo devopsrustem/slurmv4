@@ -1,0 +1,77 @@
+---
+- name: Создаем каталоги Prometheus
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+  - /etc/prometheus
+  - /etc/prometheus/rules
+  - /etc/prometheus/endpoints
+  - /etc/alertmanager
+
+- name: Копируем конфигурацию Prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    mode: '0644'
+    backup: true
+  notify: Обновить конфигурацию prometheus
+
+- name: Копируем конфигурацию Alertmanager
+  template:
+    src: alertmanager.yml.j2
+    dest: /etc/alertmanager/alertmanager.yml
+    mode: '0644'
+    backup: true
+  notify: Перезапустить alertmanager
+
+- name: Устанавливаем systemd unit Prometheus
+  template:
+    src: docker.prometheus.service.j2
+    dest: /etc/systemd/system/docker.prometheus.service
+    mode: '0644'
+  notify: Перезапустить prometheus
+
+- name: Устанавливаем systemd unit Alertmanager
+  template:
+    src: docker.alertmanager.service.j2
+    dest: /etc/systemd/system/docker.alertmanager.service
+    mode: '0644'
+  notify: Перезапустить alertmanager
+
+- name: Включаем и запускаем Prometheus
+  systemd:
+    name: docker.prometheus.service
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Включаем и запускаем Alertmanager
+  systemd:
+    name: docker.alertmanager.service
+    enabled: true
+    state: started
+    daemon_reload: true
+
+- name: Генерируем все endpoints файлы
+  template:
+    src: "endpoints/{{ item }}.j2"
+    dest: "/etc/prometheus/endpoints/{{ item }}"
+    mode: '0644'
+  loop:
+  - node-exporter.yml
+  - dcgm-exporter.yml
+  - slurm-exporter.yml
+  - ufm-cn.yml
+  - ufm-sn.yml
+  - ipmi-exporter.yml
+  notify: Обновить конфигурацию prometheus
+
+- name: Копируем правила алертов
+  template:
+    src: alert_rules.yml.j2
+    dest: /etc/prometheus/rules/alert_rules.yml
+    mode: '0644'
+    backup: true
+  notify: Обновить конфигурацию prometheus

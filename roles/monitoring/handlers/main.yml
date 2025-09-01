@@ -1,0 +1,79 @@
+---
+# Handlers для перезапуска сервисов
+
+- name: Перезапустить node-exporter
+  systemd:
+    name: docker.node-exporter.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить dcgm-exporter
+  systemd:
+    name: docker.dcgm-exporter.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить prometheus
+  systemd:
+    name: docker.prometheus.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить grafana
+  systemd:
+    name: docker.grafana.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить slurm-exporter
+  systemd:
+    name: prometheus-slurm-exporter.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить alertmanager
+  systemd:
+    name: docker.alertmanager.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить gpu-process-exporter
+  systemd:
+    name: gpu-process-exporter.timer
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить cluster-poweroff
+  systemd:
+    name: alert_webhook.service
+    state: restarted
+    daemon_reload: true
+
+# cleanup-metrics работает как обычный сервис
+- name: Перезапустить cleanup-metrics
+  systemd:
+    name: cleanup-metrics.timer
+    state: restarted
+    daemon_reload: true
+
+# Для iblinkinfo и check-sm только daemon reload (PCS управляет)
+- name: Обновить ufm-pcs-services
+  systemd:
+    daemon_reload: true
+
+- name: Обновить конфигурацию prometheus
+  systemd:
+    name: docker.prometheus.service
+    state: reloaded
+
+- name: Перезапустить ipmi-exporter
+  systemd:
+    name: ipmi_exporter.service
+    state: restarted
+    daemon_reload: true
+
+- name: Перезапустить victoriametrics
+  systemd:
+    name: victoriametrics.service
+    state: restarted
+    daemon_reload: true

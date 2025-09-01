@@ -1,0 +1,70 @@
+---
+### Полный тест
+### ansible-playbook -i tests/inventory tests/test.yml
+
+### Только cleanup
+### ansible-playbook -i tests/inventory tests/test.yml --tags cleanup
+
+# Test playbook for monitoring role
+- hosts: all
+  become: true
+  
+  vars:
+    # Test-specific overrides
+    cluster_name: "test-hpc-cluster"
+    prometheus_retention: "1d"  # Короткое хранение для тестов
+    
+    # Disable external integrations for testing
+    telegram_enabled: false
+    victoriametrics_enabled: false
+    
+    # Enable health checks
+    health_checks_enabled: true
+    
+    # Test credentials (use vault in production!)
+    alertmanager_smtp_password: "test-password"
+    
+    # Faster intervals for testing
+    gpu_process_interval: "10s"
+    ufm_check_interval: "10s"
+    
+  pre_tasks:
+    - name: Display test environment info
+      debug:
+        msg:
+          - "🧪 Starting monitoring role tests"
+          - "Target host: {{ inventory_hostname }}"
+          - "Groups: {{ group_names | join(', ') }}"
+          - "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Install Docker for testing
+      package:
+        name: docker.io
+        state: present
+        update_cache: true
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+
+    - name: Test Docker functionality
+      command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Display Docker version
+      debug:
+        msg: "Docker version: {{ docker_version.stdout }}"
+
+  roles:
+    - role: monitoring
+
+  # ... остальной код без изменений

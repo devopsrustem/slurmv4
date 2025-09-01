@@ -1,0 +1,62 @@
+# Production inventory for SA1 HPC cluster
+
+[slurm-master]
+sm01 ansible_host=10.81.8.28
+
+[compute]
+cn01 ansible_host=10.81.10.101
+cn02 ansible_host=10.81.10.102
+cn03 ansible_host=10.81.10.103
+cn04 ansible_host=10.81.10.104
+
+[ufm]
+ufm-cn1 ansible_host=10.81.8.21
+ufm-cn2 ansible_host=10.81.8.22
+ufm-sn1 ansible_host=10.81.8.24
+ufm-sn2 ansible_host=10.81.8.25
+
+[metrics]
+metrics-server ansible_host=10.81.8.7
+
+# ================================
+# GROUP VARIABLES
+# ================================
+
+[all:vars]
+# SSH settings
+ansible_user=saadmin
+ansible_become=true
+ansible_ssh_private_key_file=~/.ssh/id_ed25519
+
+# Cluster configuration
+cluster_name=sa1-hpc-cluster
+ansible_domain=sa1.test
+
+# Local files server
+use_local_files_server=true
+local_files_server=http://10.81.8.5
+
+[compute:vars]
+# GPU compute specific settings
+gpu_monitoring_enabled=true
+dcgm_custom_metrics_enabled=true
+
+[ufm:vars]
+# InfiniBand specific settings
+ufm_enabled=true
+ufm_ha_enabled=true
+ib_monitoring_enabled=true
+
+[metrics:vars]
+# Monitoring server specific settings
+prometheus_retention=30d
+victoriametrics_enabled=true
+health_checks_enabled=true
+
+# Test-specific settings for initial deployment
+telegram_enabled=false
+cluster_poweroff_enabled=true
+
+[slurm-master:vars]
+# Slurm monitoring settings
+slurm_exporter_enabled=true

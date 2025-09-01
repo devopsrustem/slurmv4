@@ -1,0 +1,7 @@
+---
+- targets:
+{% for host in groups['all'] %}
+  - {{ host }}:{{ node_exporter_port }}
+{% endfor %}
+  labels:
+    module: node-exporter

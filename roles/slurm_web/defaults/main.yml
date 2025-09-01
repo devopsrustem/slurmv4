@@ -3,15 +3,18 @@
 # Web interface settings
 slurm_web_interface: "0.0.0.0"
 slurm_web_cache_enabled: false
-slurm_web_metrics_enabled: true
 
 # Cache settings (Redis)
 slurm_web_cache_host: "localhost"
 slurm_web_cache_port: 6379
 slurm_web_cache_timeout: 300
 
-# Authentication settings
+# Authentication settings (отключено для TCLUSTER01)
 slurm_web_auth_enabled: false
 slurm_web_ldap_uri: "ldap://localhost"
-slurm_web_ldap_user_base: "ou=people,dc=example,dc=com"
-slurm_web_ldap_group_base: "ou=groups,dc=example,dc=com"
+slurm_web_ldap_user_base: "ou=people,dc=tcluster01,dc=local"
+slurm_web_ldap_group_base: "ou=groups,dc=tcluster01,dc=local"
+
+# Включаем метрики с подключением к серверу метрик
+slurm_web_metrics_enabled: true
+slurm_web_metrics_url: "http://{{ hostvars[groups['metrics_nodes'][0]]['ansible_default_ipv4']['address'] }}:9090"
