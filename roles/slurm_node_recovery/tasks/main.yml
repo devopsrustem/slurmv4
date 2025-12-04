@@ -1,0 +1,547 @@
+# roles/slurm_node_recovery/tasks/main.yml - Add node to existing Slurm cluster
+---
+- name: "Display node recovery start"
+  debug:
+    msg: "Adding {{ inventory_hostname }} to existing Slurm cluster {{ slurm_cluster_name }}"
+
+# =============================================================================
+# BASE SYSTEM SETUP
+# =============================================================================
+
+- name: "Update package cache"
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "Install base packages"
+  apt:
+    name:
+      - build-essential
+      - munge
+      - libmunge-dev
+      - hwloc
+      - libhwloc-dev
+      - nfs-common
+    state: present
+
+- name: "Create slurm group"
+  group:
+    name: slurm
+    gid: 1003
+    system: yes
+
+- name: "Create slurm user"
+  user:
+    name: slurm
+    uid: 59901
+    group: slurm
+    system: yes
+    shell: /bin/false
+    home: /var/lib/slurm
+    create_home: yes
+
+- name: "Configure system limits for InfiniBand/RDMA"
+  copy:
+    dest: /etc/security/limits.d/99-rdma.conf
+    mode: '0644'
+    content: |
+      # Unlimited locked memory for InfiniBand/RDMA
+      * soft memlock unlimited
+      * hard memlock unlimited
+      root soft memlock unlimited
+      root hard memlock unlimited
+
+- name: "Configure PAM limits"
+  lineinfile:
+    path: /etc/pam.d/common-session
+    line: 'session required pam_limits.so'
+    state: present
+
+# =============================================================================
+# NFS MOUNTS
+# =============================================================================
+
+- name: "Create NFS mount point"
+  file:
+    path: /sw
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: "Mount NFS share"
+  mount:
+    path: /sw
+    src: "{{ nfs_server_ip }}:/sw"
+    fstype: nfs
+    opts: "defaults,_netdev"
+    state: mounted
+
+# =============================================================================
+# MUNGE AUTHENTICATION
+# =============================================================================
+
+- name: "Configure MUNGE directories"
+  file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+    state: directory
+  loop:
+    - { path: /etc/munge, owner: munge, group: munge, mode: '0700' }
+    - { path: /var/log/munge, owner: munge, group: munge, mode: '0700' }
+    - { path: /var/lib/munge, owner: munge, group: munge, mode: '0700' }
+    - { path: /run/munge, owner: munge, group: munge, mode: '0755' }
+
+- name: "Fetch MUNGE key from master"
+  slurp:
+    src: /etc/munge/munge.key
+  register: munge_key_content
+  delegate_to: "{{ groups['master_nodes'][0] }}"
+
+- name: "Stop MUNGE before key update"
+  systemd:
+    name: munge
+    state: stopped
+
+- name: "Copy MUNGE key to node"
+  copy:
+    content: "{{ munge_key_content.content | b64decode }}"
+    dest: /etc/munge/munge.key
+    owner: munge
+    group: munge
+    mode: '0400'
+
+- name: "Start and enable MUNGE"
+  systemd:
+    name: munge
+    state: started
+    enabled: yes
+
+- name: "Wait for MUNGE to be ready"
+  pause:
+    seconds: 3
+
+- name: "Test MUNGE authentication"
+  shell: |
+    echo "test" | munge | unmunge
+    if [ $? -eq 0 ]; then
+      echo "MUNGE OK"
+    else
+      echo "MUNGE FAILED"
+      exit 1
+    fi
+  register: munge_test
+  failed_when: false
+
+- name: "Display MUNGE test result"
+  debug:
+    var: munge_test.stdout_lines
+
+# =============================================================================
+# SLURM INSTALLATION
+# =============================================================================
+
+- name: "Create Slurm directories"
+  file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - { path: /opt/slurm, owner: root, group: root, mode: '0755' }
+    - { path: /etc/slurm, owner: root, group: root, mode: '0755' }
+    - { path: /var/log/slurm, owner: slurm, group: slurm, mode: '0755' }
+    - { path: /var/spool/slurm, owner: slurm, group: slurm, mode: '0755' }
+    - { path: /var/spool/slurm/d, owner: slurm, group: slurm, mode: '0755' }
+
+- name: "Wait for Slurm binaries on NFS"
+  wait_for:
+    path: /sw/slurm-complete/bin/sinfo
+    timeout: 60
+
+- name: "Install Slurm binaries from NFS"
+  shell: |
+    cp -r /sw/slurm-complete/* /opt/slurm/
+    chown -R root:root /opt/slurm
+    chmod -R 755 /opt/slurm/bin /opt/slurm/sbin
+
+- name: "Wait for Slurm configuration on NFS"
+  wait_for:
+    path: /sw/config/slurm.conf
+    timeout: 60
+
+- name: "Copy Slurm configuration files"
+  copy:
+    src: "/sw/config/{{ item }}"
+    dest: "/etc/slurm/{{ item }}"
+    remote_src: yes
+    owner: slurm
+    group: slurm
+    mode: '0644'
+  loop:
+    - slurm.conf
+    - cgroup.conf
+    - gres.conf
+
+# =============================================================================
+# PROLOG/EPILOG SCRIPTS
+# =============================================================================
+
+- name: "Create prolog/epilog directories"
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/slurm/prolog.d
+    - /etc/slurm/epilog.d
+
+- name: "Copy prolog/epilog scripts"
+  copy:
+    src: "/sw/config/{{ item.src }}"
+    dest: "{{ item.dest }}"
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - { src: "prolog.sh", dest: "/etc/slurm/prolog.d/prolog.sh" }
+    - { src: "epilog.sh", dest: "/etc/slurm/epilog.d/epilog.sh" }
+
+# =============================================================================
+# SYSTEMD SERVICE
+# =============================================================================
+
+- name: "Fix log directory permissions"
+  file:
+    path: /var/log/slurm
+    state: directory
+    owner: slurm
+    group: slurm
+    mode: '0755'
+    recurse: yes
+
+- name: "Create slurmd systemd service"
+  copy:
+    dest: /etc/systemd/system/slurmd.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=Slurm node daemon
+      After=network-online.target munge.service
+      Wants=network-online.target
+      Wants=munge.service
+      ConditionPathExists=/etc/slurm/slurm.conf
+      
+      [Service]
+      Type=simple
+      ExecStart=/opt/slurm/sbin/slurmd -D
+      ExecReload=/bin/kill -HUP $MAINPID
+      LimitNOFILE=65536
+      LimitMEMLOCK=infinity
+      LimitSTACK=infinity
+      
+      # ИСПРАВЛЕНИЯ ДЛЯ КОНТЕЙНЕРОВ
+      TasksMax=infinity
+      Delegate=yes
+      
+      # Restart settings
+      Restart=on-failure
+      RestartSec=5s
+      StartLimitInterval=0
+      
+      # Security settings (УБИРАЕМ ОГРАНИЧЕНИЯ!)
+      NoNewPrivileges=false
+      PrivateTmp=true
+      
+      [Install]
+      WantedBy=multi-user.target
+
+- name: "Create symlinks for Slurm commands"
+  file:
+    src: "/opt/slurm/bin/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - sinfo
+    - squeue
+    - sbatch
+    - srun
+    - scancel
+    - scontrol
+
+- name: "Create symlinks for Slurm daemons"
+  file:
+    src: "/opt/slurm/sbin/{{ item }}"
+    dest: "/usr/sbin/{{ item }}"
+    state: link
+    force: yes
+  loop:
+    - slurmd
+
+# =============================================================================
+# PMIX INSTALLATION (before slurmd)
+# =============================================================================
+
+- name: "Install PMIx"
+  include_role:
+    name: pmix
+
+- name: "Verify slurmd binary exists"
+  stat:
+    path: /opt/slurm/sbin/slurmd
+  register: slurmd_binary
+
+- name: "Verify slurm.conf exists"
+  stat:
+    path: /etc/slurm/slurm.conf
+  register: slurm_conf
+
+- name: "Test slurmd configuration"
+  command: /opt/slurm/sbin/slurmd -D -t
+  register: slurmd_test
+  failed_when: false
+  changed_when: false
+
+- name: "Display config test result"
+  debug:
+    msg: "Config test: {{ slurmd_test.rc == 0 | ternary('PASSED', 'FAILED') }}"
+
+- name: "Reload systemd and start slurmd"
+  systemd:
+    daemon_reload: yes
+    name: slurmd
+    enabled: yes
+    state: started
+  async: 60
+  poll: 5
+  when: 
+    - slurmd_binary.stat.exists
+    - slurm_conf.stat.exists
+
+# =============================================================================
+# CONTAINER RUNTIME (for compute nodes)
+# =============================================================================
+
+- name: "Install Enroot for compute nodes"
+  include_role:
+    name: nvidia.enroot
+  when: inventory_hostname in groups['compute_nodes']
+
+- name: "Install Pyxis for compute nodes"
+  include_role:
+    name: pyxis
+  when: inventory_hostname in groups['compute_nodes']
+
+# =============================================================================
+# MONITORING EXPORTERS
+# =============================================================================
+
+- name: "Check if Docker is installed"
+  command: docker --version
+  register: docker_check
+  failed_when: false
+  changed_when: false
+
+- name: "Create Docker config directory"
+  file:
+    path: /etc/docker
+    state: directory
+    mode: '0755'
+  when: docker_check.rc == 0
+
+- name: "Configure Docker daemon for insecure registry"
+  copy:
+    dest: /etc/docker/daemon.json
+    mode: '0644'
+    content: |
+      {
+        "insecure-registries": ["git.sa1.test:5050"]
+      }
+  when: docker_check.rc == 0
+
+- name: "Start and enable Docker"
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+  when: docker_check.rc == 0
+
+- name: "Restart Docker after config change"
+  systemd:
+    name: docker
+    state: restarted
+  when: docker_check.rc == 0
+
+- name: "Create Node Exporter directories"
+  file:
+    path: /opt/node-exporter/textfile_collector
+    state: directory
+    mode: '0755'
+
+- name: "Install Node Exporter service"
+  copy:
+    dest: /etc/systemd/system/docker.node-exporter.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=Prometheus Node Exporter
+      After=docker.service
+      Requires=docker.service
+      
+      [Service]
+      TimeoutStartSec=0
+      Restart=always
+      ExecStartPre=-/usr/bin/docker stop %n
+      ExecStartPre=-/usr/bin/docker rm %n
+      ExecStartPre=/usr/bin/docker pull git.sa1.test:5050/gpu-cluster/docker/node-exporter:latest
+      ExecStart=/usr/bin/docker run --rm --network host --cpus=0.5 --pid=host --name %n \
+        -v /:/host:ro,rslave \
+        -v /opt/node-exporter/textfile_collector:/textfile_collector \
+        git.sa1.test:5050/gpu-cluster/docker/node-exporter:latest \
+        --path.rootfs=/host \
+        --collector.textfile.directory=/textfile_collector
+      
+      [Install]
+      WantedBy=multi-user.target
+
+- name: "Start and enable Node Exporter"
+  systemd:
+    name: docker.node-exporter.service
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: "Install DCGM Exporter for compute nodes"
+  block:
+    - name: "Create DCGM Exporter directories"
+      file:
+        path: /opt/dcgm-exporter/nvidia-dcgm-exporter
+        state: directory
+        mode: '0755'
+
+    - name: "Create DCGM custom metrics config"
+      copy:
+        dest: /opt/dcgm-exporter/nvidia-dcgm-exporter/dcgm-custom-metrics.csv
+        mode: '0644'
+        content: |
+          # Format
+          # If line starts with a '#' it is considered a comment
+          # DCGM FIELD, Prometheus metric type, help message
+          
+          # Clocks
+          DCGM_FI_DEV_SM_CLOCK,  gauge, SM clock frequency (in MHz).
+          DCGM_FI_DEV_MEM_CLOCK, gauge, Memory clock frequency (in MHz).
+          
+          # Temperature
+          DCGM_FI_DEV_MEMORY_TEMP, gauge, Memory temperature (in C).
+          DCGM_FI_DEV_GPU_TEMP,    gauge, GPU temperature (in C).
+          
+          # Power
+          DCGM_FI_DEV_POWER_USAGE,              gauge, Power draw (in W).
+          DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION, counter, Total energy consumption since boot (in mJ).
+          
+          # PCIE
+          DCGM_FI_DEV_PCIE_REPLAY_COUNTER, counter, Total number of PCIe retries.
+          
+          # Utilization (the sample period varies depending on the product)
+          DCGM_FI_DEV_GPU_UTIL,      gauge, GPU utilization (in %).
+          DCGM_FI_DEV_MEM_COPY_UTIL, gauge, Memory utilization (in %).
+          DCGM_FI_DEV_ENC_UTIL,      gauge, Encoder utilization (in %).
+          DCGM_FI_DEV_DEC_UTIL ,     gauge, Decoder utilization (in %).
+          
+          # Errors and violations
+          DCGM_FI_DEV_XID_ERRORS,              gauge,   Value of the last XID error encountered.
+          DCGM_FI_DEV_POWER_VIOLATION,       counter, Throttling duration due to power constraints (in us).
+          DCGM_FI_DEV_THERMAL_VIOLATION,     counter, Throttling duration due to thermal constraints (in us).
+          
+          # Memory usage
+          DCGM_FI_DEV_FB_FREE, gauge, Framebuffer memory free (in MiB).
+          DCGM_FI_DEV_FB_USED, gauge, Framebuffer memory used (in MiB).
+          DCGM_FI_DEV_FB_RESERVED, gauge, Framebuffer memory reserved (in MiB).
+          
+          # NVLink
+          DCGM_FI_DEV_NVLINK_BANDWIDTH_TOTAL,            counter, Total number of NVLink bandwidth counters for all lanes.
+           DCGM_FI_DEV_NVLINK_BANDWIDTH_L0,               counter, The number of bytes of active NVLink rx or tx data including both header and payload.
+          
+          # VGPU License status
+          DCGM_FI_DEV_VGPU_LICENSE_STATUS, gauge, vGPU License status
+          
+          # Remapped rows
+          DCGM_FI_DEV_UNCORRECTABLE_REMAPPED_ROWS, counter, Number of remapped rows for uncorrectable errors
+          DCGM_FI_DEV_CORRECTABLE_REMAPPED_ROWS,   counter, Number of remapped rows for correctable errors
+          DCGM_FI_DEV_ROW_REMAP_FAILURE,           gauge,   Whether remapping of rows has failed
+          
+          # Static configuration information. These appear as labels on the other metrics
+          DCGM_FI_DRIVER_VERSION,        label, Driver Version
+          
+          # Datacenter Profiling (DCP) metrics
+          DCGM_FI_PROF_GR_ENGINE_ACTIVE,   gauge, Ratio of time the graphics engine is active.
+          DCGM_FI_PROF_PIPE_TENSOR_ACTIVE, gauge, Ratio of cycles the tensor (HMMA) pipe is active.
+          DCGM_FI_PROF_DRAM_ACTIVE,        gauge, Ratio of cycles the device memory interface is active sending or receiving data.
+          DCGM_FI_PROF_PIPE_FP64_ACTIVE,   gauge, Ratio of cycles the fp64 pipes are active.
+          DCGM_FI_PROF_PIPE_FP32_ACTIVE,   gauge, Ratio of cycles the fp32 pipes are active.
+          DCGM_FI_PROF_PIPE_FP16_ACTIVE,   gauge, Ratio of cycles the fp16 pipes are active.
+          DCGM_FI_PROF_PCIE_TX_BYTES,      gauge, The rate of data transmitted over the PCIe bus - including both protocol headers and data payloads - in bytes per second.
+          DCGM_FI_PROF_PCIE_RX_BYTES,      gauge, The rate of data received over the PCIe bus - including both protocol headers and data payloads - in bytes per second.
+
+    - name: "Install DCGM Exporter service"
+      copy:
+        dest: /etc/systemd/system/docker.dcgm-exporter.service
+        mode: '0644'
+        content: |
+          [Unit]
+          Description=NVIDIA DCGM Exporter
+          After=docker.service
+          Requires=docker.service
+          
+          [Service]
+          TimeoutStartSec=0
+          Restart=always
+          ExecStartPre=-/usr/bin/docker stop %n
+          ExecStartPre=-/usr/bin/docker rm %n
+          ExecStartPre=/usr/bin/docker pull git.sa1.test:5050/gpu-cluster/docker/dcgm-exporter:latest
+          ExecStart=/usr/bin/docker run --rm --gpus all --cap-add=SYS_ADMIN --cpus=0.5 --name %n -p 9400:9400 \
+            -v "/opt/dcgm-exporter/nvidia-dcgm-exporter/dcgm-custom-metrics.csv:/etc/dcgm-exporter/default-counters.csv" \
+            git.sa1.test:5050/gpu-cluster/docker/dcgm-exporter:latest
+          
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: "Start and enable DCGM Exporter"
+      systemd:
+        name: docker.dcgm-exporter.service
+        enabled: yes
+        state: started
+        daemon_reload: yes
+  when: inventory_hostname in groups['compute_nodes']
+
+# =============================================================================
+# NODE REGISTRATION
+# =============================================================================
+
+- name: "Wait for slurmd to be ready"
+  wait_for:
+    port: 6818
+    host: localhost
+    timeout: 60
+
+- name: "Resume node in Slurm"
+  command: scontrol update NodeName={{ inventory_hostname }} State=RESUME
+  delegate_to: "{{ groups['master_nodes'][0] }}"
+  ignore_errors: yes
+
+- name: "Verify node status"
+  shell: scontrol show node {{ inventory_hostname }}
+  delegate_to: "{{ groups['master_nodes'][0] }}"
+  register: node_status
+
+- name: "Display node status"
+  debug:
+    var: node_status.stdout_lines

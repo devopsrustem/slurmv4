@@ -46,6 +46,7 @@
   gather_facts: true
   roles:
     - slurm_master
+    - slurm_web
 
 - name: "Configure compute nodes"
   hosts: compute_nodes
@@ -60,7 +61,6 @@
   gather_facts: true
   roles:
     - slurm_login
-    - slurm_web
 
 - name: "Disable AppArmor on compute nodes"
   hosts: compute_nodes
@@ -100,6 +100,56 @@
         state: restarted
         daemon_reload: yes
       when: inventory_hostname in groups['master_nodes']
+
+- name: "Fix slurmrestd authentication"
+  hosts: master_nodes
+  become: true
+  tasks:
+    - name: "Add JWT authentication to slurm.conf"
+      lineinfile:
+        path: /etc/slurm/slurm.conf
+        insertafter: "CredType=cred/munge"
+        line: |
+          
+          # JWT Authentication for REST API
+          AuthAltTypes=auth/jwt
+          AuthAltParameters=jwt_key=/var/spool/slurm/jwt_hs256.key
+        state: present
+
+    - name: "Ensure JWT key has correct permissions"
+      file:
+        path: /var/spool/slurm/jwt_hs256.key
+        owner: slurm
+        group: slurmrest
+        mode: '0640'
+
+    - name: "Restart slurmctld to apply config changes"
+      systemd:
+        name: slurmctld
+        state: restarted
+
+    - name: "Restart slurmrestd service"
+      systemd:
+        name: slurmrestd
+        state: restarted
+        daemon_reload: yes
+
+    - name: "Restart slurm-web services"
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - slurm-web-agent
+        - slurm-web-gateway
+
+    - name: "Copy updated slurm.conf to NFS"
+      copy:
+        src: /etc/slurm/slurm.conf
+        dest: /sw/config/slurm.conf
+        remote_src: yes
+        owner: slurm
+        group: slurm
+        mode: '0644'
 
 - name: "Resume compute nodes"
   hosts: master_nodes

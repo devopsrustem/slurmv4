@@ -1,0 +1,70 @@
+---
+- name: "Debug slurmrestd authentication issues"
+  hosts: master_nodes
+  become: true
+  tasks:
+    - name: "Check JWT key exists and permissions"
+      stat:
+        path: /var/spool/slurm/jwt_hs256.key
+      register: jwt_key_stat
+
+    - name: "Display JWT key info"
+      debug:
+        msg: |
+          JWT key exists: {{ jwt_key_stat.stat.exists }}
+          Owner: {{ jwt_key_stat.stat.pw_name | default('unknown') }}
+          Group: {{ jwt_key_stat.stat.gr_name | default('unknown') }}
+          Mode: {{ jwt_key_stat.stat.mode | default('unknown') }}
+
+    - name: "Check slurmrestd service status"
+      command: systemctl status slurmrestd
+      register: slurmrestd_status
+      failed_when: false
+
+    - name: "Display slurmrestd status"
+      debug:
+        var: slurmrestd_status.stdout_lines
+
+    - name: "Check slurmrestd socket"
+      stat:
+        path: /run/slurmrestd/slurmrestd.socket
+      register: socket_stat
+
+    - name: "Display socket info"
+      debug:
+        msg: |
+          Socket exists: {{ socket_stat.stat.exists }}
+          Socket owner: {{ socket_stat.stat.pw_name | default('unknown') }}
+          Socket group: {{ socket_stat.stat.gr_name | default('unknown') }}
+
+    - name: "Check slurmrestd logs"
+      command: journalctl -u slurmrestd --no-pager -n 20
+      register: slurmrestd_logs
+
+    - name: "Display slurmrestd logs"
+      debug:
+        var: slurmrestd_logs.stdout_lines
+
+    - name: "Check slurm.conf for AuthType"
+      shell: grep -i "authtype\|jwt" /etc/slurm/slurm.conf || echo "No auth settings found"
+      register: auth_config
+
+    - name: "Display auth config"
+      debug:
+        var: auth_config.stdout_lines
+
+    - name: "Test slurmrestd connection"
+      uri:
+        url: "http://unix:/run/slurmrestd/slurmrestd.socket:/slurm/v0.0.39/jobs"
+        method: GET
+        headers:
+          X-SLURM-USER-NAME: "slurm"
+          X-SLURM-USER-TOKEN: "dummy"
+      register: rest_test
+      failed_when: false
+
+    - name: "Display REST test result"
+      debug:
+        msg: |
+          Status: {{ rest_test.status | default('failed') }}
+          Response: {{ rest_test.json | default(rest_test.msg) }}

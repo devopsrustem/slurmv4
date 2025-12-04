@@ -1,0 +1,40 @@
+---
+- name: "Debug slurmctld startup issues"
+  hosts: master_nodes
+  become: true
+  tasks:
+    - name: "Stop slurmctld to prevent restart loop"
+      systemd:
+        name: slurmctld
+        state: stopped
+
+    - name: "Check slurmctld logs"
+      command: journalctl -u slurmctld --no-pager -n 50
+      register: slurmctld_logs
+
+    - name: "Display logs"
+      debug:
+        var: slurmctld_logs.stdout_lines
+
+    - name: "Check slurm.conf syntax"
+      command: /opt/slurm/sbin/slurmctld -D -t
+      register: config_test
+      failed_when: false
+
+    - name: "Display config test"
+      debug:
+        var: config_test
+
+    - name: "Check file permissions"
+      stat:
+        path: "{{ item }}"
+      register: file_perms
+      loop:
+        - /etc/slurm/slurm.conf
+        - /var/spool/slurm
+        - /var/log/slurm
+
+    - name: "Display permissions"
+      debug:
+        msg: "{{ item.item }}: owner={{ item.stat.pw_name | default('unknown') }} group={{ item.stat.gr_name | default('unknown') }} mode={{ item.stat.mode | default('unknown') }}"
+      loop: "{{ file_perms.results }}"

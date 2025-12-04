@@ -6,8 +6,8 @@
 # КЛАСТЕР НАСТРОЙКИ  
 # =============================================================================
 
-slurm_cluster_name: "tcluster01"
-timezone: "Europe/Moscow"
+slurm_cluster_name: "sa1"
+timezone: "UTC"
 slurm_force_rebuild: false
 
 # =============================================================================
@@ -17,8 +17,11 @@ slurm_force_rebuild: false
 # NFS сервер автоматически определится как первый в группе master_nodes
 # nfs_server: "{{ groups['master_nodes'][0] }}"
 
+# NFS сервер (только slurm-login01)
+nfs_server_ip: "10.81.8.29"  # slurm-login01
+
 # NFS экспорты автоматически создадутся для всех узлов в nfs_client группе
-nfs_export_options: "rw,sync,no_root_squash"
+nfs_export_options: "rw,sync,no_root_squash,no_subtree_check"
 nfs_mount_options: "defaults,_netdev"
 
 # =============================================================================

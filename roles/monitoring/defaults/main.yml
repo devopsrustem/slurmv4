@@ -127,11 +127,11 @@ metrics_cleanup_age: "7d"
 # ================================
 cluster_name: "{{ ansible_domain | default('hpc-cluster') }}"
 
-# Groups of nodes (адаптировано под наш inventory)
+# Groups of nodes (адаптировано под SA1 кластер)
 monitoring_groups:
   master_nodes: [ "slurm-master" ]
-  compute_nodes: [ "cn01-tc01", "cn02-tc01" ]
-  login_nodes: [ "slurm-login" ]
+  compute_nodes: [ "cn01", "cn02", "cn03", "cn04", "cn05", "cn06", "cn07", "cn08", "cn09", "cn10", "cn11", "cn12", "cn13", "cn14", "cn15", "cn16", "cn17", "cn18", "cn19", "cn20", "cn21", "cn22", "cn23", "cn24", "cn25", "cn26", "cn27", "cn28", "cn29", "cn30", "cn31", "cn32", "cn33", "cn34", "cn35", "cn36", "cn37", "cn38", "cn39", "cn40", "cn41", "cn42", "cn43", "cn44", "cn45", "cn46", "cn47", "cn48", "cn49", "cn50", "cn51", "cn52", "cn53", "cn54", "cn55", "cn56", "cn57", "cn58", "cn59", "cn60", "cn61", "cn62", "cn63", "cn64" ]
+  login_nodes: [ "slurm-login01", "slurm-login02" ]
   metrics_nodes: [ "metrics" ]  # Отдельный сервер метрик
 
 # Backwards compatibility (для старых переменных)
@@ -209,12 +209,12 @@ cluster_poweroff_webhook_port: 5001
 cluster_poweroff_webhook_token: "{{ vault_cluster_poweroff_token | default('7b54a1cfd7db43452') }}"
 
 # Cluster network configuration  
-cluster_datanet_prefix: "10.36.15"
-cluster_ipminet_prefix: "10.36.0"
-cluster_data_start: 1
-cluster_data_end: 80
-cluster_ipmi_start: 101
-cluster_ipmi_end: 180
+cluster_datanet_prefix: "10.81.10"
+cluster_ipminet_prefix: "10.81.8"
+cluster_data_start: 101
+cluster_data_end: 164
+cluster_ipmi_start: 28
+cluster_ipmi_end: 30
 
 # Authentication
 cluster_poweroff_user: "master"

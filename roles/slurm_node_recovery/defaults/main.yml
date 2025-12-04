@@ -1,0 +1,16 @@
+# roles/slurm_node_recovery/defaults/main.yml
+---
+# NFS server IP (login node)
+nfs_server_ip: "10.81.8.29"
+
+# Slurm cluster name
+slurm_cluster_name: "sa1"
+
+# Slurm user/group
+slurm_uid: 59901
+slurm_gid: 1003
+
+# Slurm paths
+slurm_install_prefix: "/opt/slurm"
+nfs_slurm_path: "/sw/slurm-complete"
+nfs_config_path: "/sw/config"

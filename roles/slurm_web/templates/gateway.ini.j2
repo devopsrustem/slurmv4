@@ -6,7 +6,7 @@ interface={{ slurm_web_interface | default('0.0.0.0') }}
 url=http://localhost:5012
 
 [ui]
-host=http://{{ ansible_default_ipv4.address }}:5011
+host=http://{{ ansible_host | default(ansible_default_ipv4.address) }}:5011
 
 [authentication]
 enabled={{ slurm_web_auth_enabled | default(false) | ternary('yes', 'no') }}

@@ -1,0 +1,34 @@
+---
+- name: "Fix missing JWT key"
+  hosts: master_nodes
+  become: true
+  tasks:
+    - name: "Stop slurmctld"
+      systemd:
+        name: slurmctld
+        state: stopped
+
+    - name: "Create JWT key directory"
+      file:
+        path: /var/spool/slurm
+        state: directory
+        owner: slurm
+        group: slurm
+        mode: '0755'
+
+    - name: "Generate JWT key"
+      shell: openssl rand -base64 32 > /var/spool/slurm/jwt_hs256.key
+      args:
+        creates: /var/spool/slurm/jwt_hs256.key
+
+    - name: "Set JWT key permissions"
+      file:
+        path: /var/spool/slurm/jwt_hs256.key
+        owner: slurm
+        group: slurm
+        mode: '0600'
+
+    - name: "Start slurmctld"
+      systemd:
+        name: slurmctld
+        state: started

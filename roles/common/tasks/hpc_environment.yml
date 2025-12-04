@@ -8,7 +8,7 @@
       export PATH="/opt/slurm/bin:/opt/slurm/sbin:$PATH"
       export LD_LIBRARY_PATH="/opt/slurm/lib:/opt/slurm/lib64:$LD_LIBRARY_PATH"
       export MANPATH="/opt/slurm/share/man:$MANPATH"
-      
+
       # Slurm useful aliases
       alias si='sinfo -o "%20N %10T %4c %8z %15C %8O %8m %18f %19E"'
       alias sq='squeue -o "%.7i %.12j %.8u %.8T %.10M %.9l %.6D %R"'
@@ -26,12 +26,12 @@
     content: |
       #!/bin/bash
       # HPC Cluster status check
-      
+
       echo "=== HPC Cluster Status ==="
       echo "Time: $(date)"
       echo "Uptime: $(uptime -p)"
       echo
-      
+
       if command -v sinfo &> /dev/null; then
           echo "=== Slurm Nodes ==="
           sinfo -N -o "%20N %10T %4c %8z %15C %8O %8m"
@@ -41,13 +41,13 @@
           squeue -o "%.7i %.12j %.8u %.8T %.10M %.9l %.6D %R" | head -20
           echo
       fi
-      
+
       echo "=== System Load ==="
       echo "CPU: $(nproc) cores"
       echo "Memory: $(free -h | grep Mem | awk '{print $3"/"$2}')"
       echo "Load: $(cat /proc/loadavg | cut -d' ' -f1-3)"
       echo
-      
+
       if ls /dev/nvidia* &> /dev/null; then
           echo "=== GPU Status ==="
           nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used,memory.total,temperature.gpu --format=csv,noheader,nounits | head -8
@@ -69,6 +69,6 @@
     mode: '0644'
     owner: "{{ item | basename }}"
   loop:
-    - /home/msu-admin
-    - /root
+  - /home/saadmin
+  - /root
   ignore_errors: yes

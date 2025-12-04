@@ -10,7 +10,7 @@ groups:
           summary: {% raw %}"{{ $labels.job }} job has been down > {% endraw %}{{ alert_instance_down_for | default('5m') }}{% raw %} on 🔥{{ $labels.instance }}"{% endraw %}
           description: {% raw %}"{{ $labels.job }} job has been down > {% endraw %}{{ alert_instance_down_for | default('5m') }}{% raw %} on 🔥{{ $labels.instance }}"{% endraw %}
 
-#Alerts fo MSU-Argo-tech
+#Alerts
 
    #КРИТИЧЕСКАЯ ТЕМПЕРАТУРА В ЦОДЕ
     - name: CLUSTER-POWEROFF

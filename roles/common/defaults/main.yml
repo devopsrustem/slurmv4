@@ -25,7 +25,7 @@ common_base_packages:
   - libhttp-parser-dev
   - libjwt-dev
 
-timezone: "Europe/Moscow"
+timezone: "UTC"
 
 slurm_user: "slurm"
 slurm_uid: 59901

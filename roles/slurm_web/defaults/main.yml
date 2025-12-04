@@ -9,11 +9,11 @@ slurm_web_cache_host: "localhost"
 slurm_web_cache_port: 6379
 slurm_web_cache_timeout: 300
 
-# Authentication settings (отключено для TCLUSTER01)
+# Authentication settings (отключено для SA1)
 slurm_web_auth_enabled: false
 slurm_web_ldap_uri: "ldap://localhost"
-slurm_web_ldap_user_base: "ou=people,dc=tcluster01,dc=local"
-slurm_web_ldap_group_base: "ou=groups,dc=tcluster01,dc=local"
+slurm_web_ldap_user_base: "ou=people,dc=sa1,dc=test"
+slurm_web_ldap_group_base: "ou=groups,dc=sa1,dc=test"
 
 # Включаем метрики с подключением к серверу метрик
 slurm_web_metrics_enabled: true

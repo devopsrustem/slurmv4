@@ -5,16 +5,51 @@
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
+# External DNS entries
+146.75.119.52 apt.postgresql.org
+185.125.190.20  snapcraft.io
+
+# Management network
+10.81.0.1  mgmt.gw-main
+10.81.0.2  mgmt.dns
+10.81.0.5  mgmt.apt
+10.81.0.6  mgmt.prov
+10.81.0.7  mgmt.metrics
+10.81.0.8  mgmt.glog
+10.81.0.17  mgmt.netq
+
+10.81.0.21  mgmt.ufm-cn1
+10.81.0.22  mgmt.ufm-cn2
+10.81.0.24  mgmt.ufm-sn1
+10.81.0.25  mgmt.ufm-sn2
+
+# Git server
+10.81.8.9  git git.sa1.test
+
+# UFM
+10.81.0.21 ufm-cn1
+10.81.0.22 ufm-cn2
+10.81.0.23 vip-ufm-cn
+
+10.81.0.24 ufm-sn1
+10.81.0.25 ufm-sn2
+10.81.0.26 vip-ufm-sn
+
+# Bond 0.4 network
+10.81.8.1  gw-main
+10.81.8.2  dns
+10.81.8.5  apt
+10.81.8.6  prov
+10.81.8.7  metrics
+10.81.8.8  glog
+10.81.8.17  netq
+
 # =============================================================================
 # SLURM CLUSTER HOSTS
 # =============================================================================
 
 {% for host in groups['all'] %}
-{% if hostvars[host]['ansible_default_ipv4'] is defined %}
-{{ hostvars[host]['ansible_default_ipv4']['address'] }}    {{ host }} {{ host }}.{{ ansible_domain | default('local') }}
-{% elif hostvars[host]['ansible_host'] is defined %}
-{{ hostvars[host]['ansible_host'] }}    {{ host }} {{ host }}.{{ ansible_domain | default('local') }}
-{% endif %}
+{{ hostvars[host]['ansible_host'] | default(hostvars[host]['ansible_default_ipv4']['address']) }}    {{ host }} {{ host }}.sa1.test
 {% endfor %}
 
 # =============================================================================
@@ -22,10 +57,6 @@
 # =============================================================================
 {% if groups['master_nodes'] is defined %}
 {% for host in groups['master_nodes'] %}
-{% if hostvars[host]['ansible_default_ipv4'] is defined %}
-{{ hostvars[host]['ansible_default_ipv4']['address'] }}    slurm-master slurm-controller
-{% elif hostvars[host]['ansible_host'] is defined %}
-{{ hostvars[host]['ansible_host'] }}    slurm-master slurm-controller
-{% endif %}
+{{ hostvars[host]['ansible_host'] | default(hostvars[host]['ansible_default_ipv4']['address']) }}    slurm-master slurm-controller
 {% endfor %}
 {% endif %}

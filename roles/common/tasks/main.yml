@@ -36,9 +36,9 @@
 
 - name: "Install MUNGE"
   apt:
-    name: 
-      - munge
-      - libmunge-dev
+    name:
+    - munge
+    - libmunge-dev
     state: present
 
 - name: "Stop MUNGE before configuration"
@@ -61,10 +61,10 @@
     mode: "{{ item.mode }}"
     state: directory
   loop:
-    - { path: /etc/munge, owner: munge, group: munge, mode: '0700' }
-    - { path: /var/log/munge, owner: munge, group: munge, mode: '0700' }
-    - { path: /var/lib/munge, owner: munge, group: munge, mode: '0700' }
-    - { path: /run/munge, owner: munge, group: munge, mode: '0755' }
+  - { path: /etc/munge, owner: munge, group: munge, mode: '0700' }
+  - { path: /var/log/munge, owner: munge, group: munge, mode: '0700' }
+  - { path: /var/lib/munge, owner: munge, group: munge, mode: '0700' }
+  - { path: /run/munge, owner: munge, group: munge, mode: '0755' }
 
 - name: "Fetch MUNGE key from master"
   slurp:
@@ -105,8 +105,8 @@
 - name: "Install HWLOC"
   apt:
     name:
-      - hwloc
-      - libhwloc-dev
+    - hwloc
+    - libhwloc-dev
     state: present
 
 - name: "Verify HWLOC installation"
@@ -117,8 +117,8 @@
 - name: "Install NFS server on master"
   apt:
     name:
-      - nfs-kernel-server
-      - nfs-common
+    - nfs-kernel-server
+    - nfs-common
     state: present
   when: inventory_hostname in groups['nfs_server']
 
@@ -130,8 +130,8 @@
     group: root
     mode: '0755'
   loop:
-    - /home
-    - /sw
+  - /home
+  - /sw
   when: inventory_hostname in groups['nfs_server']
 
 - name: "Clean old NFS exports"
@@ -140,28 +140,21 @@
     regexp: "^{{ item }}.*"
     state: absent
   loop:
-    - /home
-    - /sw
+  - /home
+  - /sw
   when: inventory_hostname in groups['nfs_server']
 
 - name: "Configure NFS exports"
   lineinfile:
     path: /etc/exports
-    line: "{{ item.path }} {{ item.client_ip }}({{ nfs_export_options }})"
+    line: "{{ item.path }} {{ item.subnet }}({{ nfs_export_options }})"
     create: yes
-  loop: >-
-    {%- set exports = [] -%}
-    {%- for path in ['/home', '/sw'] -%}
-      {%- for host in groups['nfs_client'] -%}
-        {%- set client_ip = hostvars[host]['ansible_default_ipv4']['address'] | default(host) -%}
-        {%- set _ = exports.append({'path': path, 'client_ip': client_ip}) -%}
-      {%- endfor -%}
-    {%- endfor -%}
-    {{ exports }}
+  loop:
+  - { path: /sw, subnet: "10.81.8.0/21" } # Management network
   when: inventory_hostname in groups['nfs_server']
-  notify: 
-    - restart nfs-server
-    - reload nfs-exports
+  notify:
+  - restart nfs-server
+  - reload nfs-exports
 
 - name: "Start and enable NFS server"
   systemd:
@@ -193,31 +186,31 @@
     group: root
     mode: '0755'
   loop:
-    - /sw
-  when: 
-    - inventory_hostname in groups['nfs_client']
-    - inventory_hostname not in groups['nfs_server']
+  - /sw
+  when:
+  - inventory_hostname in groups['nfs_client']
+  - inventory_hostname not in groups['nfs_server']
 
 - name: "Mount NFS shares"
   mount:
     path: "{{ item.path }}"
-    src: "{{ hostvars[groups['nfs_server'][0]]['ansible_default_ipv4']['address'] | default(groups['nfs_server'][0]) }}:{{ item.src }}"
+    src: "{{ nfs_server_ip | default(hostvars[groups['nfs_server'][0]]['ansible_default_ipv4']['address']) | default(groups['nfs_server'][0]) }}:{{ item.src }}"
     fstype: nfs
     opts: "{{ nfs_mount_options }}"
     state: mounted
   loop:
-    - { path: /home, src: /home }
-    - { path: /sw, src: /sw }
-  when: 
-    - inventory_hostname in groups['nfs_client']
-    - inventory_hostname not in groups['nfs_server']
+  - { path: /home, src: /home }
+  - { path: /sw, src: /sw }
+  when:
+  - inventory_hostname in groups['nfs_client']
+  - inventory_hostname not in groups['nfs_server']
 
 - name: "Install MariaDB on master"
   apt:
     name:
-      - mariadb-server
-      - mariadb-client  
-      - python3-pymysql
+    - mariadb-server
+    - mariadb-client
+    - python3-pymysql
     state: present
   when: inventory_hostname in groups['master_nodes']
 
@@ -229,9 +222,9 @@
     group: "{{ item.group }}"
     mode: "{{ item.mode }}"
   loop:
-    - { path: /var/log/slurm, owner: slurm, group: slurm, mode: '0755' }
-    - { path: /var/spool/slurm, owner: slurm, group: slurm, mode: '0755' }
-    - { path: /var/spool/slurm/ctld, owner: slurm, group: slurm, mode: '0755' }
-    - { path: /var/spool/slurm/d, owner: slurm, group: slurm, mode: '0755' }
-    - { path: /etc/slurm, owner: root, group: root, mode: '0755' }
-    - { path: /var/lib/slurm, owner: slurm, group: slurm, mode: '0755' }
+  - { path: /var/log/slurm, owner: slurm, group: slurm, mode: '0755' }
+  - { path: /var/spool/slurm, owner: slurm, group: slurm, mode: '0755' }
+  - { path: /var/spool/slurm/ctld, owner: slurm, group: slurm, mode: '0755' }
+  - { path: /var/spool/slurm/d, owner: slurm, group: slurm, mode: '0755' }
+  - { path: /etc/slurm, owner: root, group: root, mode: '0755' }
+  - { path: /var/lib/slurm, owner: slurm, group: slurm, mode: '0755' }

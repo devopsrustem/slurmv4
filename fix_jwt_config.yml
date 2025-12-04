@@ -1,0 +1,50 @@
+---
+- name: "Fix JWT configuration in slurm.conf"
+  hosts: master_nodes
+  become: true
+  tasks:
+    - name: "Add JWT authentication to slurm.conf"
+      lineinfile:
+        path: /etc/slurm/slurm.conf
+        insertafter: "CredType=cred/munge"
+        line: |
+          
+          # JWT Authentication for REST API
+          AuthAltTypes=auth/jwt
+          AuthAltParameters=jwt_key=/var/spool/slurm/jwt_hs256.key
+        state: present
+
+    - name: "Ensure JWT key has correct permissions"
+      file:
+        path: /var/spool/slurm/jwt_hs256.key
+        owner: slurm
+        group: slurmrest
+        mode: '0640'
+
+    - name: "Restart slurmctld to apply config changes"
+      systemd:
+        name: slurmctld
+        state: restarted
+
+    - name: "Wait for slurmctld to start"
+      wait_for:
+        port: 6817
+        timeout: 30
+
+    - name: "Restart slurmrestd"
+      systemd:
+        name: slurmrestd
+        state: restarted
+
+    - name: "Wait for slurmrestd socket"
+      wait_for:
+        path: /run/slurmrestd/slurmrestd.socket
+        timeout: 30
+
+    - name: "Restart slurm-web services"
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      loop:
+        - slurm-web-agent
+        - slurm-web-gateway

@@ -1,13 +1,13 @@
 # playbooks/monitoring.yml - Monitoring deployment playbook
 ---
-- name: "Deploy monitoring stack for TCLUSTER01"
+- name: "Deploy monitoring stack for SA1"
   hosts: localhost
   gather_facts: false
   tasks:
     - name: "Display monitoring deployment info"
       debug:
         msg: |
-          Deploying monitoring stack for TCLUSTER01
+          Deploying monitoring stack for SA1
           Master nodes: {{ groups['master_nodes'] | join(', ') }}
           Compute nodes: {{ groups['compute_nodes'] | join(', ') }}
           Login nodes: {{ groups['login_nodes'] | join(', ') }}
