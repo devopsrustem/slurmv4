@@ -154,3 +154,9 @@ curl -X POST http://10.82.101.193:8000/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hello"}],
     "max_tokens": 10
   }'
+
+
+[2026-02-19 11:57:26] tpgds-aihub0003:2366501:2366501 [0] transport/nvls.cc:621 NCCL WARN Cuda failure 1 'invalid argument'
+
+[2026-02-19 11:57:26] tpgds-aihub0003:2366504:2366504 [3] transport/nvls.cc:621 NCCL WARN Cuda failure 1 'invalid argument'
+
