@@ -418,3 +418,75 @@ exec "$@"
 EOF
 sudo chmod +x /opt/mooncake-libs/run-with-new-libstdc.sh && \
 /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -c "import mooncake; print('Mooncake OK')"
+
+
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -v http://10.99.91.33:30000/health
+*   Trying 10.99.91.33:30000...
+* connect to 10.99.91.33 port 30000 failed: Connection refused
+* Failed to connect to 10.99.91.33 port 30000: Connection refused
+* Closing connection 0
+curl: (7) Failed to connect to 10.99.91.33 port 30000: Connection refused
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -v http://10.99.91.39:30000/health
+*   Trying 10.99.91.39:30000...
+* Connected to 10.99.91.39 (10.99.91.39) port 30000 (#0)
+> GET /health HTTP/1.1
+> Host: 10.99.91.39:30000
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Thu, 19 Feb 2026 12:27:57 GMT
+< server: uvicorn
+< content-length: 0
+< 
+* Connection #0 to host 10.99.91.39 left intact
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -v http://10.99.91.41:30000/health
+*   Trying 10.99.91.41:30000...
+* Connected to 10.99.91.41 (10.99.91.41) port 30000 (#0)
+> GET /health HTTP/1.1
+> Host: 10.99.91.41:30000
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Thu, 19 Feb 2026 12:28:10 GMT
+< server: uvicorn
+< content-length: 0
+< 
+* Connection #0 to host 10.99.91.41 left intact
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -v http://10.99.91.49:30001/health
+*   Trying 10.99.91.49:30001...
+* Connected to 10.99.91.49 (10.99.91.49) port 30001 (#0)
+> GET /health HTTP/1.1
+> Host: 10.99.91.49:30001
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Thu, 19 Feb 2026 12:28:25 GMT
+< server: uvicorn
+< content-length: 0
+< 
+* Connection #0 to host 10.99.91.49 left intact
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -v http://10.99.91.33:30001/health
+*   Trying 10.99.91.33:30001...
+* Connected to 10.99.91.33 (10.99.91.33) port 30001 (#0)
+> GET /health HTTP/1.1
+> Host: 10.99.91.33:30001
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Thu, 19 Feb 2026 12:28:35 GMT
+< server: uvicorn
+< content-length: 0
+< 
+* Connection #0 to host 10.99.91.33 left intact
+timed out waiting for input: auto-logout
+
