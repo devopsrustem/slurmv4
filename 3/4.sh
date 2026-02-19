@@ -44,3 +44,6 @@ TOKENIZERS_PARALLELISM=false \
 
 curl -v http://10.99.91.49:30001/health
 curl -v http://10.99.91.33:30001/health
+
+launch_server.py: error: unrecognized arguments: --disaggregation-decode-url http://10.99.91.49:30001,http://10.99.91.33:30001
+[W219 11:47:05.252714350 AllocatorConfig.cpp:28] Warning: PYTORCH_CUDA_ALLOC_CONF is deprecated, use PYTORCH_ALLOC_CONF instead (function operator())
