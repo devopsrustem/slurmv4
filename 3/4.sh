@@ -227,4 +227,12 @@ TOKENIZERS_PARALLELISM=false \
   --disaggregation-bootstrap-host 0.0.0.0 \
   --disaggregation-bootstrap-port 8998
 
-  
+  E0219 12:59:19.523866 401918 common.h:378] readString: too large length from socket: 8387229930220700999
+E0219 12:59:19.523916 401918 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+E0219 12:59:19.524248 402005 common.h:378] readString: too large length from socket: 8387229930220700999
+E0219 12:59:19.524286 402005 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+
