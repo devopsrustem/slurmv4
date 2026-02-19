@@ -490,3 +490,19 @@ curl: (7) Failed to connect to 10.99.91.33 port 30000: Connection refused
 * Connection #0 to host 10.99.91.33 left intact
 timed out waiting for input: auto-logout
 
+
+
+
+
+
+
+
+/app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router \
+  --pd-disaggregation \
+  --prefill http://10.99.91.39:30000 \
+  --prefill http://10.99.91.41:30000 \
+  --decode http://10.99.91.49:30001 \
+  --decode http://10.99.91.33:30001 \
+  --host 0.0.0.0 \
+  --port 8000
+
