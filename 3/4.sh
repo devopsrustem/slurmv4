@@ -580,3 +580,39 @@ TOKENIZERS_PARALLELISM=false \
 
 # На каждой ноде проверь:
 python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+10.82.101.193
+
+[dcbsr_dev@tpgds-aihub0002 ~]$ python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+10.82.101.194
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+10.82.101.249
+
+[dcbsr_dev@tpgds-aihub0005 ~]$ python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
+10.82.101.129
+
+
+[2026-02-19 16:49:44] INFO:     10.99.91.39:37590 - "GET /health HTTP/1.1" 200 OK
+[2026-02-19 16:49:44] INFO:     10.99.91.39:37616 - "GET /server_info HTTP/1.1" 200 OK
+[2026-02-19 16:49:44] INFO:     10.99.91.39:37616 - "GET /model_info HTTP/1.1" 200 OK
+[2026-02-19 16:50:08 TP5] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP1] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP3] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP7] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP4] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP0] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP6] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP2] Error fetching prefill parallel info from bootstrap: HTTPConnectionPool(host='10.99.91.41', port=8998): Max retries exceeded with url: /route?engine_rank=-1&target_dp_group=-1&target_pp_rank=-1 (Caused by NewConnectionError("HTTPConnection(host='10.99.91.41', port=8998): Failed to establish a new connection: [Errno 111] Connection refused"))
+[2026-02-19 16:50:08 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP7] Decode transfer failed for request rank=7 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP6] Decode transfer failed for request rank=6 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP5] Decode transfer failed for request rank=5 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP4] Decode transfer failed for request rank=4 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP3] Decode transfer failed for request rank=3 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08 TP2] Decode transfer failed for request rank=2 decode_req.req.rid='611c6e426d8249fd9b0301eb7a674d66' decode_req.req.bootstrap_room=4515924363118528477 with exception KVTransferError(bootstrap_room=4515924363118528477): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
+[2026-02-19 16:50:08] INFO:     10.99.91.39:53540 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+
