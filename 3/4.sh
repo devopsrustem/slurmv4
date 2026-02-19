@@ -617,3 +617,18 @@ curl -X POST http://10.82.101.193:8000/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hello! What is 2+2?"}],
     "max_tokens": 50
   }'
+
+
+  2026-02-19 12:57:24  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:259: Workflow completed instance_id=d9f2f3b1-62ff-4cdb-b2d4-3f483fefa69e duration_ms=1232
+2026-02-19 12:59:55  INFO http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-cWbHCIGf0gtAMLU2XJI2u8Zm"}: smg::request: /home/runner/work/sglang/sglang/src/middleware.rs:310: started processing request
+
+
+[2026-02-19 16:00:27 TP15] Prefill bootstrap failed for request rank=15 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP12] Prefill bootstrap failed for request rank=12 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP14] Prefill bootstrap failed for request rank=14 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP10] Prefill bootstrap failed for request rank=10 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP13] Prefill bootstrap failed for request rank=13 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP11] Prefill bootstrap failed for request rank=11 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP9] Prefill bootstrap failed for request rank=9 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+[2026-02-19 16:00:27 TP8] Prefill bootstrap failed for request rank=8 req.rid='783a27b005b940f989f7249cd61d63dd' req.bootstrap_room=1382653975510771152 with exception KVTransferError(bootstrap_room=1382653975510771152): Aborted by AbortReq.
+
