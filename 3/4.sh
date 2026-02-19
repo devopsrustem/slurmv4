@@ -613,34 +613,17 @@ export MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.39
 
 
 
-23534980@sigma.sbrf.ru@CAB-WSN-0052363:~$ curl -X POST http://10.82.101.193:8000/v1/chat/completions   -H "Content-Type: application/json"   -d '{
-    "model": "/app/models/Deepseek-R1/",
-    "messages": [{"role": "user", "content": "Hello! What is 2+2?"}],
-    "max_tokens": 50
-  }'
+[dcbsr_dev@tpgds-aihub0001 ~]$ ss -tulpn | grep 8998
+tcp   LISTEN 0      128      10.99.91.39:8998       0.0.0.0:*    users:(("python3",pid=625781,fd=121))        
+[dcbsr_dev@tpgds-aihub0001 ~]$ ^C
+[dcbsr_dev@tpgds-aihub0001 ~]$ 
+logout
+23534980@sigma.sbrf.ru@CAB-WSN-0052363:~$ ssh aihub2
+Last login: Thu Feb 19 17:58:47 2026 from 10.9.143.146
 
+ SberLinux release 9.7 (Ulutau)
+ Hostname: tpgds-aihub0002
 
-2026-02-19 15:11:48  INFO http_request{method=POST uri=/generate version=HTTP/1.1 module="smg" request_id="gnt-3GXGNXIXv57SqfOE3K9Dji0l"}: smg::request: /home/runner/work/sglang/sglang/src/middleware.rs:310: started processing request
-2026-02-19 15:11:48 ERROR http_request{method=POST uri=/generate version=HTTP/1.1 module="smg" request_id="gnt-3GXGNXIXv57SqfOE3K9Dji0l"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
-2026-02-19 15:11:48 ERROR http_request{method=POST uri=/generate version=HTTP/1.1 module="smg" request_id="gnt-3GXGNXIXv57SqfOE3K9Dji0l"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.33:30001 status=404 Not Found
-2026-02-19 15:11:48  WARN http_request{method=POST uri=/generate version=HTTP/1.1 module="smg" request_id="gnt-3GXGNXIXv57SqfOE3K9Dji0l" status_code=404 latency=63032}: smg::response: /home/runner/work/sglang/sglang/src/middleware.rs:354: request failed with client error
-2026-02-19 15:12:19  INFO http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-P1Fn7g34Q7qna6rbQrW90pxy"}: smg::request: /home/runner/work/sglang/sglang/src/middleware.rs:310: started processing request
-2026-02-19 15:12:19 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-P1Fn7g34Q7qna6rbQrW90pxy"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
-2026-02-19 15:12:19 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-P1Fn7g34Q7qna6rbQrW90pxy"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
-
-
-3я
-[2026-02-19 18:12:19 TP14] Decode transfer failed for request rank=14 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP13] Decode transfer failed for request rank=13 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP12] Decode transfer failed for request rank=12 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP11] Decode transfer failed for request rank=11 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP10] Decode transfer failed for request rank=10 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP9] Decode transfer failed for request rank=9 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-[2026-02-19 18:12:19 TP8] Decode transfer failed for request rank=8 decode_req.req.rid='f61c572411274c40944b65651f3619bc' decode_req.req.bootstrap_room=2073067133184716842 with exception KVTransferError(bootstrap_room=2073067133184716842): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8998
-
-
-[dcbsr_dev@tpgds-aihub0005 ~]$ telnet 10.99.91.41 8998
-Trying 10.99.91.41...
-telnet: connect to address 10.99.91.41: Connection refused
-
+[dcbsr_dev@tpgds-aihub0002 ~]$ ss -tlnpn | grep 8998
+[dcbsr_dev@tpgds-aihub0002 ~]$ 
 
