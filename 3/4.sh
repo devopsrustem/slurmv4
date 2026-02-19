@@ -610,4 +610,10 @@ timed out waiting for input: auto-logout
 2026-02-19 12:57:24  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:259: Workflow completed instance_id=5f8089d2-9bf3-4855-9ad7-3f17c803335d duration_ms=1232
 2026-02-19 12:57:24  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:259: Workflow completed instance_id=d9f2f3b1-62ff-4cdb-b2d4-3f483fefa69e duration_ms=1232
 
-
+curl -X POST http://10.82.101.193:8000/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "/app/models/Deepseek-R1/",
+    "messages": [{"role": "user", "content": "Hello! What is 2+2?"}],
+    "max_tokens": 50
+  }'
