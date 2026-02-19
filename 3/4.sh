@@ -164,3 +164,51 @@ Connected to 10.99.91.39.
 Escape character is '^]'.
 
 
+[dcbsr_dev@tpgds-aihub0003 ~]$ curl -v http://10.99.91.39:30000/v1/models
+*   Trying 10.99.91.39:30000...
+* Connected to 10.99.91.39 (10.99.91.39) port 30000 (#0)
+> GET /v1/models HTTP/1.1
+> Host: 10.99.91.39:30000
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 200 OK
+< date: Thu, 19 Feb 2026 09:22:36 GMT
+< server: uvicorn
+< content-length: 189
+< content-type: application/json
+< 
+* Connection #0 to host 10.99.91.39 left intact
+{"object":"list","data":[{"id":"/app/models/Deepseek-R1/","object":"model","created":1771492956,"owned_by":"sglang","root":"/app/models/Deepseek-R1/","parent":null,"max_model_len":163840}]}[dcbsr_dev@tpgds-aihub0003 ~]$ curl -v http://10.99.91.41:30000/v1/models
+*   Trying 10.99.91.41:30000...
+* Connected to 10.99.91.41 (10.99.91.41) port 30000 (#0)
+> GET /v1/models HTTP/1.1
+> Host: 10.99.91.41:30000
+> User-Agent: curl/7.76.1
+> Accept: */*
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 404 Not Found
+< date: Thu, 19 Feb 2026 09:22:50 GMT
+< server: uvicorn
+< content-length: 22
+< content-type: application/json
+< 
+* Connection #0 to host 10.99.91.41 left intact
+
+
+[dcbsr_dev@tpgds-aihub0002 ~]$ ss -tulpn | grep 30000
+tcp   LISTEN 0      2048     10.99.91.41:30000      0.0.0.0:*    users:(("python3",pid=349786,fd=107))        
+
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+E0219 12:25:16.368417 2375866 common.h:378] readString: too large length from socket: 8387229930220700999
+E0219 12:25:16.368453 2375866 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+E0219 12:25:16.369454 2375848 common.h:378] readString: too large length from socket: 8387229930220700999
+E0219 12:25:16.369489 2375848 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+
