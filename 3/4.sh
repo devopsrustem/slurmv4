@@ -197,18 +197,7 @@ Escape character is '^]'.
 < 
 * Connection #0 to host 10.99.91.41 left intact
 
-
-[dcbsr_dev@tpgds-aihub0002 ~]$ ss -tulpn | grep 30000
-tcp   LISTEN 0      2048     10.99.91.41:30000      0.0.0.0:*    users:(("python3",pid=349786,fd=107))        
-
-  Syntax error: value, object or array expected.
-, json string length: 0, json string content: 
-E0219 12:25:16.368417 2375866 common.h:378] readString: too large length from socket: 8387229930220700999
-E0219 12:25:16.368453 2375866 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
-  Syntax error: value, object or array expected.
-, json string length: 0, json string content: 
-E0219 12:25:16.369454 2375848 common.h:378] readString: too large length from socket: 8387229930220700999
-E0219 12:25:16.369489 2375848 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
-  Syntax error: value, object or array expected.
-, json string length: 0, json string content: 
-
+1-2 ноды
+ens108np0       GPU0 ↔ NIC0 (mlx5_0)         -1       0000:0e:00.0 ConnectX7(rev:0)     UP2-ROCE-AC-005-Q41-01-EXT          10.99.91.38           up      
+3,5 ноды
+ens3np0         GPU0 ↔ NIC0 (mlx5_0)         -1       0000:09:00.0 ConnectX7(rev:0)     UP2-ROCE-AC-005-Q41-01-EXT          10.99.91.48           up      
