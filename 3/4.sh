@@ -493,10 +493,6 @@ timed out waiting for input: auto-logout
 
 
 
-
-
-
-
 /app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router \
   --pd-disaggregation \
   --prefill http://10.99.91.39:30000 \
@@ -506,49 +502,7 @@ timed out waiting for input: auto-logout
   --host 0.0.0.0 \
   --port 8000
 
-
-1
-[2026-02-19 16:08:03 TP0] Prefill bootstrap failed for request rank=0 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP7] Prefill bootstrap failed for request rank=7 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP6] Prefill bootstrap failed for request rank=6 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP3] Prefill bootstrap failed for request rank=3 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP5] Prefill bootstrap failed for request rank=5 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP4] Prefill bootstrap failed for request rank=4 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP1] Prefill bootstrap failed for request rank=1 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:03 TP2] Prefill bootstrap failed for request rank=2 req.rid='ca6925bb242c4f9c96c333ba83beebec' req.bootstrap_room=4651746280874391062 with exception KVTransferError(bootstrap_room=4651746280874391062): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP0] Prefill bootstrap failed for request rank=0 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP7] Prefill bootstrap failed for request rank=7 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP6] Prefill bootstrap failed for request rank=6 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP5] Prefill bootstrap failed for request rank=5 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP4] Prefill bootstrap failed for request rank=4 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP1] Prefill bootstrap failed for request rank=1 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP2] Prefill bootstrap failed for request rank=2 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:41 TP3] Prefill bootstrap failed for request rank=3 req.rid='5695ebefac00434d9f19aed4fe225abe' req.bootstrap_room=1291308662352764236 with exception KVTransferError(bootstrap_room=1291308662352764236): Aborted by AbortReq.
-[2026-02-19 16:08:45 TP0] Prefill batch, #new-seq: 1, #new-token: 1, #cached-token: 0, token usage: 0.00, #running-req: 0, #queue-req: 0, #prealloc-req: 0, #inflight-req: 0, input throughput (token/s): 0.02, 
-3
-[2026-02-19 16:08:17 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP7] Decode transfer failed for request rank=7 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP6] Decode transfer failed for request rank=6 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP5] Decode transfer failed for request rank=5 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP4] Decode transfer failed for request rank=4 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP3] Decode transfer failed for request rank=3 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP2] Decode transfer failed for request rank=2 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-5
-nnection(host='10.99.91.41', port=8999): Failed to establish a new connection: [Errno 111] Connection refused"))
-[2026-02-19 16:08:17 TP15] Decode transfer failed for request rank=15 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP14] Decode transfer failed for request rank=14 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP13] Decode transfer failed for request rank=13 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP12] Decode transfer failed for request rank=12 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP11] Decode transfer failed for request rank=11 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP10] Decode transfer failed for request rank=10 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP9] Decode transfer failed for request rank=9 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-[2026-02-19 16:08:17 TP8] Decode transfer failed for request rank=8 decode_req.req.rid='5025c3ae25b74dcb9c5155ed81f7ad1f' decode_req.req.bootstrap_room=5920011033555834494 with exception KVTransferError(bootstrap_room=5920011033555834494): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.41:8999
-
-router
-2026-02-19 13:08:05 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-N3Y2j8zrgStMGNc3FRxEDprl"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
-2026-02-19 13:08:05 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-N3Y2j8zrgStMGNc3FRxEDprl"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.33:30001 status=404 Not Found
-2026-02-19 13:08:05  WARN http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-N3Y2j8zrgStMGNc3FRxEDprl" status_code=404 latency=67757}: smg::response: /home/runner/work/sglang/sglang/src/middleware.rs:354: request failed with client error
-2026-02-19 13:08:17  INFO http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-z07zHw4KZTI3sNbmLyS3QGtY"}: smg::request: /home/runner/work/sglang/sglang/src/middleware.rs:310: started processing request
-2026-02-19 13:08:17 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-z07zHw4KZTI3sNbmLyS3QGtY"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
-
+https://docs.sglang.io/advanced_features/pd_disaggregation.html
+https://docs.sglang.io/advanced_features/sgl_model_gateway.html#prefill-decode-disaggregation
+https://docs.sglang.io/advanced_features/server_arguments.html#runtime-options
+https://docs.sglang.io/references/multi_node_deployment/multi_node.html
