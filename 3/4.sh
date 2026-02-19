@@ -372,3 +372,49 @@ TOKENIZERS_PARALLELISM=false \
 SGLANG_KV_TRANSFER_USE_TCP=1
 sha256sum /opt/mooncake-libs/run-with-new-libstdc.sh
 ls -lh /opt/mooncake-libs/
+
+
+
+
+
+###############
+1-2 ноды
+
+sudo mkdir -p /opt/mooncake-libs && \
+sudo cp /opt/nvidia/nsight-compute/2025.4.1/host/linux-desktop-glibc_2_11_3-x64/libstdc++.so.6* /opt/mooncake-libs/ && \
+sudo tee /opt/mooncake-libs/run-with-new-libstdc.sh > /dev/null << 'EOF'
+#!/bin/bash
+export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
+exec "$@"
+EOF
+sudo chmod +x /opt/mooncake-libs/run-with-new-libstdc.sh && \
+/opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -c "import mooncake; print('Mooncake OK')"
+
+
+3,5 ноды
+sudo find /opt/nvidia -name "libstdc++.so.6" -exec strings {} \; 2>/dev/null | grep GLIBCXX_3.4.30 | head -1 && \
+sudo find /opt/nvidia -name "libstdc++.so.6" 2>/dev/null
+
+3я
+
+sudo mkdir -p /opt/mooncake-libs && \
+sudo cp /opt/nvidia/nsight-compute/2025.1.1/host/linux-desktop-glibc_2_11_3-x64/libstdc++.so.6* /opt/mooncake-libs/ && \
+sudo tee /opt/mooncake-libs/run-with-new-libstdc.sh > /dev/null << 'EOF'
+#!/bin/bash
+export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
+exec "$@"
+EOF
+sudo chmod +x /opt/mooncake-libs/run-with-new-libstdc.sh && \
+/opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -c "import mooncake; print('Mooncake OK')"
+
+5я
+
+sudo mkdir -p /opt/mooncake-libs && \
+sudo cp /opt/nvidia/nsight-compute/2025.2.1/host/linux-desktop-glibc_2_11_3-x64/libstdc++.so.6* /opt/mooncake-libs/ && \
+sudo tee /opt/mooncake-libs/run-with-new-libstdc.sh > /dev/null << 'EOF'
+#!/bin/bash
+export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
+exec "$@"
+EOF
+sudo chmod +x /opt/mooncake-libs/run-with-new-libstdc.sh && \
+/opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -c "import mooncake; print('Mooncake OK')"
