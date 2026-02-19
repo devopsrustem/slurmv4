@@ -155,18 +155,12 @@ curl -X POST http://10.82.101.193:8000/v1/chat/completions \
     "max_tokens": 10
   }'
 
+[dcbsr_dev@tpgds-aihub0001 ~]$ ss -tulpn | grep 8998
+tcp   LISTEN 0      128      10.99.91.39:8998       0.0.0.0:*    users:(("python3",pid=376819,fd=121))    
 
-[2026-02-19 11:57:26] tpgds-aihub0003:2366501:2366501 [0] transport/nvls.cc:621 NCCL WARN Cuda failure 1 'invalid argument'
+[dcbsr_dev@tpgds-aihub0003 ~]$ telnet 10.99.91.39 8998
+Trying 10.99.91.39...
+Connected to 10.99.91.39.
+Escape character is '^]'.
 
-[2026-02-19 11:57:26] tpgds-aihub0003:2366504:2366504 [3] transport/nvls.cc:621 NCCL WARN Cuda failure 1 'invalid argument'
 
-[2026-02-19 12:05:52 TP6] Error fetching prefill parallel info from bootstrap: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
-[2026-02-19 12:05:52 TP0] Decode transfer failed for request rank=0 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP7] Decode transfer failed for request rank=7 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP6] Decode transfer failed for request rank=6 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP5] Decode transfer failed for request rank=5 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP4] Decode transfer failed for request rank=4 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP3] Decode transfer failed for request rank=3 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP2] Decode transfer failed for request rank=2 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='6b8a2c4cfa4645a09e71a72d57d97424' decode_req.req.bootstrap_room=3639611334409118714 with exception KVTransferError(bootstrap_room=3639611334409118714): Could not fetch prefill parallel info from bootstrap_addr: 10.99.91.39:8998
-[2026-02-19 12:05:52] INFO:     10.99.91.39:43516 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
