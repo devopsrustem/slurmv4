@@ -720,4 +720,103 @@ SGLANG_DISAGGREGATION_WAITING_TIMEOUT=600 \
   --port 8000
 
 
-  
+  [2026-02-20 11:13:52 DP1 TP3 EP3] Load weight begin. avail mem=77.48 GB
+[2026-02-20 11:13:52 DP0 TP1 EP1] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 383, in __init__
+    self.initialize(min_per_gpu_memory)
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 460, in initialize
+    self.load_model()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 889, in load_model
+    self.model = self.loader.load_model(
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_loader/loader.py", line 657, in load_model
+    model = _initialize_model(
+            ^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_loader/loader.py", line 278, in _initialize_model
+    return model_class(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2790, in __init__
+    self.model = DeepseekV2Model(
+                 ^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2534, in __init__
+    self.layers, self.start_layer, self.end_layer = make_layers(
+                                                    ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/utils/common.py", line 615, in make_layers
+    + get_offloader().wrap_modules(
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/utils/offloader.py", line 36, in wrap_modules
+    return list(all_modules_generator)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/utils/common.py", line 617, in <genexpr>
+    layer_fn(idx=idx, prefix=add_prefix(idx, prefix))
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2536, in <lambda>
+    lambda idx, prefix: DeepseekV2DecoderLayer(
+                        ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2282, in __init__
+    self.mlp = DeepseekV2MoE(
+               ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 412, in __init__
+    self.experts = get_moe_impl_class(quant_config)(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/ep_moe/layer.py", line 84, in __init__
+    super().__init__(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/fused_moe_triton/layer.py", line 281, in __init__
+    self.dispatcher = create_moe_dispatcher(self.moe_runner_config)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/fused_moe_triton/layer.py", line 96, in create_moe_dispatcher
+    return MaybeTboDeepEPDispatcher(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/batch_overlap/two_batch_overlap.py", line 1019, in __init__
+    DeepEPDispatcher(**kwargs) for _ in range(num_inner_dispatchers)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/deepep.py", line 761, in __init__
+    self._low_latency_dispatcher = _DeepEPDispatcherImplLowLatency(
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/deepep.py", line 536, in __init__
+    super().__init__(**kwargs)
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/deepep.py", line 304, in __init__
+    raise ImportError(
+ImportError: DeepEP is not installed. Please install DeepEP package from https://github.com/deepseek-ai/deepep.
+
+[2026-02-20 11:13:52] Rank 0 scheduler is dead. Please check if there are relevant logs.
+[2026-02-20 11:13:52] Exit code: -3
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/launch_server.py", line 32, in <module>
+    run_server(server_args)
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/launch_server.py", line 25, in run_server
+    launch_server(server_args)
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/entrypoints/http_server.py", line 1723, in launch_server
+    _launch_subprocesses(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/entrypoints/engine.py", line 1013, in _launch_subprocesses
+    scheduler_infos = _wait_for_scheduler_ready(scheduler_pipe_readers, scheduler_procs)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/entrypoints/engine.py", line 847, in _wait_for_scheduler_ready
+    data = scheduler_pipe_readers[i].recv()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/multiprocessing/connection.py", line 250, in recv
+    buf = self._recv_bytes()
+          ^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/multiprocessing/connection.py", line 430, in _recv_bytes
+    buf = self._recv(4)
+          ^^^^^^^^^^^^^
+  File "/usr/lib64/python3.12/multiprocessing/connection.py", line 399, in _recv
+    raise EOFError
+EOFError
+
