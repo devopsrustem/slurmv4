@@ -1,57 +1,9 @@
-1-2
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ lscpu | grep -i numa
-NUMA node(s):                            1
-NUMA node0 CPU(s):                       0-223
+pkill -9 -f sglang
+sleep 2
 
+export MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.35
+export GLOO_SOCKET_FAMILY=AF_INET
+export NCCL_SOCKET_IFNAME=ens3np0
+export NCCL_TIMEOUT=600
 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ lscpu | grep -i numa
-NUMA node(s):                            1
-NUMA node0 CPU(s):                       0-111
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ lscpu | grep -i numa
-NUMA node(s):                            8
-NUMA node0 CPU(s):                       0-13
-NUMA node1 CPU(s):                       14-27
-NUMA node2 CPU(s):                       28-41
-NUMA node3 CPU(s):                       42-55
-NUMA node4 CPU(s):                       56-69
-NUMA node5 CPU(s):                       70-83
-NUMA node6 CPU(s):                       84-97
-NUMA node7 CPU(s):                       98-111
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ numactl --cpunodebind=0 --membind=0
-usage: numactl [--all | -a] [--balancing | -b]
-               [--interleave= | -i <nodes>] [--weighted-interleave= | -w <nodes>]
-               [--preferred= | -p <node>] [--preferred-many= | -P <nodes>]
-               [--physcpubind= | -C <cpus>] [--cpunodebind= | -N <nodes>]
-               [--membind= | -m <nodes>] [--localalloc | -l] command args ...
-               [--localalloc | -l] command args ...
-       numactl [--show | -s]
-       numactl [--hardware | -H] [--cpu-compress]
-       numactl [--version]
-       numactl [--length | -L <length>] [--offset | -o <offset>] [--shmmode | -M <shmmode>]
-               [--strict | -t]
-               [--shmid | -I <id>] --shm | -S <shmkeyfile>
-               [--shmid | -I <id>] --file | -f <tmpfsfile>
-               [--huge | -u] [--touch | -T] 
-               memory policy [--dump | -d] [--dump-nodes | -D]
-
-memory policy is --preferred | -p, --membind | -m, --localalloc | -l,
-                 --interleave | -i, --weighted-interleave | -w
-<nodes> is a comma delimited list of node numbers or A-B ranges or all.
-Instead of a number a node can also be:
-  netdev:DEV the node connected to network device DEV
-  file:PATH  the node the block device of path is connected to
-  ip:HOST    the node of the network device host routes through
-  block:PATH the node of block device path
-  pci:[seg:]bus:dev[:func] The node of a PCI device
-<cpus> is a comma delimited list of cpu numbers or A-B ranges or all
-all ranges can be inverted with !
-all numbers and ranges can be made cpuset-relative with +
-the old --cpubind argument is deprecated.
-use --cpunodebind or --physcpubind instead
-use --balancing | -b to enable Linux kernel NUMA balancing
-for the process if it is supported by kernel
-<length> can have g (GB), m (MB) or k (KB) suffixes
+numactl --cpunodebind=0 --membind=0 -- env GLOO_SOCKET_IFNAME=ens3np0 NCCL_DEBUG=WARN NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.35 --port 30001 --dist-init-addr 10.99.91.49:5000 --nnodes 2 --node-rank 1 --mem-fraction-static 0.8 --disaggregation-mode decode --max-running-requests 128 --disaggregation-ib-device mlx5_0 --disaggregation-bootstrap-port 8998
