@@ -195,3 +195,15 @@ MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.49
 ((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ python3 -c "import socket; print(socket.gethostbyname(socket.gethostname()))"
 10.99.91.35
 
+# На КАЖДОЙ ноде:
+sudo pkill -9 -f sglang
+sudo pkill -9 -f python
+sudo pkill -9 -f mooncake
+sleep 3
+
+# Очисти все временные файлы:
+rm -rf /tmp/torch_* /tmp/nccl_* /dev/shm/torch_* /tmp/mooncake* ~/.mooncake 2>/dev/null
+
+# Проверь что ничего не осталось:
+ps aux | grep -E "(sglang|python.*sglang)" | grep -v grep
+ss -tlnp | grep -E "(5000|30000|30001|8998)"
