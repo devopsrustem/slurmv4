@@ -284,4 +284,74 @@ curl -X POST http://10.82.101.193:8000/v1/chat/completions \
     "max_tokens": 50
   }'
 
-  
+
+
+
+  ##############
+  ine=False, enable_pdmux=False, pdmux_config_path=None, sm_group_num=8, mm_max_concurrent_calls=32, mm_per_request_timeout=10.0, enable_broadcast_mm_inputs_process=False, enable_prefix_mm_cache=False, mm_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None)
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+[2026-02-25 15:39:23 TP9] Init torch distributed begin.
+[2026-02-25 15:39:23 TP12] Init torch distributed begin.
+[2026-02-25 15:39:23 TP13] Init torch distributed begin.
+[2026-02-25 15:39:23 TP14] Init torch distributed begin.
+[2026-02-25 15:39:23 TP11] Init torch distributed begin.
+[2026-02-25 15:39:24 TP8] Init torch distributed begin.
+[2026-02-25 15:39:24 TP15] Init torch distributed begin.
+[2026-02-25 15:39:24 TP10] Init torch distributed begin.
+[W225 15:39:25.115480139 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 15:39:25.136862390 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[2026-02-25 15:39:25 TP8] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 758, in init_torch_distributed
+    init_distributed_environment(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1530, in init_distributed_environment
+    _WORLD = init_world_group(ranks, local_rank, backend)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1327, in init_world_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 255, in __init__
+    active_ranks = torch.ones(len(ranks), dtype=torch.int32, device=self.device)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: out of memory
+Search for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+[2026-02-25 15:39:25] Received sigquit from a child process. It usually means the child failed.
+Killed
+
