@@ -1,9 +1,26 @@
-pkill -9 -f sglang
-sleep 2
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ /app/sglang/sglang-latest/bin/pip install --upgrade nvidia-nccl-cu13
+Looking in indexes: https://token:****@sberosc.sigma.sbrf.ru/repo/pypi/simple
+Requirement already satisfied: nvidia-nccl-cu13 in /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages (2.27.7)
+Collecting nvidia-nccl-cu13
+  Downloading https://sberosc.sigma.sbrf.ru/repo/pypi/packages/7b/70/aae7806eeaed043b3e212da435880ad067b5f14052986a6b4c0a4c62f68a/nvidia_nccl_cu13-2.29.3-py3-none-manylinux_2_18_x86_64.whl.metadata (2.1 kB)
+Downloading https://sberosc.sigma.sbrf.ru/repo/pypi/packages/7b/70/aae7806eeaed043b3e212da435880ad067b5f14052986a6b4c0a4c62f68a/nvidia_nccl_cu13-2.29.3-py3-none-manylinux_2_18_x86_64.whl (201.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.1/201.1 MB 475.9 MB/s  0:00:00
+Installing collected packages: nvidia-nccl-cu13
+  Attempting uninstall: nvidia-nccl-cu13
+    Found existing installation: nvidia-nccl-cu13 2.27.7
+    Uninstalling nvidia-nccl-cu13-2.27.7:
+      Successfully uninstalled nvidia-nccl-cu13-2.27.7
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+torch 2.9.1+cu130 requires nvidia-nvshmem-cu13==3.3.24; platform_system == "Linux", which is not installed.
+torch 2.9.1+cu130 requires nvidia-nccl-cu13==2.27.7; platform_system == "Linux", but you have nvidia-nccl-cu13 2.29.3 which is incompatible.
+Successfully installed nvidia-nccl-cu13-2.29.3
 
-export MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.35
-export GLOO_SOCKET_FAMILY=AF_INET
-export NCCL_SOCKET_IFNAME=ens3np0
-export NCCL_TIMEOUT=600
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ /app/sglang/sglang-latest/bin/pip install --upgrade nvidia-nccl-cu13
+Looking in indexes: https://token:****@sberosc.sigma.sbrf.ru/repo/pypi/simple
+Collecting nvidia-nccl-cu13
+  Downloading https://sberosc.sigma.sbrf.ru/repo/pypi/packages/7b/70/aae7806eeaed043b3e212da435880ad067b5f14052986a6b4c0a4c62f68a/nvidia_nccl_cu13-2.29.3-py3-none-manylinux_2_18_x86_64.whl.metadata (2.1 kB)
+Downloading https://sberosc.sigma.sbrf.ru/repo/pypi/packages/7b/70/aae7806eeaed043b3e212da435880ad067b5f14052986a6b4c0a4c62f68a/nvidia_nccl_cu13-2.29.3-py3-none-manylinux_2_18_x86_64.whl (201.1 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 201.1/201.1 MB 121.7 MB/s  0:00:01
+Installing collected packages: nvidia-nccl-cu13
+Successfully installed nvidia-nccl-cu13-2.29.3
 
-numactl --cpunodebind=0 --membind=0 -- env GLOO_SOCKET_IFNAME=ens3np0 NCCL_DEBUG=WARN NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.35 --port 30001 --dist-init-addr 10.99.91.49:5000 --nnodes 2 --node-rank 1 --mem-fraction-static 0.8 --disaggregation-mode decode --max-running-requests 128 --disaggregation-ib-device mlx5_0 --disaggregation-bootstrap-port 8998
