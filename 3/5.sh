@@ -316,3 +316,348 @@ TOKENIZERS_PARALLELISM=false \
   --max-running-requests 128 \
   --disaggregation-ib-device mlx5_0 \
   --disaggregation-bootstrap-port 8998
+
+
+
+_enable_dp_encoder=False, mm_process_config={}, limit_mm_data_per_request=None, decrypted_config_file=None, decrypted_draft_config_file=None, forward_hooks=None)
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+[2026-02-25 16:32:57 TP13] Init torch distributed begin.
+[2026-02-25 16:32:57 TP10] Init torch distributed begin.
+[W225 16:32:57.295093976 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:57.295152768 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+The module name  (originally ) is not a valid Python identifier. Please rename the original module to avoid import issues.
+[2026-02-25 16:32:58 TP14] Init torch distributed begin.
+[2026-02-25 16:32:58 TP8] Init torch distributed begin.
+[2026-02-25 16:32:58 TP15] Init torch distributed begin.
+[2026-02-25 16:32:58 TP12] Init torch distributed begin.
+[2026-02-25 16:32:58 TP11] Init torch distributed begin.
+[2026-02-25 16:32:58 TP9] Init torch distributed begin.
+[W225 16:32:58.470737969 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:58.656077665 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:59.766266089 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:59.768556663 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:59.770903372 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[W225 16:32:59.773174154 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.49]:5000 (errno: 97 - Address family not supported by protocol).
+[Gloo] Rank 8 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 11 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 12 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 13 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 10 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 9 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 14 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 15 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 8 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 9 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 10 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 12 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 13 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 11 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 14 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+[Gloo] Rank 15 is connected to 15 peer ranks. Expected number of connected peer ranks is : 15
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996242:3996242 [2] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+[2026-02-25 16:33:59 TP10] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59] Received sigquit from a child process. It usually means the child failed.
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996243:3996243 [3] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996246:3996246 [6] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996241:3996241 [1] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996244:3996244 [4] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996247:3996247 [7] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+
+[2026-02-25 16:33:59] tpgds-aihub0006:3996245:3996245 [5] misc/socket.cc:578 NCCL WARN socketPollConnect: connect to 10.82.101.249<54709> returned Connection refused, exceeded error retry count after 35 attempts
+[2026-02-25 16:33:59 TP9] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59 TP11] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59 TP14] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59 TP12] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59] Received sigquit from a child process. It usually means the child failed.
+--- Logging error ---
+[2026-02-25 16:33:59 TP13] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59] Received sigquit from a child process. It usually means the child failed.
+[2026-02-25 16:33:59 TP15] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 346, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 535, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 497, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 246, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 329, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 365, in __init__
+    min_per_gpu_memory = self.init_torch_distributed()
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 766, in init_torch_distributed
+    initialize_model_parallel(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1590, in initialize_model_parallel
+    _TP = init_model_parallel_group(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 1359, in init_model_parallel_group
+    return GroupCoordinator(
+           ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/parallel_state.py", line 330, in __init__
+    self.pynccl_comm = PyNcclCommunicator(
+                       ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py", line 113, in __init__
+    self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 399, in ncclCommInitRank
+    self.NCCL_CHECK(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl_wrapper.py", line 374, in NCCL_CHECK
+    raise RuntimeError(f"NCCL error: {error_str}")
+RuntimeError: NCCL error: remote process exited or there was a network error
+
+[2026-02-25 16:33:59] Received sigquit from a child process. It usually means the child failed.
+Killed
