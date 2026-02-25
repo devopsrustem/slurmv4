@@ -1,4 +1,4 @@
-коротко
+   коротко
 запуск на 1 и 2 нодах (до 3 и 5 даже не дошли)
 1я нода
 ((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ export LD_LIBRARY_PATH=/app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages/torch/lib:$(find /app/sglang/sglang-0.5.7/lib/python3.12/site-packages/nvidia -type d -name lib 2>/dev/null | tr '\n' ':'):/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH
@@ -129,3 +129,71 @@ tpgds-aihub0002:848538:848538 [6] NVSHMEM INFO nvshmemi_common_init failed, cont
 AttributeError: 'NoneType' object has no attribute 'server_args'
 
 [2026-02-25 15:04:39] ERROR:    Application startup failed. Exiting.
+
+
+
+
+
+
+export MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.39
+
+NCCL_SOCKET_IFNAME=bond0 \
+GLOO_SOCKET_IFNAME=ens108np0 \
+NCCL_DEBUG=WARN \
+NCCL_IB_DISABLE=0 \
+NCCL_NET_GDR_LEVEL=PIX \
+NCCL_IB_GID_INDEX=3 \
+NCCL_IB_TC=106 \
+NCCL_NVLS_ENABLE=0 \
+NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11 \
+NCCL_CROSS_NIC=1 \
+CUDA_DEVICE_MAX_CONNECTIONS=1 \
+PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 \
+TOKENIZERS_PARALLELISM=false \
+/opt/mooncake-libs/run-with-new-libstdc.sh \
+/app/sglang/sglang-latest/bin/python3 -m sglang.launch_server \
+  --model-path /app/models/Deepseek-R1/ \
+  --trust-remote-code \
+  --tp-size 16 \
+  --host 10.99.91.39 \
+  --port 30000 \
+  --dist-init-addr 10.99.91.39:5000 \
+  --nnodes 2 \
+  --node-rank 0 \
+  --mem-fraction-static 0.8 \
+  --disaggregation-mode prefill \
+  --disaggregation-ib-device mlx5_0 \
+  --disaggregation-bootstrap-port 8998 \
+  --disable-cuda-graph
+
+
+export MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.41
+
+NCCL_SOCKET_IFNAME=bond0 \
+GLOO_SOCKET_IFNAME=ens108np0 \
+NCCL_DEBUG=WARN \
+NCCL_IB_DISABLE=0 \
+NCCL_NET_GDR_LEVEL=PIX \
+NCCL_IB_GID_INDEX=3 \
+NCCL_IB_TC=106 \
+NCCL_NVLS_ENABLE=0 \
+NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11 \
+NCCL_CROSS_NIC=1 \
+CUDA_DEVICE_MAX_CONNECTIONS=1 \
+PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb=256 \
+TOKENIZERS_PARALLELISM=false \
+/opt/mooncake-libs/run-with-new-libstdc.sh \
+/app/sglang/sglang-latest/bin/python3 -m sglang.launch_server \
+  --model-path /app/models/Deepseek-R1/ \
+  --trust-remote-code \
+  --tp-size 16 \
+  --host 10.99.91.41 \
+  --port 30000 \
+  --dist-init-addr 10.99.91.39:5000 \
+  --nnodes 2 \
+  --node-rank 1 \
+  --mem-fraction-static 0.8 \
+  --disaggregation-mode prefill \
+  --disaggregation-ib-device mlx5_0 \
+  --disaggregation-bootstrap-port 8998 \
+  --disable-cuda-graph
