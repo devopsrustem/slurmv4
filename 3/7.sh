@@ -167,3 +167,6 @@ TOKENIZERS_PARALLELISM=false \
   --decode http://10.99.91.49:30001 \
   --host 0.0.0.0 \
   --port 8000
+
+
+ps aux | grep sglang | grep python3 | head -1 | awk '{print $2}' | xargs -I {} cat /proc/{}/environ | tr '\0' '\n' | grep MOONCAKE
