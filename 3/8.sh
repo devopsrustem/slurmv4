@@ -235,3 +235,35 @@ NCCL_SOCKET_IFNAME= - это контрол плейн
 
 grep -n -A 15 "def get_local_ip_auto" \
   /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/utils.py
+
+
+  ((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 sglang]$ grep -rl "get_local_ip_auto"
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/distributed/parallel_state.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/shm_broadcast.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/__pycache__/shm_broadcast.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/distributed/__pycache__/parallel_state.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/ascend/conn.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/common/conn.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/common/__pycache__/conn.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/encode_server.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/encode_receiver.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/disaggregation/__pycache__/encode_receiver.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/utils/common.py
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/utils/__pycache__/common.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/model_executor/__pycache__/model_runner.cpython-312.pyc
+sglang-0.5.7/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/parallel_state.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/shm_broadcast.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/__pycache__/shm_broadcast.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/__pycache__/parallel_state.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/ascend/conn.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/common/conn.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/common/__pycache__/conn.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/encode_server.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/encode_receiver.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/disaggregation/__pycache__/encode_receiver.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/utils/common.py
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/utils/__pycache__/common.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/__pycache__/model_runner.cpython-312.pyc
+sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py
+
