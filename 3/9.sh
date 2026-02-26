@@ -1,73 +1,29 @@
-[dcbsr_dev@tpgds-aihub0003 ~]$ nc -zv 10.99.91.39 8998
-Ncat: Version 7.92 ( https://nmap.org/ncat )
-Ncat: Connected to 10.99.91.39:8998.
-Ncat: 0 bytes sent, 0 bytes received in 0.01 seconds.
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 sglang]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+ens108np0        UP             10.99.91.39/31 
+ens12f0np0       UP             
+ens12f1np1       DOWN           
+ens109np0        UP             10.99.92.39/31 
+ens110np0        UP             10.99.93.39/31 
+ens111np0        UP             10.99.94.39/31 
+ens112np0        UP             10.99.95.39/31 
+ens20f0np0       UP             
+ens20f1np1       DOWN           
+ens113np0        UP             10.99.96.39/31 
+ens114np0        UP             10.99.97.39/31 
+ens115np0        UP             10.99.98.39/31 
+bond0            UP             10.82.101.193/29 
+docker0          DOWN           172.17.0.1/16 
 
-[dcbsr_dev@tpgds-aihub0001 ~]$ ss -tlnp | grep -E '8998'
-LISTEN 0      128      10.99.91.39:8998       0.0.0.0:*    users:(("python3",pid=824384,fd=121))        
+nv peermem не используем
 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ nc -zv 10.99.91.39 8998
-Ncat: Version 7.92 ( https://nmap.org/ncat )
-Ncat: Connected to 10.99.91.39:8998.
-Ncat: 0 bytes sent, 0 bytes received in 0.01 seconds.
+запуск
+aihub3
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0  SGLANG_HOST_IP=10.99.91.49  GLOO_SOCKET_FAMILY=AF_INET NCCL_SOCKET_IFNAME=ens3np0 NCCL_TIMEOUT=600 MASTER_ADDR=10.99.91.49 MASTER_PORT=5000 GLOO_SOCKET_IFNAME=ens3np0 NCCL_DEBUG=INFO NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/   --trust-remote-code   --tp-size 16   --host 10.99.91.49   --port 30001   --dist-init-addr 10.99.91.49:5000   --nnodes 2   --node-rank 0   --mem-fraction-static 0.8   --disaggregation-mode decode   --max-running-requests 128   --disaggregation-ib-device mlx5_0   --disaggregation-bootstrap-port 8998
 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0 SGLANG_HOST_IP=10.99.91.35 GLOO_SOCKET_FAMILY=AF_INET NCCL_SOCKET_IFNAME=ens3np0 NCCL_TIMEOUT=600 MASTER_ADDR=10.99.91.49 MASTER_PORT=5000 GLOO_SOCKET_IFNAME=ens3np0 NCCL_DEBUG=info NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/   --trust-remote-code   --tp-size 16   --host 10.99.91.35   --port 30001   --dist-init-addr 10.99.91.49:5000   --nnodes 2   --node-rank 1   --mem-fraction-static 0.8   --disaggregation-mode decode   --max-running-requests 128   --disaggregation-ib-device mlx5_0   --disaggregation-bootstrap-port 8998
 
-Это binary garbage на входе — классический признак несовместимости протокола или ABI. Проверь версии Mooncake на обеих сторонах:
-bash# На aihub0001 (prefill)
-python3 -c "import mooncake; print(mooncake.__version__)" 2>/dev/null || \
-pip show mooncake 2>/dev/null | grep Version
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 sglang]$ SGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.39 SGLANG_HOST_IP=10.99.91.39 GLOO_SOCKET_FAMILY=AF_INET NCCL_SOCKET_IFNAME=ens108np0 NCCL_TIMEOUT=600 MASTER_ADDR=10.99.91.39 MASTER_PORT=5000 GLOO_SOCKET_IFNAME=ens108np0 NCCL_DEBUG=INFO NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/   --trust-remote-code   --tp-size 16   --host 10.99.91.39   --port 30000   --dist-init-addr 10.99.91.39:5000   --nnodes 1   --node-rank 0   --mem-fraction-static 0.8   --disaggregation-mode prefill   --disaggregation-ib-device mlx5_0   --disaggregation-bootstrap-port 8998   --disable-cuda-graph
 
-# На aihub0003 (decode)  
-python3 -c "import mooncake; print(mooncake.__version__)" 2>/dev/null || \
-pip show mooncake 2>/dev/null | grep Version
-И проверь что за библиотека используется через LD_PRELOAD:
-bash# На aihub0001
-cat /opt/mooncake-libs/run-with-new-libstdc.sh
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0002 ~]$ SGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.41 SGLANG_HOST_IP=10.99.91.41 GLOO_SOCKET_FAMILY=AF_INET NCCL_SOCKET_IFNAME=ens108np0 NCCL_TIMEOUT=600 MASTER_ADDR=10.99.91.39 MASTER_PORT=5000 GLOO_SOCKET_IFNAME=ens108np0 NCCL_DEBUG=INFO NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/   --trust-remote-code   --tp-size 16   --host 10.99.91.41   --port 30000   --dist-init-addr 10.99.91.39:5000   --nnodes 2   --node-rank 1   --mem-fraction-static 0.8   --disaggregation-mode prefill   --disaggregation-ib-device mlx5_0   --disaggregation-bootstrap-port 8998   --disable-cuda-graph
 
-# Какой libmooncake.so грузится
-ls -la /opt/mooncake-libs/
-python3 -c "import mooncake._transfer_engine; print(mooncake._transfer_engine.__file__)"
-
-https://github.com/kvcache-ai/Mooncake/tree/main
-
-
-[dcbsr_dev@tpgds-aihub0001 ~]$ . /app/sglang/sglang-0.5.8.post1/bin/activate
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ python3 -c "import mooncake; print(mooncake.__version__)" 2>/dev/null || \
-pip show mooncake 2>/dev/null | grep Version
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ pip show mooncake
-WARNING: Package(s) not found: mooncake
-
-[dcbsr_dev@tpgds-aihub0003 ~]$ python3 -c "import mooncake; print(mooncake.__version__)" 2>/dev/null || \
-pip show mooncake 2>/dev/null | grep Version
-[dcbsr_dev@tpgds-aihub0003 ~]$ . /app/sglang/sglang-latest/bin/activate
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ python3 -c "import mooncake; print(mooncake.__version__)" 2>/dev/null || \
-pip show mooncake 2>/dev/null | grep Version
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ ls -la /opt/mooncake-libs/
-python3 -c "import mooncake._transfer_engine; print(mooncake._transfer_engine.__file__)"
-total 1920
-drwxr-xr-x   3 root root      73 Feb 26 13:06 .
-drwxr-xr-x. 11 root root     197 Feb 17 15:59 ..
-drwxrwxrwx   2 root root      27 Feb 26 13:07 config
--rwxr-xr-x   1 root root 1958696 Feb 19 15:22 libstdc++.so.6
--rwxr-xr-x   1 root root      74 Feb 17 16:03 run-with-new-libstdc.sh
-
-
-
-Из найденных рабочих конфигураций на github видно два важных момента:
-1. Переменная SGLANG_LOCAL_IP_NIC — она отдельная от SGLANG_HOST_IP, контролирует какой NIC использует TransferEngine для RDMA handshake. Попробуй на decode нодах:
-bashSGLANG_LOCAL_IP_NIC=ens3np0  # для aihub0003 и aihub0006
-2. Включи trace логи Mooncake чтобы увидеть что именно происходит при handshake:
-bashMC_LOG_LEVEL=TRACE MC_TE_METRIC=true
-Итоговые команды decode (добавить к текущим):
-bash# aihub0003
-MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0 SGLANG_HOST_IP=10.99.91.49 \
-  ... остальные переменные ... \
-  /opt/mooncake-libs/run-with-new-libstdc.sh python3 -m sglang.launch_server ...
-
-# aihub0006  
-MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0 SGLANG_HOST_IP=10.99.91.35 \
-  ...
-И на prefill тоже:
-bashSGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.39  # aihub0001
-SGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.41  # aihub0002
-После запуска покажи TRACE логи с decode ноды в момент запроса — там будет видно на каком адресе TransferEngine реально инициализируется и что происходит при handshake.
