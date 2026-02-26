@@ -17,3 +17,29 @@ Traceback (most recent call last):
 ValueError: Configuration error: Invalid value for field 'worker_url': http://10.99.91.39:30000,8998 - Invalid URL format: invalid port number
 ((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
 
+
+
+
+Investigated argument parsing discrepancy between Python and Rust layers
+
+
+
+
+Rust-часть роутера валидирует URL строже. Посмотри актуальный синтаксис:
+
+bash
+/app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router --help | grep -A5 -i "prefill\|bootstrap"
+И посмотри как именно router_args.py парсит и передаёт в Rust:
+
+bash
+grep -A20 "prefill" /app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang_router/launch_router.py | head -40
+Возможно bootstrap port передаётся отдельным аргументом:
+
+bash
+# Вариант 1 - отдельный аргумент
+/app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router \
+  --pd-disaggregation \
+  --prefill http://10.99.91.39:30000 \
+  --prefill-bootstrap-port 8998 \
+  --decode http://10.99.91.49:30001 \
+  --host 0.0.0.0 --port 8000
