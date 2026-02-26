@@ -485,3 +485,66 @@ find /app/sglang/sglang-latest -name "*.py" -exec grep -l "MOONCAKE_TRANSFER_ENG
 https://kvcache-ai.github.io/Mooncake/getting_started/examples/sglang-integration/hicache-integration-v1.html
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+ens108np0        UP             10.99.91.39/31 
+ens12f0np0       UP             
+ens12f1np1       DOWN           
+ens109np0        UP             10.99.92.39/31 
+ens110np0        UP             10.99.93.39/31 
+ens111np0        UP             10.99.94.39/31 
+ens112np0        UP             10.99.95.39/31 
+ens20f0np0       UP             
+ens20f1np1       DOWN           
+ens113np0        UP             10.99.96.39/31 
+ens114np0        UP             10.99.97.39/31 
+ens115np0        UP             10.99.98.39/31 
+bond0            UP             10.82.101.193/29 
+docker0          DOWN           172.17.0.1/16 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ ibdev2netdev 
+mlx5_0 port 1 ==> ens108np0 (Up)
+mlx5_1 port 1 ==> bond0 (Up)
+mlx5_10 port 1 ==> ens114np0 (Up)
+mlx5_11 port 1 ==> ens115np0 (Up)
+mlx5_2 port 1 ==> ens12f1np1 (Down)
+mlx5_3 port 1 ==> ens109np0 (Up)
+mlx5_4 port 1 ==> ens110np0 (Up)
+mlx5_5 port 1 ==> ens111np0 (Up)
+mlx5_6 port 1 ==> ens112np0 (Up)
+mlx5_7 port 1 ==> bond0 (Up)
+mlx5_8 port 1 ==> ens20f1np1 (Down)
+mlx5_9 port 1 ==> ens113np0 (Up)
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
+
+
+[2026-02-26 12:37:45 TP4] Prefill transfer failed for request rank=4 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.249:16028 is not alive
+[2026-02-26 12:37:45 TP3] Prefill transfer failed for request rank=3 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.249:15128 is not alive
+[2026-02-26 12:37:45 TP2] Prefill transfer failed for request rank=2 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.249:15607 is not alive
+[2026-02-26 12:37:45 TP1] Prefill transfer failed for request rank=1 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.249:16667 is not alive
+[2026-02-26 12:37:45] INFO:     10.99.91.39:37578 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+
+
+ncake session 10.82.101.130:15256 is not alive
+[2026-02-26 12:37:45 TP14] Prefill transfer failed for request rank=14 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16199 is not alive
+[2026-02-26 12:37:45 TP13] Prefill transfer failed for request rank=13 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16462 is not alive
+[2026-02-26 12:37:45 TP12] Prefill transfer failed for request rank=12 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16264 is not alive
+[2026-02-26 12:37:45 TP11] Prefill transfer failed for request rank=11 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16122 is not alive
+[2026-02-26 12:37:45 TP10] Prefill transfer failed for request rank=10 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16010 is not alive
+[2026-02-26 12:37:45 TP9] Prefill transfer failed for request rank=9 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16315 is not alive
+[2026-02-26 12:37:45 TP8] Prefill transfer failed for request rank=8 req.rid='09dd70fa51a7420eb8e0ba215dd530c0' req.bootstrap_room=8998792899019027382 with exception KVTransferError(bootstrap_room=8998792899019027382): Decode instance could be dead, remote mooncake session 10.82.101.130:16407 is not alive
+
+
