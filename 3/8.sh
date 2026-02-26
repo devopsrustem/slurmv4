@@ -197,3 +197,16 @@ export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
 exec "$@"
 ((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
 
+Проверь сначала версию Mooncake:
+bash/app/sglang/sglang-latest/bin/python3 -c "import mooncake; print(mooncake.__version__)"
+# или
+/app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
+И попробуй явно с MOONCAKE_CONFIG_PATH:
+bashMOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
+/app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+Это покажет читается ли файл вообще. И покажи вывод — разберёмся точно.
