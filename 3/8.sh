@@ -415,3 +415,153 @@ decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(
     "max_tokens": 50
   }'
 {"error":{"type":"Internal Server Error","code":"decode_internal_error","message":"Decode transfer failed for request rank=0 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead"}}[dcbsr_dev@tpgds-aihub0001 ~]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ ss -tlnp | grep -E "15[0-9]|{3}|16[0-9]{3}"
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                                        
+LISTEN 0      100        127.0.0.1:50457      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=253))
+LISTEN 0      2048     10.99.91.49:30001      0.0.0.0:*    users:(("python3",pid=3089168,fd=98))         
+LISTEN 0      128          0.0.0.0:16711      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=254))
+LISTEN 0      128          0.0.0.0:16610      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=254))
+LISTEN 0      16384    10.99.91.49:52945      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=165))
+LISTEN 0      16384    10.99.91.49:49253      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=166))
+LISTEN 0      16384    10.99.91.49:49547      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=165))
+LISTEN 0      16384    10.99.91.49:51139      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=161))
+LISTEN 0      16384    10.99.91.49:55453      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=161))
+LISTEN 0      16384    10.99.91.49:55861      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=161))
+LISTEN 0      16384    10.99.91.49:56405      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=161))
+LISTEN 0      16384    10.99.91.49:56495      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=165))
+LISTEN 0      16384    10.99.91.49:56861      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=165))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=182))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=167))
+LISTEN 0      16384      127.0.0.1:28028      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=167))
+LISTEN 0      16384    10.99.91.49:54593      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=164))
+LISTEN 0      16384    10.99.91.49:55123      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=202))
+LISTEN 0      16384    10.99.91.49:59599      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=166))
+LISTEN 0      16384    10.99.91.49:60877      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=207))
+LISTEN 0      16384    10.99.91.49:57691      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=161))
+LISTEN 0      16384    10.99.91.49:57829      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=164))
+LISTEN 0      16384    10.99.91.49:35071      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=166))
+LISTEN 0      65535    10.99.91.49:35075      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=108))
+LISTEN 0      65535    10.99.91.49:35807      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=218))
+LISTEN 0      128          0.0.0.0:22         0.0.0.0:*                                                  
+LISTEN 0      65535    10.99.91.49:35977      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=218))
+LISTEN 0      16384    10.99.91.49:36487      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=164))
+LISTEN 0      16384    10.99.91.49:36483      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=164))
+LISTEN 0      65535    10.99.91.49:36613      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=218))
+LISTEN 0      65535    10.99.91.49:33087      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=127))
+LISTEN 0      6          127.0.0.1:16000      0.0.0.0:*                                                  
+LISTEN 0      100      10.99.91.49:33471      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=253))
+LISTEN 0      16384    10.99.91.49:33639      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=164))
+LISTEN 0      65535    10.99.91.49:33745      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=127))
+LISTEN 0      65535    10.99.91.49:33805      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=226))
+LISTEN 0      100      10.99.91.49:34027      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=253))
+LISTEN 0      65535    10.99.91.49:34139      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=226))
+LISTEN 0      16384    10.99.91.49:34205      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=165))
+LISTEN 0      16384    10.99.91.49:34411      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=165))
+LISTEN 0      65535    10.99.91.49:34385      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=108))
+LISTEN 0      65535    10.99.91.49:34539      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=127))
+LISTEN 0      16384    10.99.91.49:34797      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=166))
+LISTEN 0      65535    10.99.91.49:34781      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=226))
+LISTEN 0      100      10.99.91.49:39033      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=253))
+LISTEN 0      65535    10.99.91.49:39031      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=222))
+LISTEN 0      65535        0.0.0.0:5000       0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=125))
+LISTEN 0      65535    10.99.91.49:39165      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=222))
+LISTEN 0      65535    10.99.91.49:39377      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=127))
+LISTEN 0      16384    10.99.91.49:39545      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=166))
+LISTEN 0      65535    10.99.91.49:39463      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=282))
+LISTEN 0      100      10.99.91.49:39457      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=253))
+LISTEN 0      16384    10.99.91.49:40173      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=161))
+LISTEN 0      65535    10.99.91.49:40149      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=222))
+LISTEN 0      65535    10.99.91.49:40557      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=218))
+LISTEN 0      100      10.99.91.49:40809      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=253))
+LISTEN 0      2048         0.0.0.0:7076       0.0.0.0:*    users:(("app",pid=3796,fd=7))                 
+LISTEN 0      65535    10.99.91.49:37155      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=127))
+LISTEN 0      65535    10.99.91.49:37517      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=226))
+LISTEN 0      16384    10.99.91.49:37793      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=166))
+LISTEN 0      65535    10.99.91.49:37943      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=108))
+LISTEN 0      65535    10.99.91.49:38189      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=127))
+LISTEN 0      16384    10.99.91.49:38149      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=164))
+LISTEN 0      65535    10.99.91.49:38499      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=222))
+LISTEN 0      65535    10.99.91.49:38415      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=218))
+LISTEN 0      16384    10.99.91.49:38743      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=206))
+LISTEN 0      65535    10.99.91.49:43041      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=108))
+LISTEN 0      65535    10.99.91.49:43167      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=226))
+LISTEN 0      6          127.0.0.1:5555       0.0.0.0:*                                                  
+LISTEN 0      16384    10.99.91.49:43351      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=164))
+LISTEN 0      65535    10.99.91.49:43645      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=222))
+LISTEN 0      65535    10.99.91.49:44147      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=274))
+LISTEN 0      65535    10.99.91.49:44069      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=108))
+LISTEN 0      4096         0.0.0.0:10050      0.0.0.0:*                                                  
+LISTEN 0      65535    10.99.91.49:44873      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=222))
+LISTEN 0      65535    10.99.91.49:45017      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=218))
+LISTEN 0      16384    10.99.91.49:41045      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=161))
+LISTEN 0      16384    10.99.91.49:40997      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=166))
+LISTEN 0      100      10.99.91.49:42055      0.0.0.0:*    users:(("sglang::schedul",pid=3089372,fd=253))
+LISTEN 0      100      10.99.91.49:42231      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=253))
+LISTEN 0      100      10.99.91.49:42727      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=309))
+LISTEN 0      6          127.0.0.1:6666       0.0.0.0:*                                                  
+LISTEN 0      16384    10.99.91.49:47431      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=205))
+LISTEN 0      16384    10.99.91.49:48227      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=165))
+LISTEN 0      32         127.0.0.1:53         0.0.0.0:*                                                  
+LISTEN 0      65535    10.99.91.49:45143      0.0.0.0:*    users:(("sglang::schedul",pid=3089366,fd=226))
+LISTEN 0      128          0.0.0.0:15266      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=254))
+LISTEN 0      65535    10.99.91.49:45211      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=222))
+LISTEN 0      128          0.0.0.0:15160      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=254))
+LISTEN 0      100      10.99.91.49:45533      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=255))
+LISTEN 0      65535    10.99.91.49:45487      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=108))
+LISTEN 0      65535    10.99.91.49:45667      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=278))
+LISTEN 0      65535    10.99.91.49:45717      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=108))
+LISTEN 0      65535    10.99.91.49:46127      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=166))
+LISTEN 0      65535    10.99.91.49:46097      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=147))
+LISTEN 0      65535    10.99.91.49:46245      0.0.0.0:*    users:(("sglang::schedul",pid=3089371,fd=127))
+LISTEN 0      128          0.0.0.0:16093      0.0.0.0:*    users:(("sglang::schedul",pid=3089369,fd=254))
+LISTEN 0      65535    10.99.91.49:46403      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=226))
+LISTEN 0      128          0.0.0.0:15956      0.0.0.0:*    users:(("sglang::schedul",pid=3089368,fd=254))
+LISTEN 0      65535    10.99.91.49:46765      0.0.0.0:*    users:(("sglang::schedul",pid=3089367,fd=218))
+LISTEN 0      128          0.0.0.0:15571      0.0.0.0:*    users:(("sglang::schedul",pid=3089365,fd=310))
+LISTEN 0      128          0.0.0.0:15366      0.0.0.0:*    users:(("sglang::schedul",pid=3089370,fd=254))
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ ss -tnlp | grep python
+LISTEN 0      128      10.99.91.39:8998       0.0.0.0:*    users:(("python3",pid=769175,fd=121))        
+LISTEN 0      2048     10.99.91.39:30000      0.0.0.0:*    users:(("python3",pid=769175,fd=92))         
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ nc -zv 10.99.91.49 15366
+Ncat: Version 7.92 ( https://nmap.org/ncat )
+Ncat: Connected to 10.99.91.49:15366.
+Ncat: 0 bytes sent, 0 bytes received in 0.01 seconds.
+
+
+на декод выскочило 
+E0226 15:23:54.626150 3093345 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+
+
+
+
+
+
+
