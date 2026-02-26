@@ -287,3 +287,14 @@ grep: /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggre
 /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/decode.py:                bootstrap_addr=f"{req.bootstrap_host}:{req.bootstrap_port}",
 [dcbsr_dev@tpgds-aihub0001 ~]$ 
 
+
+
+
+prefill/decode:
+bashgrep -r "bootstrap_host\|bootstrap_room\|bootstrap_port" \
+  /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/ 2>/dev/null | \
+  grep -v ".pyc" | grep -v "Binary"
+Параметра --disaggregation-bootstrap-host в SGLang нет (мы видели полный help). Bootstrap_host берётся из --host каждого сервера и передаётся роутером. Скорее всего роутер передаёт prefill bootstrap host (10.99.91.39) в запрос к decode, и decode должен до него дотянуться — это должно работать.
+Реальная проблема может быть в другом — проверь TCP handshake напрямую:
+bash# С aihub0001 → aihub0003, смотри что приходит
+(echo -n '{"op":"check"}'; sleep 1) | nc 10.99.91.49 15328 | xxd | head -5
