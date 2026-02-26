@@ -481,3 +481,7 @@ MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.49
 
 # На любой ноде найди где SGLang инициализирует Mooncake:
 find /app/sglang/sglang-latest -name "*.py" -exec grep -l "MOONCAKE_TRANSFER_ENGINE_IP" {} \;
+
+https://kvcache-ai.github.io/Mooncake/getting_started/examples/sglang-integration/hicache-integration-v1.html
+
+
