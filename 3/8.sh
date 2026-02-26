@@ -267,3 +267,26 @@ sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/utils/__pycache__/com
 sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/__pycache__/model_runner.cpython-312.pyc
 sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py
 
+
+2829:def get_local_ip_auto(fallback: str = None) -> str:
+2830-    """
+2831-    Automatically detect the local IP address using multiple fallback strategies.
+2832-
+2833-    This function attempts to obtain the local IP address through several methods.
+2834-    If all methods fail, it returns the specified fallback value or raises an exception.
+2835-
+2836-    Args:
+2837-        fallback (str, optional): Fallback IP address to return if all detection
+2838-            methods fail. For server applications, explicitly set this to
+2839-            "0.0.0.0" (IPv4) or "::" (IPv6) to bind to all available interfaces.
+2840-            Defaults to None.
+2841-
+2842-    Returns:
+2843-        str: The detected local IP address, or the fallback value if detection fails.
+2844-
+2845-    Raises:
+2846-        ValueError: If IP detection fails and no fallback value is provided.
+2847-
+2848-    Note:
+2849-        The function tries detection methods in the following order:
+
