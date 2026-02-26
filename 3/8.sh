@@ -210,3 +210,130 @@ print('PATH:', path)
 print('FILE:', json.load(open(path)))
 "
 Это покажет читается ли файл вообще. И покажи вывод — разберёмся точно.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
+Name: mooncake-transfer-engine
+Version: 0.3.8.post1
+Summary: Python binding of a Mooncake library using pybind11
+Home-page: https://github.com/kvcache-ai/Mooncake
+Author: Mooncake Authors
+Author-email: 
+License: 
+Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
+Requires: aiohttp, requests
+Required-by: 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
+/app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+PATH: /opt/mooncake-libs/config/mooncake.json
+FILE: {'local_hostname': '10.99.91.49', 'metadata_server': 'http://10.99.91.49:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
+Name: mooncake-transfer-engine
+Version: 0.3.8.post1
+Summary: Python binding of a Mooncake library using pybind11
+Home-page: https://github.com/kvcache-ai/Mooncake
+Author: Mooncake Authors
+Author-email: 
+License: 
+Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
+Requires: aiohttp, requests
+Required-by: 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
+/app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+PATH: /opt/mooncake-libs/config/mooncake.json
+FILE: {'local_hostname': '10.99.91.35', 'metadata_server': 'http://10.99.91.49:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
+Name: mooncake-transfer-engine
+Version: 0.3.8.post1
+Summary: Python binding of a Mooncake library using pybind11
+Home-page: https://github.com/kvcache-ai/Mooncake
+Author: Mooncake Authors
+Author-email: 
+License: 
+Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
+Requires: aiohttp, requests
+Required-by: 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+PATH: None
+Traceback (most recent call last):
+  File "<string>", line 5, in <module>
+TypeError: expected str, bytes or os.PathLike object, not NoneType
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
+/app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+PATH: /opt/mooncake-libs/config/mooncake.json
+FILE: {'local_hostname': '10.99.91.39', 'metadata_server': 'http://10.99.91.39:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
+
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0002 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
+Name: mooncake-transfer-engine
+Version: 0.3.8.post1
+Summary: Python binding of a Mooncake library using pybind11
+Home-page: https://github.com/kvcache-ai/Mooncake
+Author: Mooncake Authors
+Author-email: 
+License: 
+Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
+Requires: aiohttp, requests
+Required-by: 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0002 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
+/app/sglang/sglang-latest/bin/python3 -c "
+import os, json
+path = os.environ.get('MOONCAKE_CONFIG_PATH')
+print('PATH:', path)
+print('FILE:', json.load(open(path)))
+"
+PATH: /opt/mooncake-libs/config/mooncake.json
+FILE: {'local_hostname': '10.99.91.41', 'metadata_server': 'http://10.99.91.39:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
+
+
+
+
+
+
+
