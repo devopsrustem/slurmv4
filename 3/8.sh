@@ -233,3 +233,5 @@ NCCL_SOCKET_IFNAME= - это контрол плейн
 ред. 
 
 
+grep -n -A 15 "def get_local_ip_auto" \
+  /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/utils.py
