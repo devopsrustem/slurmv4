@@ -189,164 +189,63 @@ json{
 
 
 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /opt/mooncake-libs/
-config/                  libstdc++.so.6           run-with-new-libstdc.sh  
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /opt/mooncake-libs/run-with-new-libstdc.sh 
-#!/bin/bash
-export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
-exec "$@"
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
-
-Проверь сначала версию Mooncake:
-bash/app/sglang/sglang-latest/bin/python3 -c "import mooncake; print(mooncake.__version__)"
-# или
-/app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
-И попробуй явно с MOONCAKE_CONFIG_PATH:
-bashMOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
-/app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-Это покажет читается ли файл вообще. И покажи вывод — разберёмся точно.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
-Name: mooncake-transfer-engine
-Version: 0.3.8.post1
-Summary: Python binding of a Mooncake library using pybind11
-Home-page: https://github.com/kvcache-ai/Mooncake
-Author: Mooncake Authors
-Author-email: 
-License: 
-Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
-Requires: aiohttp, requests
-Required-by: 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
-/app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-PATH: /opt/mooncake-libs/config/mooncake.json
-FILE: {'local_hostname': '10.99.91.49', 'metadata_server': 'http://10.99.91.49:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ find /app/sglang/sglang-latest/lib -name "mooncake*.py" -o -name "*disaggregat*.py" 2>/dev/null | head -20
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/mooncake.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/test/server_fixtures/disaggregation_fixture.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_ep_buffer.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_connector_v1.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_store_service.py
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ find /app/sglang/sglang-latest/lib -path "*/sglang*" -name "*.py" | xargs grep -l "local_hostname\|mooncake_config\|MOONCAKE" 2>/dev/null
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/bench_serving.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/environ.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/utils.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/utils.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/utils.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/utils.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/mooncake.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/allocator.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_connector_v1.py
+/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_store_service.py
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ python3 -c "import sglang; print(sglang.__file__)"
+/app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages/sglang/__init__.py
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/pip show -f sglang | grep -i "mooncake\|disaggregat"
+  sglang/srt/disaggregation/ascend/__init__.py
+  sglang/srt/disaggregation/ascend/conn.py
+  sglang/srt/disaggregation/ascend/transfer_engine.py
+  sglang/srt/disaggregation/base/__init__.py
+  sglang/srt/disaggregation/base/conn.py
+  sglang/srt/disaggregation/common/__init__.py
+  sglang/srt/disaggregation/common/conn.py
+  sglang/srt/disaggregation/common/utils.py
+  sglang/srt/disaggregation/decode.py
+  sglang/srt/disaggregation/decode_kvcache_offload_manager.py
+  sglang/srt/disaggregation/decode_schedule_batch_mixin.py
+  sglang/srt/disaggregation/encode_receiver.py
+  sglang/srt/disaggregation/encode_server.py
+  sglang/srt/disaggregation/fake/__init__.py
+  sglang/srt/disaggregation/fake/conn.py
+  sglang/srt/disaggregation/kv_events.py
+  sglang/srt/disaggregation/mooncake/__init__.py
+  sglang/srt/disaggregation/mooncake/conn.py
+  sglang/srt/disaggregation/mooncake/transfer_engine.py
+  sglang/srt/disaggregation/mooncake/utils.py
+  sglang/srt/disaggregation/nixl/__init__.py
+  sglang/srt/disaggregation/nixl/conn.py
+  sglang/srt/disaggregation/prefill.py
+  sglang/srt/disaggregation/utils.py
+  sglang/srt/layers/moe/token_dispatcher/mooncake.py
+  sglang/srt/mem_cache/storage/mooncake_store/README.md
+  sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
+  sglang/srt/mem_cache/storage/mooncake_store/test_mooncake_store.py
+  sglang/test/server_fixtures/disaggregation_fixture.py
 
 
 
 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
-Name: mooncake-transfer-engine
-Version: 0.3.8.post1
-Summary: Python binding of a Mooncake library using pybind11
-Home-page: https://github.com/kvcache-ai/Mooncake
-Author: Mooncake Authors
-Author-email: 
-License: 
-Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
-Requires: aiohttp, requests
-Required-by: 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0006 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
-/app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-PATH: /opt/mooncake-libs/config/mooncake.json
-FILE: {'local_hostname': '10.99.91.35', 'metadata_server': 'http://10.99.91.49:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
-
-
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
-Name: mooncake-transfer-engine
-Version: 0.3.8.post1
-Summary: Python binding of a Mooncake library using pybind11
-Home-page: https://github.com/kvcache-ai/Mooncake
-Author: Mooncake Authors
-Author-email: 
-License: 
-Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
-Requires: aiohttp, requests
-Required-by: 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-PATH: None
-Traceback (most recent call last):
-  File "<string>", line 5, in <module>
-TypeError: expected str, bytes or os.PathLike object, not NoneType
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
-/app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-PATH: /opt/mooncake-libs/config/mooncake.json
-FILE: {'local_hostname': '10.99.91.39', 'metadata_server': 'http://10.99.91.39:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
-
-
-
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0002 ~]$ /app/sglang/sglang-latest/bin/pip show mooncake-transfer-engine
-Name: mooncake-transfer-engine
-Version: 0.3.8.post1
-Summary: Python binding of a Mooncake library using pybind11
-Home-page: https://github.com/kvcache-ai/Mooncake
-Author: Mooncake Authors
-Author-email: 
-License: 
-Location: /app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages
-Requires: aiohttp, requests
-Required-by: 
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0002 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json \
-/app/sglang/sglang-latest/bin/python3 -c "
-import os, json
-path = os.environ.get('MOONCAKE_CONFIG_PATH')
-print('PATH:', path)
-print('FILE:', json.load(open(path)))
-"
-PATH: /opt/mooncake-libs/config/mooncake.json
-FILE: {'local_hostname': '10.99.91.41', 'metadata_server': 'http://10.99.91.39:8998/metadata', 'protocol': 'rdma', 'device_name': 'mlx5_0'}
-
-
-
-
-
-bashfind /app/sglang/sglang-latest -name "*.py" | xargs grep -l "local_hostname\|TransferEngine\|MOONCAKE_CONFIG" 2>/dev/null
-И конкретно файл инициализации:
-bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | head -20
-И посмотри что там внутри:
-bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | xargs grep -l "hostname\|device_name\|config" 2>/dev/null | head -5 | xargs cat
-
-
-
-Значит SGLang установлен как пакет, исходники не там. Ищем иначе:
-bashfind /app/sglang/sglang-latest/lib -name "mooncake*.py" -o -name "*disaggregat*.py" 2>/dev/null | head -20
-bashfind /app/sglang/sglang-latest/lib -path "*/sglang*" -name "*.py" | xargs grep -l "local_hostname\|mooncake_config\|MOONCAKE" 2>/dev/null
-bashpython3 -c "import sglang; print(sglang.__file__)"
-# потом ищем рядом
-Или через pip:
-bash/app/sglang/sglang-latest/bin/pip show -f sglang | grep -i "mooncake\|disaggregat"
