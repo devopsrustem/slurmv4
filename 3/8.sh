@@ -191,3 +191,488 @@ json{
 cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py
 cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/utils.py
 cat /app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
+
+
+
+
+
+
+
+
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py
+import json
+import logging
+import os
+from typing import List, Optional
+
+from sglang.srt.environ import envs
+from sglang.srt.utils import get_free_port, maybe_wrap_ipv6_address
+
+logger = logging.getLogger(__name__)
+
+
+def get_ib_devices_for_gpu(ib_device_str: Optional[str], gpu_id: int) -> Optional[str]:
+    """
+    Parse IB device string and get IB devices for a specific GPU ID.
+
+    Supports all the following formats:
+    1. Old format: "ib0, ib1, ib2"
+    2. New format: {0: "ib0, ib1", 1: "ib2, ib3", 2: "ib4"}
+    3. JSON file: path to a JSON file containing the mapping
+
+    Args:
+        ib_device_str: The original IB device string or path to JSON file
+        gpu_id: The GPU ID to get devices for
+
+    Returns:
+        IB devices string for the GPU, or None if not available
+    """
+    if ib_device_str is None or not ib_device_str.strip():
+        return None
+
+    ib_device_str = ib_device_str.strip()
+
+    # Check if it's a JSON file first and load its content
+    is_json_file = ib_device_str.endswith(".json")
+    if is_json_file:
+        try:
+            if os.path.isfile(ib_device_str):
+                with open(ib_device_str, "r") as f:
+                    ib_device_str = f.read()
+            else:
+                # File doesn't exist, treat as old format
+                raise RuntimeError(f"File {ib_device_str} does not exist.")
+        except (IOError, OSError) as e:
+            # File reading failed, raise exception
+            raise RuntimeError(f"Failed to read JSON file {ib_device_str}: {e}") from e
+
+    # Check if it's JSON format (new format)
+    try:
+        parsed_json = json.loads(ib_device_str)
+        if isinstance(parsed_json, dict):
+            # Validate format - keys should be integers (or string rep), values should be strings
+            gpu_mapping = {}
+            for gpu_key, ib_devices in parsed_json.items():
+                if (
+                    isinstance(gpu_key, str)
+                    and gpu_key.isdigit()
+                    and isinstance(ib_devices, str)
+                ):
+                    gpu_mapping[int(gpu_key)] = ib_devices.strip()
+                elif isinstance(gpu_key, int) and isinstance(ib_devices, str):
+                    gpu_mapping[gpu_key] = ib_devices.strip()
+                else:
+                    raise ValueError(
+                        f"Invalid format: keys must be integers (or string representations of integers) and values must be strings"
+                    )
+
+            if not gpu_mapping:
+                raise ValueError("No valid GPU mappings found in JSON")
+
+            # Return devices for specific GPU
+            if gpu_id in gpu_mapping:
+                return gpu_mapping[gpu_id]
+            else:
+                raise ValueError(
+                    f"No IB devices configured for GPU {gpu_id}. Available GPUs: {list(gpu_mapping.keys())}"
+                )
+
+    except json.JSONDecodeError:
+        if is_json_file:
+            # It was supposed to be a JSON file but failed to parse
+            raise RuntimeError(
+                f"Failed to parse JSON content from file {ib_device_str}"
+            )
+        # Not JSON format, treat as old format - return same devices for all GPUs
+        return ib_device_str
+
+
+class MooncakeTransferEngine:
+
+    def __init__(self, hostname: str, gpu_id: int, ib_device: Optional[str] = None):
+        try:
+            from mooncake.engine import TransferEngine
+        except ImportError as e:
+            raise ImportError(
+                "Please install mooncake by following the instructions at "
+                "https://github.com/kvcache-ai/Mooncake/blob/main/doc/en/build.md "  # noqa: E501
+                "to run SGLang with MooncakeTransferEngine."
+            ) from e
+
+        self.engine = TransferEngine()
+        self.hostname = hostname
+        self.gpu_id = gpu_id
+        self.ib_device = get_ib_devices_for_gpu(ib_device, gpu_id)
+
+        self.initialize(
+            hostname=self.hostname,
+            device_name=self.ib_device,
+        )
+        self.session_id = (
+            f"{maybe_wrap_ipv6_address(self.hostname)}:{self.engine.get_rpc_port()}"
+        )
+
+    def register(self, ptr, length):
+        try:
+            ret_value = self.engine.register_memory(ptr, length)
+        except Exception:
+            # Mark register as failed
+            ret_value = -1
+
+        if ret_value != 0:
+            logger.debug("Mooncake memory registration %s failed.", ptr)
+
+    def deregister(self, ptr):
+        try:
+            ret_value = self.engine.unregister_memory(ptr)
+        except Exception:
+            # Mark deregister as failed
+            ret_value = -1
+
+        if ret_value != 0:
+            logger.debug("Mooncake memory deregistration %s failed.", ptr)
+
+    def batch_register(self, ptrs: List[int], lengths: List[int]) -> int:
+        """Batch register multiple memory regions."""
+        try:
+            ret_value = self.engine.batch_register_memory(ptrs, lengths)
+        except Exception:
+            # Mark batch register as failed
+            ret_value = -1
+            if not hasattr(self.engine, "batch_register_memory"):
+                raise RuntimeError(
+                    "Mooncake's batch register requires a newer version of mooncake-transfer-engine. "
+                    "Please upgrade Mooncake."
+                )
+
+        if ret_value != 0:
+            logger.debug("Mooncake batch memory registration failed.")
+        return ret_value
+
+    def batch_deregister(self, ptrs: List[int]) -> int:
+        """Batch deregister multiple memory regions."""
+        try:
+            ret_value = self.engine.batch_unregister_memory(ptrs)
+        except Exception:
+            # Mark batch deregister as failed
+            ret_value = -1
+
+        if ret_value != 0:
+            logger.debug("Mooncake batch memory deregistration failed.")
+        return ret_value
+
+    def initialize(
+        self,
+        hostname: str,
+        device_name: Optional[str],
+    ) -> None:
+        """Initialize the mooncake instance."""
+        if envs.ENABLE_ASCEND_TRANSFER_WITH_MOONCAKE.get():
+            npu_phy_id = envs.ASCEND_NPU_PHY_ID.get()
+            if npu_phy_id == -1:
+                hostname += f":{get_free_port()}:npu_{self.gpu_id}"
+            else:
+                hostname += f":{get_free_port()}:npu_{npu_phy_id}"
+            ret_value = self.engine.initialize(
+                hostname,
+                "P2PHANDSHAKE",
+                "ascend",
+                device_name if device_name is not None else "",
+            )
+        else:
+            ret_value = self.engine.initialize(
+                hostname,
+                "P2PHANDSHAKE",
+                "rdma",
+                device_name if device_name is not None else "",
+            )
+        if ret_value != 0:
+            logger.error("Mooncake Transfer Engine initialization failed.")
+            raise RuntimeError("Mooncake Transfer Engine initialization failed.")
+
+    def transfer_sync(
+        self, session_id: str, buffer: int, peer_buffer_address: int, length: int
+    ) -> int:
+        """Synchronously transfer data to the specified address."""
+        try:
+            # the first time: based on session_id (which contains remote_ip) to construct a queue pair, and cache the queue pair
+            # later: based on the cached queue pair to send data
+            ret = self.engine.transfer_sync_write(
+                session_id, buffer, peer_buffer_address, length
+            )
+        except Exception:
+            # Mark transfer request as failed
+            ret = -1
+
+        if ret < 0:
+            # Do not raise an exception here, since some transfer requests fail should be accepted and the execution thread should not be stopped.
+            logger.debug(
+                "Failed to transfer data from %s to %s - %s.",
+                buffer,
+                session_id,
+                peer_buffer_address,
+            )
+
+        return ret
+
+    def batch_transfer_sync(
+        self,
+        session_id: str,
+        buffers: List[int],
+        peer_buffer_addresses: List[int],
+        lengths: List[int],
+    ) -> int:
+        """Synchronously transfer data to the specified addresses in batches."""
+        try:
+            ret = self.engine.batch_transfer_sync_write(
+                session_id, buffers, peer_buffer_addresses, lengths
+            )
+        except Exception:
+            ret = -1
+            # Inform user to upgrade mooncake-transfer-engine >= 0.3.4.post2
+            if not hasattr(self.engine, "batch_transfer_sync_write"):
+                raise RuntimeError(
+                    "Mooncake's batch transfer requires mooncake-transfer-engine >= 0.3.4.post2. "
+                    "Please upgrade Mooncake by 'pip install mooncake-transfer-engine --upgrade'"
+                )
+
+        if ret < 0:
+            logger.debug(
+                "Failed to batch transfer data. Buffers: %s, Session: %s, Peer addresses: %s",
+                buffers,
+                session_id,
+                peer_buffer_addresses,
+            )
+        return ret
+
+    def get_session_id(self):
+        return self.session_id
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/utils.py
+# Copyright 2025 SGLang Team
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ==============================================================================
+"""Mooncake-specific utilities for custom memory pool management."""
+
+import logging
+from typing import Any, Optional, Tuple
+
+import torch
+
+from sglang.srt.environ import envs
+
+logger = logging.getLogger(__name__)
+
+# Global constants for custom memory pool types
+SUPPORTED_MOONCAKE_CUSTOM_MEM_POOL_TYPES = ["NVLINK", "BAREX"]
+
+
+def init_mooncake_custom_mem_pool(
+    device: str,
+) -> Tuple[bool, Optional[Any], Optional[str]]:
+    """
+    Initialize custom memory pool based on environment variable.
+
+    Args:
+        device: The device to allocate memory on
+
+    Returns:
+        Tuple of (enable_custom_mem_pool, custom_mem_pool, custom_mem_pool_type)
+    """
+    enable_custom_mem_pool, custom_mem_pool_type = (
+        check_mooncake_custom_mem_pool_enabled()
+    )
+
+    custom_mem_pool = None
+
+    if enable_custom_mem_pool:
+        try:
+            # TODO(shangming): abstract custom allocator class for more backends
+            if custom_mem_pool_type == "NVLINK":
+                from mooncake.allocator import NVLinkAllocator
+
+                allocator = NVLinkAllocator.get_allocator(device)
+            elif custom_mem_pool_type == "BAREX":
+                from mooncake.allocator import BarexAllocator
+
+                allocator = BarexAllocator.get_allocator(device)
+            else:
+                # This should not happen due to the enable_custom_mem_pool check above
+                raise ValueError(
+                    f"Unsupported custom mem pool type: {custom_mem_pool_type}"
+                )
+
+            custom_mem_pool = torch.cuda.MemPool(allocator.allocator())
+            logger.debug(
+                f"Initialized custom memory pool: {custom_mem_pool_type} on device {device}"
+            )
+        except ImportError as e:
+            logger.warning(
+                f"Failed to import mooncake allocator for {custom_mem_pool_type}: {e}. "
+                f"Falling back to default memory pool."
+            )
+            enable_custom_mem_pool = False
+            custom_mem_pool = None
+            custom_mem_pool_type = None
+        except Exception as e:
+            logger.error(
+                f"Failed to initialize custom memory pool {custom_mem_pool_type}: {e}. "
+                f"Falling back to default memory pool."
+            )
+            enable_custom_mem_pool = False
+            custom_mem_pool = None
+            custom_mem_pool_type = None
+    else:
+        return False, None, None
+
+    return enable_custom_mem_pool, custom_mem_pool, custom_mem_pool_type
+
+
+def check_mooncake_custom_mem_pool_enabled() -> Tuple[bool, Optional[str]]:
+    """
+    Check if custom memory pool is enabled without importing allocators.
+
+    Returns:
+        Tuple of (enable_custom_mem_pool, custom_mem_pool_type)
+    """
+    custom_mem_pool_type = envs.SGLANG_MOONCAKE_CUSTOM_MEM_POOL.get()
+
+    if custom_mem_pool_type is not None:
+        # Handle boolean True as NVLINK
+        if custom_mem_pool_type.lower() == "true":
+            custom_mem_pool_type = "NVLINK"
+        enable_custom_mem_pool = (
+            custom_mem_pool_type in SUPPORTED_MOONCAKE_CUSTOM_MEM_POOL_TYPES
+        )
+    else:
+        enable_custom_mem_pool = False
+        custom_mem_pool_type = None
+
+    return enable_custom_mem_pool, custom_mem_pool_type
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
+#!/usr/bin/env python3
+"""
+Mooncake Configuration
+"""
+import json
+import os
+from dataclasses import dataclass
+from typing import Optional
+
+DEFAULT_GLOBAL_SEGMENT_SIZE = 3355443200  # 3.125 GiB
+DEFAULT_LOCAL_BUFFER_SIZE = 1073741824  # 1.0 GiB
+
+def _parse_segment_size(value) -> int:
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        s = value.strip().lower()
+        if s.endswith("gb"):
+            num = s[:-2].strip()
+            if not num:
+                raise ValueError(
+                    "Invalid segment size: missing number before 'gb'"
+                )
+            return int(num) * 1024 * 1024 * 1024
+        return int(s)
+    return int(value)
+
+@dataclass
+class MooncakeConfig:
+    """The configuration class for Mooncake.
+
+    Attributes:
+        local_hostname (str): The hostname of the local machine.
+        metadata_server (str): The address of the metadata server.
+        global_segment_size (int): The size of each global segment in bytes.
+        local_buffer_size (int): The size of the local buffer in bytes.
+        protocol (str): The communication protocol to use.
+        device_name (Optional[str]): The name of the device to use.
+        master_server_address (str): The address of the master server.
+
+    Example of configuration file:
+        {
+            "local_hostname": "localhost",
+            "metadata_server": "localhost:8080",
+            "global_segment_size": 3355443200,
+            "local_buffer_size": 1073741824,
+            "protocol": "tcp",
+            "device_name": "",
+            "master_server_address": "localhost:8081"
+        }
+    """
+    local_hostname: str
+    metadata_server: str
+    global_segment_size: int
+    local_buffer_size: int
+    protocol: str
+    device_name: Optional[str]
+    master_server_address: str
+
+    @staticmethod
+    def from_file(file_path: str) -> 'MooncakeConfig':
+        """Load the config from a JSON file."""
+        with open(file_path) as fin:
+            config = json.load(fin)
+        required_fields = [
+            "local_hostname",
+            "metadata_server",
+            "master_server_address",
+        ]
+        for field in required_fields:
+            if field not in config:
+                raise ValueError(f"Missing required config field: {field}")
+        return MooncakeConfig(
+            local_hostname=config.get("local_hostname"),
+            metadata_server=config.get("metadata_server"),
+            global_segment_size=_parse_segment_size(
+                config.get("global_segment_size", DEFAULT_GLOBAL_SEGMENT_SIZE)
+            ),
+            local_buffer_size=_parse_segment_size(
+                config.get("local_buffer_size", DEFAULT_LOCAL_BUFFER_SIZE)
+            ),
+            protocol=config.get("protocol", "tcp"),
+            device_name=config.get("device_name", ""),
+            master_server_address=config.get("master_server_address"),
+        )
+
+    @staticmethod
+    def load_from_env() -> 'MooncakeConfig':
+        """Load config from a file specified in the environment variable.
+        export MOONCAKE_MASTER=10.13.3.232:50051
+        export MOONCAKE_PROTOCOL="rdma"
+        export MOONCAKE_DEVICE=""
+        export MOONCAKE_TE_META_DATA_SERVER="P2PHANDSHAKE"
+        """
+        config_file_path = os.getenv('MOONCAKE_CONFIG_PATH')
+        if config_file_path is None:
+            if not os.getenv("MOONCAKE_MASTER"):
+                raise ValueError("Neither the environment variable 'MOONCAKE_CONFIG_PATH' nor 'MOONCAKE_MASTER' is set.")
+            return MooncakeConfig(
+                local_hostname=os.getenv("MOONCAKE_LOCAL_HOSTNAME", "localhost"),
+                metadata_server=os.getenv("MOONCAKE_TE_META_DATA_SERVER", "P2PHANDSHAKE"),
+                global_segment_size=_parse_segment_size(
+                    os.getenv("MOONCAKE_GLOBAL_SEGMENT_SIZE", DEFAULT_GLOBAL_SEGMENT_SIZE)
+                ),
+                local_buffer_size=_parse_segment_size(
+                    os.getenv("MOONCAKE_LOCAL_BUFFER_SIZE", DEFAULT_LOCAL_BUFFER_SIZE)
+                ),
+                protocol=os.getenv("MOONCAKE_PROTOCOL", "tcp"),
+                device_name=os.getenv("MOONCAKE_DEVICE", ""),
+                master_server_address=os.getenv("MOONCAKE_MASTER"),
+            )
+        return MooncakeConfig.from_file(config_file_path)((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
+
