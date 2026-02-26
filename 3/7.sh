@@ -479,3 +479,5 @@ HOSTNAME=tpgds-aihub0003
 UV_INSECURE_HOST=sberosc.sigma.sbrf.ru
 MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.49
 
+# На любой ноде найди где SGLang инициализирует Mooncake:
+find /app/sglang/sglang-latest -name "*.py" -exec grep -l "MOONCAKE_TRANSFER_ENGINE_IP" {} \;
