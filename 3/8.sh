@@ -335,5 +335,9 @@ FILE: {'local_hostname': '10.99.91.41', 'metadata_server': 'http://10.99.91.39:8
 
 
 
-
+bashfind /app/sglang/sglang-latest -name "*.py" | xargs grep -l "local_hostname\|TransferEngine\|MOONCAKE_CONFIG" 2>/dev/null
+И конкретно файл инициализации:
+bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | head -20
+И посмотри что там внутри:
+bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | xargs grep -l "hostname\|device_name\|config" 2>/dev/null | head -5 | xargs cat
 
