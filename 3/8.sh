@@ -351,3 +351,67 @@ sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/model_
 2887-        "LlamaForCausalLM",
 2888-        "Olmo2ForCausalLM",
 2889-        "Gemma2ForCausalLM",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1я нода префилл
+
+Req(rid=eb176436e7cb4fa29591069881c96af0, input_ids=[0, 128803, 19923, 3, 1999, 344, 223, 20, 13, 20, 33, 128804], output_ids=[128798], self.grammar=None, self.sampling_params=<sglang.srt.sampling.sampling_params.SamplingParams object at 0x7fb996a1a9f0>)
+Req(rid=eb176436e7cb4fa29591069881c96af0, input_ids=[0, 128803, 19923, 3, 1999, 344, 223, 20, 13, 20, 33, 128804], output_ids=[128798], self.grammar=None, self.sampling_params=<sglang.srt.sampling.sampling_params.SamplingParams object at 0x7ff3b19d1820>)
+[2026-02-26 15:09:35 TP5] Prefill transfer failed for request rank=5 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.49:15366 is not alive
+[2026-02-26 15:09:35 TP4] Prefill transfer failed for request rank=4 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.49:16093 is not alive
+[2026-02-26 15:09:35 TP3] Prefill transfer failed for request rank=3 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.49:15956 is not alive
+[2026-02-26 15:09:35 TP2] Prefill transfer failed for request rank=2 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.49:15266 is not alive
+[2026-02-26 15:09:35 TP1] Prefill transfer failed for request rank=1 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.49:16711 is not alive
+[2026-02-26 15:09:35] INFO:     10.99.91.39:48644 - "POST /v1/chat/completions HTTP/1.1" 500 Internal Server Error
+
+2я нода префил
+
+[2026-02-26 15:09:35 TP13] Prefill transfer failed for request rank=13 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:16102 is not alive
+[2026-02-26 15:09:35 TP12] Prefill transfer failed for request rank=12 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:16169 is not alive
+[2026-02-26 15:09:35 TP11] Prefill transfer failed for request rank=11 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:16476 is not alive
+[2026-02-26 15:09:35 TP10] Prefill transfer failed for request rank=10 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:15809 is not alive
+[2026-02-26 15:09:35 TP9] Prefill transfer failed for request rank=9 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:16855 is not alive
+[2026-02-26 15:09:35 TP8] Prefill transfer failed for request rank=8 req.rid='eb176436e7cb4fa29591069881c96af0' req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Decode instance could be dead, remote mooncake session 10.99.91.35:16582 is not alive
+
+3 нода декод
+
+decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP6] Decode transfer failed for request rank=6 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP5] Decode transfer failed for request rank=5 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP3] Decode transfer failed for request rank=3 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP4] Decode transfer failed for request rank=4 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP1] Decode transfer failed for request rank=1 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP2] Decode transfer failed for request rank=2 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+
+
+4я нода декод
+23469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP12] Decode transfer failed for request rank=12 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP11] Decode transfer failed for request rank=11 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP10] Decode transfer failed for request rank=10 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP9] Decode transfer failed for request rank=9 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+[2026-02-26 15:09:35 TP8] Decode transfer failed for request rank=8 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead
+
+запрос
+[dcbsr_dev@tpgds-aihub0001 ~]$ curl -X POST http://10.82.101.193:8000/v1/chat/completions   -H "Content-Type: application/json"   -d '{
+    "model": "/app/models/Deepseek-R1/",
+    "messages": [{"role": "user", "content": "Hello! What is 2+2?"}],
+    "max_tokens": 50
+  }'
+{"error":{"type":"Internal Server Error","code":"decode_internal_error","message":"Decode transfer failed for request rank=0 decode_req.req.rid='5ef45001d0e14f0b8ffecc0eb4313a1a' decode_req.req.bootstrap_room=804716023469713517 with exception KVTransferError(bootstrap_room=804716023469713517): Failed to get kvcache from prefill instance, it might be dead"}}[dcbsr_dev@tpgds-aihub0001 ~]$ 
