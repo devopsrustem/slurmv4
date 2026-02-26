@@ -371,4 +371,14 @@ TOKENIZERS_PARALLELISM=false \
   --disaggregation-ib-device mlx5_0 \
   --disaggregation-bootstrap-port 8998 \
   --disable-cuda-graph
-  
+
+
+
+  Decode нода 3:
+bash--mooncake-transfer-engine-addr 10.99.91.49
+Decode нода 6:
+bash--mooncake-transfer-engine-addr 10.99.91.35
+Prefill нода 1:
+bash--mooncake-transfer-engine-addr 10.99.91.39
+Prefill нода 2:
+bash--mooncake-transfer-engine-addr 10.99.91.41
