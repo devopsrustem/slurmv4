@@ -676,3 +676,9 @@ class MooncakeConfig:
             )
         return MooncakeConfig.from_file(config_file_path)((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
 
+
+
+bashcat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py
+Там увидим откуда реально берётся hostname для TransferEngine. И сразу же:
+bashgrep -n "MOONCAKE_LOCAL_HOSTNAME\|local_hostname\|hostname" \
+  /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py
