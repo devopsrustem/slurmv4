@@ -194,10 +194,42 @@ cat /app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_con
 
 
 
-
-
-
-
-
-
 grep -n "local_ip" /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/common/conn.py
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ grep -n "local_ip" /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/common/conn.py
+35:    get_local_ip_auto,
+71:        self.local_ip = get_local_ip_auto()
+75:        zmq_bind_host = maybe_wrap_ipv6_address(self.local_ip)
+129:            "rank_ip": self.local_ip,
+[dcbsr_dev@tpgds-aihub0001 ~]$ 
+
+
+
+
+а почему не хотите для NCCL_SOCKET использовать бонд?
+13:44
+это же нормальный путь, через бонд Control-Plane через IB - DataPlane?
+ред. 
+13:45
+Бонд оставил на завтра, если сегодня потерплю поражение.
+мне кажется бонд снизит производительность
+13:47
+Рустем Валитов
+Бонд оставил на завтра, если сегодня потерплю поражение.
+Разделение DATA/Plane - Control-Plane
+13:48
+NCCL_SOCKET_IFNAME= - это контрол плейн
+13:48
+то есть, обычно в контрол плейн - идет обмен системными/сервисными данными, где согласуются каналы/линки и т.п.
+13:51
+а уже в датаплейн - идут комминикации через GPU по IB/RoCE
+13:52
+ну для трейна обычно так)
+13:52
+там вообще на IB - айпи адресов нет обычно)
+13:52
+они через бонд друг друга увидят, договорятся через какие IB-линки по каким IP-адресам договориться коммуницировать и запустятся
+ред. 
+
+
