@@ -186,3 +186,14 @@ json{
   "protocol": "rdma",
   "device_name": "mlx5_0"
 }
+
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /opt/mooncake-libs/
+config/                  libstdc++.so.6           run-with-new-libstdc.sh  
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ cat /opt/mooncake-libs/run-with-new-libstdc.sh 
+#!/bin/bash
+export LD_PRELOAD=/opt/mooncake-libs/libstdc++.so.6
+exec "$@"
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ 
+
