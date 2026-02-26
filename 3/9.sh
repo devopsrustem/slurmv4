@@ -50,3 +50,24 @@ drwxr-xr-x. 11 root root     197 Feb 17 15:59 ..
 drwxrwxrwx   2 root root      27 Feb 26 13:07 config
 -rwxr-xr-x   1 root root 1958696 Feb 19 15:22 libstdc++.so.6
 -rwxr-xr-x   1 root root      74 Feb 17 16:03 run-with-new-libstdc.sh
+
+
+
+Из найденных рабочих конфигураций на github видно два важных момента:
+1. Переменная SGLANG_LOCAL_IP_NIC — она отдельная от SGLANG_HOST_IP, контролирует какой NIC использует TransferEngine для RDMA handshake. Попробуй на decode нодах:
+bashSGLANG_LOCAL_IP_NIC=ens3np0  # для aihub0003 и aihub0006
+2. Включи trace логи Mooncake чтобы увидеть что именно происходит при handshake:
+bashMC_LOG_LEVEL=TRACE MC_TE_METRIC=true
+Итоговые команды decode (добавить к текущим):
+bash# aihub0003
+MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0 SGLANG_HOST_IP=10.99.91.49 \
+  ... остальные переменные ... \
+  /opt/mooncake-libs/run-with-new-libstdc.sh python3 -m sglang.launch_server ...
+
+# aihub0006  
+MC_LOG_LEVEL=TRACE SGLANG_LOCAL_IP_NIC=ens3np0 SGLANG_HOST_IP=10.99.91.35 \
+  ...
+И на prefill тоже:
+bashSGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.39  # aihub0001
+SGLANG_LOCAL_IP_NIC=ens108np0 SGLANG_HOST_IP=10.99.91.41  # aihub0002
+После запуска покажи TRACE логи с decode ноды в момент запроса — там будет видно на каком адресе TransferEngine реально инициализируется и что происходит при handshake.
