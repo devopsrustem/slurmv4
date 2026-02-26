@@ -425,5 +425,49 @@ ip route show | grep 10.99.91
 bash# На каждой ноде:
 sudo ip route del 10.99.91.0/24
 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ ip r s
+default via 10.82.101.254 dev bond0 proto static metric 300 
+10.82.101.248/29 dev bond0 proto kernel scope link src 10.82.101.249 metric 300 
+10.99.91.0/24 via 10.99.91.48 dev ens3np0 proto static metric 102 
+10.99.91.48/31 dev ens3np0 proto kernel scope link src 10.99.91.49 metric 102 
+10.99.92.0/24 via 10.99.92.48 dev ens2np0 proto static metric 101 
+10.99.92.48/31 dev ens2np0 proto kernel scope link src 10.99.92.49 metric 101 
+10.99.93.0/24 via 10.99.93.48 dev ens4np0 proto static metric 103 
+10.99.93.48/31 dev ens4np0 proto kernel scope link src 10.99.93.49 metric 103 
+10.99.94.0/24 via 10.99.94.48 dev ens1np0 proto static metric 100 
+10.99.94.48/31 dev ens1np0 proto kernel scope link src 10.99.94.49 metric 100 
+10.99.95.0/24 via 10.99.95.48 dev ens8np0 proto static metric 110 
+10.99.95.48/31 dev ens8np0 proto kernel scope link src 10.99.95.49 metric 110 
+10.99.96.0/24 via 10.99.96.48 dev ens7np0 proto static metric 106 
+10.99.96.48/31 dev ens7np0 proto kernel scope link src 10.99.96.49 metric 106 
+10.99.97.0/24 via 10.99.97.48 dev ens6np0 proto static metric 105 
+10.99.97.48/31 dev ens6np0 proto kernel scope link src 10.99.97.49 metric 105 
+10.99.98.0/24 via 10.99.98.48 dev ens5np0 proto static metric 104 
+10.99.98.48/31 dev ens5np0 proto kernel scope link src 10.99.98.49 metric 104 
+127.0.0.0/8 dev lo proto kernel scope link src 127.0.0.1 metric 30 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ sudo ip route add 10.99.91.0/24 dev ens3np0 src 10.99.91.49 metric 10
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0003 ~]$ ip r s
+default via 10.82.101.254 dev bond0 proto static metric 300 
+10.82.101.248/29 dev bond0 proto kernel scope link src 10.82.101.249 metric 300 
+10.99.91.0/24 dev ens3np0 scope link src 10.99.91.49 metric 10 
+10.99.91.0/24 via 10.99.91.48 dev ens3np0 proto static metric 102 
+10.99.91.48/31 dev ens3np0 proto kernel scope link src 10.99.91.49 metric 102 
+10.99.92.0/24 via 10.99.92.48 dev ens2np0 proto static metric 101 
+10.99.92.48/31 dev ens2np0 proto kernel scope link src 10.99.92.49 metric 101 
+10.99.93.0/24 via 10.99.93.48 dev ens4np0 proto static metric 103 
+10.99.93.48/31 dev ens4np0 proto kernel scope link src 10.99.93.49 metric 103 
+10.99.94.0/24 via 10.99.94.48 dev ens1np0 proto static metric 100 
+10.99.94.48/31 dev ens1np0 proto kernel scope link src 10.99.94.49 metric 100 
+10.99.95.0/24 via 10.99.95.48 dev ens8np0 proto static metric 110 
+10.99.95.48/31 dev ens8np0 proto kernel scope link src 10.99.95.49 metric 110 
+10.99.96.0/24 via 10.99.96.48 dev ens7np0 proto static metric 106 
+10.99.96.48/31 dev ens7np0 proto kernel scope link src 10.99.96.49 metric 106 
+10.99.97.0/24 via 10.99.97.48 dev ens6np0 proto static metric 105 
+10.99.97.48/31 dev ens6np0 proto kernel scope link src 10.99.97.49 metric 105 
+10.99.98.0/24 via 10.99.98.48 dev ens5np0 proto static metric 104 
+10.99.98.48/31 dev ens5np0 proto kernel scope link src 10.99.98.49 metric 104 
+127.0.0.0/8 dev lo proto kernel scope link src 127.0.0.1 metric 30 
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
 
 
