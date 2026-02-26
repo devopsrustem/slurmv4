@@ -341,3 +341,12 @@ bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | head
 И посмотри что там внутри:
 bashfind /app/sglang/sglang-latest -path "*/disaggregation*" -name "*.py" | xargs grep -l "hostname\|device_name\|config" 2>/dev/null | head -5 | xargs cat
 
+
+
+Значит SGLang установлен как пакет, исходники не там. Ищем иначе:
+bashfind /app/sglang/sglang-latest/lib -name "mooncake*.py" -o -name "*disaggregat*.py" 2>/dev/null | head -20
+bashfind /app/sglang/sglang-latest/lib -path "*/sglang*" -name "*.py" | xargs grep -l "local_hostname\|mooncake_config\|MOONCAKE" 2>/dev/null
+bashpython3 -c "import sglang; print(sglang.__file__)"
+# потом ищем рядом
+Или через pip:
+bash/app/sglang/sglang-latest/bin/pip show -f sglang | grep -i "mooncake\|disaggregat"
