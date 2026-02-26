@@ -561,6 +561,33 @@ E0226 15:23:54.626150 3093345 transfer_metadata_plugin.cpp:750] SocketHandShakeP
 
 
 
+[dcbsr_dev@tpgds-aihub0001 ~]$ show_gids mlx5_0
+DEV	PORT	INDEX	GID					IPv4  		VER	DEV
+---	----	-----	---					------------  	---	---
+mlx5_0	1	0	fe80:0000:0000:0000:a288:c2ff:fe63:5a20			v1	ens108np0
+mlx5_0	1	1	fe80:0000:0000:0000:a288:c2ff:fe63:5a20			v2	ens108np0
+mlx5_0	1	2	0000:0000:0000:0000:0000:ffff:0a63:5b27	10.99.91.39  	v1	ens108np0
+mlx5_0	1	3	0000:0000:0000:0000:0000:ffff:0a63:5b27	10.99.91.39  	v2	ens108np0
+n_gids_found=4
+[dcbsr_dev@tpgds-aihub0001 ~]$ ibv_devinfo -d mlx5_0
+hca_id:	mlx5_0
+	transport:			InfiniBand (0)
+	fw_ver:				28.43.2026
+	node_guid:			a088:c203:0063:5a20
+	sys_image_guid:			a088:c203:0063:5a20
+	vendor_id:			0x02c9
+	vendor_part_id:			4129
+	hw_ver:				0x0
+	board_id:			MT_0000000838
+	phys_port_cnt:			1
+		port:	1
+			state:			PORT_ACTIVE (4)
+			max_mtu:		4096 (5)
+			active_mtu:		4096 (5)
+			sm_lid:			0
+			port_lid:		0
+			port_lmc:		0x00
+			link_layer:		Ethernet
 
 
 
