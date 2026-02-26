@@ -471,3 +471,4 @@ default via 10.82.101.254 dev bond0 proto static metric 300
 172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown 
 
 
+ps aux | grep "sglang.*decode" | grep -v grep | head -1 | awk '{print $2}' | xargs -I {} cat /proc/{}/environ | tr '\0' '\n' | grep -E "(MOONCAKE|HOST)"
