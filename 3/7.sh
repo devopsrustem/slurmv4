@@ -472,3 +472,10 @@ default via 10.82.101.254 dev bond0 proto static metric 300
 
 
 ps aux | grep "sglang.*decode" | grep -v grep | head -1 | awk '{print $2}' | xargs -I {} cat /proc/{}/environ | tr '\0' '\n' | grep -E "(MOONCAKE|HOST)"
+
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ ps aux | grep "sglang.*decode" | grep -v grep | head -1 | awk '{print $2}' | xargs -I {} cat /proc/{}/environ | tr '\0' '\n' | grep -E "(MOONCAKE|HOST)"
+HOSTNAME=tpgds-aihub0003
+UV_INSECURE_HOST=sberosc.sigma.sbrf.ru
+MOONCAKE_TRANSFER_ENGINE_IP=10.99.91.49
+
