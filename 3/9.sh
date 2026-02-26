@@ -298,3 +298,141 @@ bashgrep -r "bootstrap_host\|bootstrap_room\|bootstrap_port" \
 Реальная проблема может быть в другом — проверь TCP handshake напрямую:
 bash# С aihub0001 → aihub0003, смотри что приходит
 (echo -n '{"op":"check"}'; sleep 1) | nc 10.99.91.49 15328 | xxd | head -5
+
+
+
+
+[dcbsr_dev@tpgds-aihub0001 ~]$ grep -r "bootstrap_host\|bootstrap_room\|bootstrap_port" \
+  /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/ 2>/dev/null | \
+  grep -v ".pyc" | grep -v "Binary"
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router.py:        prefill_urls: List of (url, bootstrap_port) tuples for prefill servers (PD mode only)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router.py:        bootstrap_port_annotation: Kubernetes annotation name for bootstrap port (PD mode).
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:    )  # List of (url, bootstrap_port)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:    bootstrap_port_annotation: str = "sglang.ai/bootstrap-port"
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:        args_dict["bootstrap_port_annotation"] = "sglang.ai/bootstrap-port"
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                bootstrap_port_str = prefill_args[1]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                if bootstrap_port_str.lower() == "none":
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                    bootstrap_port = None
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                        bootstrap_port = int(bootstrap_port_str)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                            f"Invalid bootstrap port: {bootstrap_port_str}. Must be a number or 'none'"
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:                bootstrap_port = None
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/router_args.py:            prefill_urls.append((url, bootstrap_port))
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:        self.prefill_bootstrap_ports = [url[1] for url in router_args.prefill_urls]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            self.prefill_bootstrap_ports[pidx],
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            bootstrap_room_list = []
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                bootstrap_room_list = (
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    modified_request["bootstrap_room"]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    if isinstance(modified_request["bootstrap_room"], list)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    else [modified_request["bootstrap_room"]]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                trace_context = trace_get_remote_propagate_context(bootstrap_room_list)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            for bootstrap_room in bootstrap_room_list:
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                trace_slice_end("mini_lb_launch", bootstrap_room, auto_next_anon=True)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            for bootstrap_room in bootstrap_room_list:
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    bootstrap_room,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                trace_req_finish(bootstrap_room)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                bootstrap_room_list = []
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    bootstrap_room_list = (
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                        modified_request["bootstrap_room"]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                        if isinstance(modified_request["bootstrap_room"], list)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                        else [modified_request["bootstrap_room"]]
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                        bootstrap_room_list
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                for bootstrap_room in bootstrap_room_list:
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                        "mini_lb_launch", bootstrap_room, auto_next_anon=True
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            for bootstrap_room in bootstrap_room_list:
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    bootstrap_room,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                trace_req_finish(bootstrap_room)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:    prefill_server, bootstrap_port, decode_server = lb.select_pair()
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_host": [hostname] * batch_size,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_port": [bootstrap_port] * batch_size,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_room": [
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                    _generate_bootstrap_room() for _ in range(batch_size)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_host": hostname,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_port": bootstrap_port,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:                "bootstrap_room": _generate_bootstrap_room(),
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:    prefill_server, bootstrap_port, decode_server = lb.select_pair()
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            "bootstrap_host": hostname,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            "bootstrap_port": bootstrap_port,
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:            "bootstrap_room": _generate_bootstrap_room(),
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:def _generate_bootstrap_room():
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:    bootstrap_room = random.randint(0, 2**63 - 1)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:        trace_req_start(bootstrap_room, bootstrap_room, role="router")
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:        trace_slice_start("mini_lb_launch", bootstrap_room)
+/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang_router/mini_lb.py:    return bootstrap_room
+[dcbsr_dev@tpgds-aihub0001 ~]$ (echo -n '{"op":"check"}'; sleep 1) | nc 10.99.91.49 15328 | xxd | head -5
+-bash: xxd: command not found
+Ncat: Connection reset by peer.
+
+
+на aihub3
+E0226 16:43:33.215444 3114642 common.h:378] readString: too large length from socket: 7143335878552658555
+E0226 16:43:33.215505 3114642 transfer_metadata_plugin.cpp:750] SocketHandShakePlugin: failed to receive handshake message, malformed json format: * Line 1, Column 1
+  Syntax error: value, object or array expected.
+, json string length: 0, json string content: 
+
+
+логи роутера
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$   /app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router   --pd-disaggregation   --prefill http://10.99.91.39:30000   --decode http://10.99.91.49:30001   --host 0.0.0.0   --port 8000
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:794: Starting router on 0.0.0.0:8000 | mode: PrefillDecode { prefill_urls: [("http://10.99.91.39:30000", None)], decode_urls: ["http://10.99.91.49:30001"], prefill_policy: None, decode_policy: None } | policy: CacheAware { cache_threshold: 0.3, balance_abs_threshold: 64, balance_rel_threshold: 1.5, eviction_interval_secs: 60, max_tree_size: 67108864 } | max_payload: 512MB
+2026-02-26 13:00:06  INFO smg::app_context: /home/runner/work/sglang/sglang/src/app_context.rs:412: Tokenizer path is not provided, will load from worker on the fly
+2026-02-26 13:00:06  INFO smg::data_connector::factory: /home/runner/work/sglang/sglang/src/data_connector/factory.rs:51: Initializing data connector: Memory
+2026-02-26 13:00:06  INFO smg::mcp::manager: /home/runner/work/sglang/sglang/src/mcp/manager.rs:90: No static MCP servers connected
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:833: Initializing workers for routing mode: PrefillDecode { prefill_urls: [("http://10.99.91.39:30000", None)], decode_urls: ["http://10.99.91.49:30001"], prefill_policy: None, decode_policy: None }
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:851: Worker initialization job submitted (will complete in background)
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:863: No MCP config provided, skipping MCP server initialization
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:875: Workers initialized: 0 total, 0 healthy
+2026-02-26 13:00:06  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:197: Workflow started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 definition_id=local_worker_registration
+2026-02-26 13:00:06  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:197: Workflow started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f definition_id=local_worker_registration
+2026-02-26 13:00:06  INFO smg::routers::router_manager: /home/runner/work/sglang/sglang/src/routers/router_manager.rs:169: Initializing RouterManager in single-router mode
+2026-02-26 13:00:06  INFO smg::routers::router_manager: /home/runner/work/sglang/sglang/src/routers/router_manager.rs:177: Created single router with ID: http-pd
+2026-02-26 13:00:06  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=detect_connection_mode attempt=1
+2026-02-26 13:00:06  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=detect_connection_mode attempt=1
+2026-02-26 13:00:06  INFO smg::routers::router_manager: /home/runner/work/sglang/sglang/src/routers/router_manager.rs:216: Set default router to http-pd
+2026-02-26 13:00:06  INFO smg::core::worker_manager: /home/runner/work/sglang/sglang/src/core/worker_manager.rs:350: Starting load monitoring with interval: 30s
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:907: Rate limiting is disabled (max_concurrent_requests = -1)
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:985: Router ready | workers: []
+2026-02-26 13:00:06  INFO smg::server: /home/runner/work/sglang/sglang/src/server.rs:1018: Starting server on 0.0.0.0:8000
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=detect_connection_mode duration_ms=1002
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=discover_metadata attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=discover_metadata attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=detect_connection_mode duration_ms=1003
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=discover_metadata duration_ms=10
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=discover_dp_info attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=discover_dp_info duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=create_worker attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=create_worker duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=register_workers attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=register_workers duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=discover_metadata duration_ms=12
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=discover_dp_info attempt=1
+2026-02-26 13:00:07  INFO smg::core::steps::worker::shared::activate: /home/runner/work/sglang/sglang/src/core/steps/worker/shared/activate.rs:31: Activated 1 worker(s) (marked as healthy)
+2026-02-26 13:00:07  INFO smg::tokenizer::registry: /home/runner/work/sglang/sglang/src/tokenizer/registry.rs:121: Loading tokenizer '/app/models/Deepseek-R1/' from source: /app/models/Deepseek-R1/
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=discover_dp_info duration_ms=0
+2026-02-26 13:00:07  INFO smg::policies::registry: /home/runner/work/sglang/sglang/src/policies/registry.rs:89: Assigning policy cache_aware to new model /app/models/Deepseek-R1/
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=activate_workers attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=activate_workers duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=update_policies attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=create_worker attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=register_workers attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=update_policies duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=create_worker duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=register_workers duration_ms=0
+2026-02-26 13:00:07  INFO smg::core::steps::worker::shared::activate: /home/runner/work/sglang/sglang/src/core/steps/worker/shared/activate.rs:31: Activated 1 worker(s) (marked as healthy)
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=register_tokenizer attempt=1
+2026-02-26 13:00:07  WARN smg::core::steps::worker::shared::update_policies: /home/runner/work/sglang/sglang/src/core/steps/worker/shared/update_policies.rs:62: Model /app/models/Deepseek-R1/ has conflicting load_balance_method: prefill=Some("follow_bootstrap_room"), decode=Some("round_robin")
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=activate_workers attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=activate_workers duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=update_policies duration_ms=0
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=update_policies attempt=1
+2026-02-26 13:00:07  INFO smg::tokenizer::registry: /home/runner/work/sglang/sglang/src/tokenizer/registry.rs:141: Successfully registered tokenizer '/app/models/Deepseek-R1/' with id: 09b8ea9c-9832-4637-8371-40f981f7ea29
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:208: Step started instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=register_tokenizer attempt=1
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 step_id=register_tokenizer duration_ms=211
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:259: Workflow completed instance_id=a6e493a6-4ccd-41be-aab0-5831cc6278a1 duration_ms=1225
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:220: Step succeeded instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f step_id=register_tokenizer duration_ms=211
+2026-02-26 13:00:07  INFO smg::workflow::event: /home/runner/work/sglang/sglang/src/workflow/event.rs:259: Workflow completed instance_id=1c20d313-ae05-4b80-85b9-e5372c34cf5f duration_ms=1225
+2026-02-26 13:00:11  INFO http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::request: /home/runner/work/sglang/sglang/src/middleware.rs:310: started processing request
+2026-02-26 13:00:12 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
+2026-02-26 13:00:12 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
+2026-02-26 13:00:12 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
+2026-02-26 13:00:12 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
+2026-02-26 13:00:13 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ"}: smg::routers::http::pd_router: /home/runner/work/sglang/sglang/src/routers/http/pd_router.rs:590: Decode server returned error status decode_url=http://10.99.91.49:30001 status=500 Internal Server Error
+2026-02-26 13:00:13 ERROR http_request{method=POST uri=/v1/chat/completions version=HTTP/1.1 module="smg" request_id="chatcmpl-Wly2zVLtUcyK1Vg13jmipvFZ" status_code=500 latency=1254651}: smg::response: /home/runner/work/sglang/sglang/src/middleware.rs:349: request failed with server error
