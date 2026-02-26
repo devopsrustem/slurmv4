@@ -188,66 +188,6 @@ json{
 }
 
 
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ find /app/sglang/sglang-latest/lib -name "mooncake*.py" -o -name "*disaggregat*.py" 2>/dev/null | head -20
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/mooncake.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/test/server_fixtures/disaggregation_fixture.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_ep_buffer.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_connector_v1.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_store_service.py
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ find /app/sglang/sglang-latest/lib -path "*/sglang*" -name "*.py" | xargs grep -l "local_hostname\|mooncake_config\|MOONCAKE" 2>/dev/null
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/bench_serving.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/environ.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/utils.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/utils.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/utils.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/utils.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/layers/moe/token_dispatcher/mooncake.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/model_executor/model_runner.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/allocator.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_connector_v1.py
-/app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_store_service.py
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ python3 -c "import sglang; print(sglang.__file__)"
-/app/sglang/sglang-0.5.8.post1/lib64/python3.12/site-packages/sglang/__init__.py
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ /app/sglang/sglang-latest/bin/pip show -f sglang | grep -i "mooncake\|disaggregat"
-  sglang/srt/disaggregation/ascend/__init__.py
-  sglang/srt/disaggregation/ascend/conn.py
-  sglang/srt/disaggregation/ascend/transfer_engine.py
-  sglang/srt/disaggregation/base/__init__.py
-  sglang/srt/disaggregation/base/conn.py
-  sglang/srt/disaggregation/common/__init__.py
-  sglang/srt/disaggregation/common/conn.py
-  sglang/srt/disaggregation/common/utils.py
-  sglang/srt/disaggregation/decode.py
-  sglang/srt/disaggregation/decode_kvcache_offload_manager.py
-  sglang/srt/disaggregation/decode_schedule_batch_mixin.py
-  sglang/srt/disaggregation/encode_receiver.py
-  sglang/srt/disaggregation/encode_server.py
-  sglang/srt/disaggregation/fake/__init__.py
-  sglang/srt/disaggregation/fake/conn.py
-  sglang/srt/disaggregation/kv_events.py
-  sglang/srt/disaggregation/mooncake/__init__.py
-  sglang/srt/disaggregation/mooncake/conn.py
-  sglang/srt/disaggregation/mooncake/transfer_engine.py
-  sglang/srt/disaggregation/mooncake/utils.py
-  sglang/srt/disaggregation/nixl/__init__.py
-  sglang/srt/disaggregation/nixl/conn.py
-  sglang/srt/disaggregation/prefill.py
-  sglang/srt/disaggregation/utils.py
-  sglang/srt/layers/moe/token_dispatcher/mooncake.py
-  sglang/srt/mem_cache/storage/mooncake_store/README.md
-  sglang/srt/mem_cache/storage/mooncake_store/mooncake_store.py
-  sglang/srt/mem_cache/storage/mooncake_store/test_mooncake_store.py
-  sglang/test/server_fixtures/disaggregation_fixture.py
-
-
-((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0001 ~]$ MOONCAKE_CONFIG_PATH=/opt/mooncake-libs/config/mooncake.json GLOO_SOCKET_FAMILY=AF_INET NCCL_SOCKET_IFNAME=ens108np0 NCCL_TIMEOUT=600 MASTER_ADDR=10.99.91.39 MASTER_PORT=5000 GLOO_SOCKET_IFNAME=ens108np0 NCCL_DEBUG=WARN NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_NVLS_ENABLE=0 NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11 NCCL_CROSS_NIC=1 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh /app/sglang/sglang-latest/bin/python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/   --trust-remote-code   --tp-size 16   --host 10.99.91.39   --port 30000   --dist-init-addr 10.99.91.39:5000   --nnodes 2   --node-rank 0   --mem-fraction-static 0.8   --disaggregation-mode prefill   --disaggregation-ib-device mlx5_0   --disaggregation-bootstrap-port 8998   --disable-cuda-graph
-
-
-
+cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py
+cat /app/sglang/sglang-latest/lib/python3.12/site-packages/sglang/srt/disaggregation/mooncake/utils.py
+cat /app/sglang/sglang-latest/lib/python3.12/site-packages/mooncake/mooncake_config.py
