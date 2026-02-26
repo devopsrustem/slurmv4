@@ -290,3 +290,64 @@ sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/model_executor/model_
 2848-    Note:
 2849-        The function tries detection methods in the following order:
 
+2829:def get_local_ip_auto(fallback: str = None) -> str:
+2830-    """
+2831-    Automatically detect the local IP address using multiple fallback strategies.
+2832-
+2833-    This function attempts to obtain the local IP address through several methods.
+2834-    If all methods fail, it returns the specified fallback value or raises an exception.
+2835-
+2836-    Args:
+2837-        fallback (str, optional): Fallback IP address to return if all detection
+2838-            methods fail. For server applications, explicitly set this to
+2839-            "0.0.0.0" (IPv4) or "::" (IPv6) to bind to all available interfaces.
+2840-            Defaults to None.
+2841-
+2842-    Returns:
+2843-        str: The detected local IP address, or the fallback value if detection fails.
+2844-
+2845-    Raises:
+2846-        ValueError: If IP detection fails and no fallback value is provided.
+2847-
+2848-    Note:
+2849-        The function tries detection methods in the following order:
+2850-        1. Direct IP detection via get_ip()
+2851-        2. Network interface enumeration via get_local_ip_by_nic()
+2852-        3. Remote connection method via get_local_ip_by_remote()
+2853-    """
+2854-    # Try environment variable
+2855-    host_ip = os.getenv("SGLANG_HOST_IP", "") or os.getenv("HOST_IP", "")
+2856-    if host_ip:
+2857-        return host_ip
+2858-    logger.debug("get_ip failed")
+2859-    # Fallback
+2860-    if ip := get_local_ip_by_nic():
+2861-        return ip
+2862-    logger.debug("get_local_ip_by_nic failed")
+2863-    # Fallback
+2864-    if ip := get_local_ip_by_remote():
+2865-        return ip
+2866-    logger.debug("get_local_ip_by_remote failed")
+2867-    if fallback:
+2868-        return fallback
+2869-    raise ValueError("Can not get local ip")
+2870-
+2871-
+2872-# TODO(hebiao064): Accelerate FA3 Spec Decode with topk > 1.
+2873-# TODO(hebiao064): Improve the acc rate for FA3 Spec Decode with topk == 1 and page_size > 1.
+2874-def is_no_spec_infer_or_topk_one(server_args):
+2875-    return server_args.speculative_eagle_topk is None or (
+2876-        server_args.speculative_eagle_topk == 1
+2877-        and (server_args.page_size == 1 or server_args.page_size is None)
+2878-    )
+2879-
+2880-
+2881-def is_fa3_default_architecture(hf_config):
+2882-    architectures = getattr(hf_config, "architectures", None)
+2883-    if not isinstance(architectures, list) or not architectures:
+2884-        return False
+2885-    default_archs = {
+2886-        "Llama4ForConditionalGeneration",
+2887-        "LlamaForCausalLM",
+2888-        "Olmo2ForCausalLM",
+2889-        "Gemma2ForCausalLM",
