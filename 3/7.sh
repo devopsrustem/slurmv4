@@ -381,4 +381,49 @@ bash--mooncake-transfer-engine-addr 10.99.91.35
 Prefill нода 1:
 bash--mooncake-transfer-engine-addr 10.99.91.39
 Prefill нода 2:
-bash--mooncake-transfer-engine-addr 10.99.91.41
+bash--mooncake-transfer-engine-addr 10.99.91.41Decode Нода 3 (10.99.91.49):
+bash# Проверь текущие маршруты:
+ip route show
+
+# Добавь RoCE приоритет:
+sudo ip route add 10.99.91.0/24 dev ens3np0 src 10.99.91.49 metric 10
+
+# Проверь что добавилось:
+ip route show | grep 10.99.91
+
+Decode Нода 6 (10.99.91.35):
+bash# Проверь текущие маршруты:
+ip route show
+
+# Добавь RoCE приоритет:
+sudo ip route add 10.99.91.0/24 dev ens3np0 src 10.99.91.35 metric 10
+
+# Проверь что добавилось:
+ip route show | grep 10.99.91
+
+Prefill Нода 1 (10.99.91.39):
+bash# Проверь текущие маршруты:
+ip route show
+
+# Добавь RoCE приоритет:
+sudo ip route add 10.99.91.0/24 dev ens108np0 src 10.99.91.39 metric 10
+
+# Проверь что добавилось:
+ip route show | grep 10.99.91
+
+Prefill Нода 2 (10.99.91.41):
+bash# Проверь текущие маршруты:
+ip route show
+
+# Добавь RoCE приоритет:
+sudo ip route add 10.99.91.0/24 dev ens108np0 src 10.99.91.41 metric 10
+
+# Проверь что добавилось:
+ip route show | grep 10.99.91
+
+❌ Если нужно откатить (на случай проблем):
+bash# На каждой ноде:
+sudo ip route del 10.99.91.0/24
+
+
+
