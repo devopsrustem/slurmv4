@@ -84,3 +84,50 @@ bashcurl -s http://localhost:8000/generate \
 [2026-02-27 15:01:51 TP9] Prefill transfer failed for request rank=9 req.rid='ca271fb6eab2421f98ac61976e6f0f34' req.bootstrap_room=6593551520068383758 with exception KVTransferError(bootstrap_room=6593551520068383758): Decode instance could be dead, remote mooncake session 10.99.91.35:16272 is not alive
 [2026-02-27 15:01:51 TP10] Prefill transfer failed for request rank=10 req.rid='ca271fb6eab2421f98ac61976e6f0f34' req.bootstrap_room=6593551520068383758 with exception KVTransferError(bootstrap_room=6593551520068383758): Decode instance could be dead, remote mooncake session 10.99.91.35:15390 is not alive
 [2026-02-27 15:01:51 TP8] Prefill transfer failed for request rank=8 req.rid='ca271fb6eab2421f98ac61976e6f0f34' req.bootstrap_room=6593551520068383758 with exception KVTransferError(bootstrap_room=6593551520068383758): Decode instance could be dead, remote mooncake session 10.99.91.35:16323 is not alive
+
+
+
+
+Изменить только один параметр в командах запуска, добавить:
+
+bash
+--disaggregation-transfer-backend nixl
+Всё остальное оставить как есть (MC_GID_INDEX=3, MC_TCP_BIND_ADDRESS, device list). Параметр --disaggregation-ib-device тоже оставить — NIXL его использует.
+
+Пример для aihub0003:
+
+bash
+SGLANG_HOST_IP=10.99.91.49 MC_GID_INDEX=3 MC_TCP_BIND_ADDRESS=10.99.91.49 \
+... все остальные переменные ... \
+python3 -m sglang.launch_server \
+  ... все остальные параметры ... \
+  --disaggregation-mode decode \
+  --disaggregation-transfer-backend nixl \
+  --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 \
+  --max-running-requests 128
+Если pip install nixl завалится или NIXL не найдёт UCX — покажи ошибку.
+
+роутер запускать нужно?
+
+3:21 PM
+
+Утвердил необходимость маршрутизатора и уточнил порядок запуска
+Утвердил необходимость маршрутизатора и уточнил порядок запуска
+
+Да, роутер нужен. Порядок запуска:
+
+Сначала prefill (aihub0001 + aihub0002) — ждать The server is fired up
+Потом decode (aihub0003 + aihub0006) — ждать The server is fired up
+Потом роутер (можно на aihub0001):
+bash
+python3 -m sglang_router.launch_router \
+  --pd-disaggregation \
+  --prefill http://10.99.91.39:30000 8998 \
+  --decode http://10.99.91.49:30001 \
+  --host 0.0.0.0 \
+  --port 8000
+Тест через роутер:
+bash
+curl -s http://10.99.91.39:8000/generate \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Hello world", "sampling_params": {"max_new_tokens": 16}}'
