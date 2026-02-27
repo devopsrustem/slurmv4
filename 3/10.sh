@@ -307,3 +307,17 @@ tpgds-aihub0006:1021621:1023016 [7] NCCL INFO [Service thread] Connection closed
 tpgds-aihub0006:1021621:1023016 [7] NCCL INFO [Service thread] Connection closed by localRank 2
 Killed
 
+Новая ошибка, новый root cause. MC_FORCE_TCP=true заставляет TcpTransport биндиться на IPv6 по умолчанию, а на нодах IPv6 отключён → Address family not supported.
+Нужно добавить MC_TCP_BIND_ADDRESS чтобы форсировать IPv4:
+aihub0001: добавить MC_TCP_BIND_ADDRESS=10.99.91.39
+aihub0002: добавить MC_TCP_BIND_ADDRESS=10.99.91.41
+aihub0003: добавить MC_TCP_BIND_ADDRESS=10.99.91.49
+aihub0006: добавить MC_TCP_BIND_ADDRESS=10.99.91.35
+Пример для aihub0006:
+bashexport MC_FORCE_TCP=true
+export MC_TCP_BIND_ADDRESS=10.99.91.35
+
+MC_LOG_LEVEL=TRACE SGLANG_HOST_IP=10.99.91.35 \
+MC_TCP_BIND_ADDRESS=10.99.91.35 \
+... остальные переменные ... \
+python3 -m sglang.launch_server ...
