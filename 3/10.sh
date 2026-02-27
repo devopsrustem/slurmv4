@@ -321,3 +321,359 @@ MC_LOG_LEVEL=TRACE SGLANG_HOST_IP=10.99.91.35 \
 MC_TCP_BIND_ADDRESS=10.99.91.35 \
 ... остальные переменные ... \
 python3 -m sglang.launch_server ...
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[2026-02-27 11:40:44 TP5] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP3] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP2] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP0] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP6] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP1] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP4] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:44 TP7] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-latest/lib64/python3.12/site-packages/transformers/__init__.py)
+[2026-02-27 11:40:45 TP3] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP1] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP2] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP5] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP0] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP0] Detected fp8 checkpoint.
+[2026-02-27 11:40:45 TP6] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP4] Load weight begin. avail mem=77.47 GB
+[2026-02-27 11:40:45 TP7] Load weight begin. avail mem=77.47 GB
+Loading safetensors checkpoint shards:   0% Completed | 0/163 [00:00<?, ?it/s]
+Loading safetensors checkpoint shards:   9% Completed | 14/163 [00:00<00:01, 130.15it/s]
+Loading safetensors checkpoint shards:  17% Completed | 28/163 [00:00<00:01, 124.63it/s]
+Loading safetensors checkpoint shards:  25% Completed | 41/163 [00:00<00:00, 123.50it/s]
+Loading safetensors checkpoint shards:  33% Completed | 54/163 [00:00<00:00, 120.55it/s]
+Loading safetensors checkpoint shards:  41% Completed | 67/163 [00:00<00:00, 118.56it/s]
+Loading safetensors checkpoint shards:  49% Completed | 80/163 [00:00<00:00, 120.80it/s]
+Loading safetensors checkpoint shards:  57% Completed | 93/163 [00:00<00:00, 120.63it/s]
+Loading safetensors checkpoint shards:  65% Completed | 106/163 [00:00<00:00, 120.55it/s]
+Loading safetensors checkpoint shards:  73% Completed | 119/163 [00:01<00:00, 64.87it/s]
+Loading safetensors checkpoint shards:  81% Completed | 132/163 [00:01<00:00, 76.04it/s]
+Loading safetensors checkpoint shards:  88% Completed | 144/163 [00:01<00:00, 84.20it/s]
+Loading safetensors checkpoint shards:  96% Completed | 156/163 [00:01<00:00, 90.58it/s]
+Loading safetensors checkpoint shards: 100% Completed | 163/163 [00:01<00:00, 98.68it/s]
+
+[2026-02-27 11:40:47 TP0] Shared experts fusion optimization enabled.
+[2026-02-27 11:41:04 TP3] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:05 TP0] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:05 TP6] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:05 TP1] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:06 TP4] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:06 TP5] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:06 TP2] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:06 TP7] Load weight end. type=DeepseekV3ForCausalLM, dtype=torch.bfloat16, avail mem=36.85 GB, mem usage=40.62 GB.
+[2026-02-27 11:41:06 TP0] Using KV cache dtype: torch.bfloat16
+[2026-02-27 11:41:06 TP2] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP1] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP2] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP1] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP6] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP7] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP6] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP7] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP0] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP3] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP5] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP0] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP3] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP5] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:06 TP4] KV Cache is allocated. #tokens: 326217, KV size: 21.35 GB
+[2026-02-27 11:41:06 TP4] Memory pool end. avail mem=14.13 GB
+[2026-02-27 11:41:07 TP0] max_total_num_tokens=326217, chunked_prefill_size=8192, max_prefill_tokens=16384, max_running_requests=2048, context_len=163840, available_gpu_mem=14.04 GB
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.339725 1370592 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.339775 1370592 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.339812 1370592 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:16872
+I0227 11:41:07.339907 1370592 transfer_engine_impl.cpp:217] Auto-discovering topology...
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.341276 1370590 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.341315 1370590 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.341349 1370590 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:15222
+I0227 11:41:07.341332 1370594 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.341367 1370594 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.341398 1370594 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:16106
+I0227 11:41:07.341447 1370590 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I0227 11:41:07.341485 1370594 transfer_engine_impl.cpp:217] Auto-discovering topology...
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.349938 1370588 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.349972 1370588 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.350003 1370588 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:15083
+I0227 11:41:07.350099 1370588 transfer_engine_impl.cpp:217] Auto-discovering topology...
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.350539 1370589 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.350572 1370589 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.350603 1370589 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:15375
+I0227 11:41:07.350677 1370589 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I0227 11:41:07.350803 1370592 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.350837 1370592 tcp_transport.cpp:343] TcpTransport: listen on port 15409
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.350838 1370593 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.350870 1370593 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.350900 1370593 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:16007
+I0227 11:41:07.350978 1370593 transfer_engine_impl.cpp:217] Auto-discovering topology...
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.351156 1370591 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.351189 1370591 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.351220 1370591 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:15095
+WARNING: Logging before InitGoogleLogging() is written to STDERR
+I0227 11:41:07.351234 1370595 transfer_engine_impl.cpp:571] Metrics reporting is disabled (set MC_TE_METRIC=1 to enable)
+I0227 11:41:07.351266 1370595 transfer_engine_impl.cpp:105] Transfer Engine parseHostNameWithPort. server_name: 10.99.91.39 port: 12001
+I0227 11:41:07.351297 1370595 transfer_engine_impl.cpp:172] Transfer Engine RPC using P2P handshake, listening on 10.99.91.39:16452
+I0227 11:41:07.351308 1370591 transfer_engine_impl.cpp:217] Auto-discovering topology...
+I0227 11:41:07.351387 1370595 transfer_engine_impl.cpp:217] Auto-discovering topology...
+[2026-02-27 11:41:07 TP4] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+I0227 11:41:07.354581 1370590 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.354621 1370590 tcp_transport.cpp:343] TcpTransport: listen on port 16927
+I0227 11:41:07.355638 1370594 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.355676 1370594 tcp_transport.cpp:343] TcpTransport: listen on port 15986
+[2026-02-27 11:41:07 TP2] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+[2026-02-27 11:41:07 TP6] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+I0227 11:41:07.361781 1370588 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.361814 1370588 tcp_transport.cpp:343] TcpTransport: listen on port 16776
+[2026-02-27 11:41:07 TP0] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+I0227 11:41:07.365715 1370589 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.365746 1370589 tcp_transport.cpp:343] TcpTransport: listen on port 16424
+[2026-02-27 11:41:07 TP1] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+I0227 11:41:07.368763 1370593 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.368796 1370593 tcp_transport.cpp:343] TcpTransport: listen on port 15654
+I0227 11:41:07.370513 1370591 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.370553 1370591 tcp_transport.cpp:343] TcpTransport: listen on port 15022
+I0227 11:41:07.371258 1370595 transfer_engine_impl.cpp:232] Topology discovery complete. Found 1 HCAs.
+I0227 11:41:07.371292 1370595 tcp_transport.cpp:343] TcpTransport: listen on port 15221
+[2026-02-27 11:41:07 TP5] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+[2026-02-27 11:41:07 TP3] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+[2026-02-27 11:41:07 TP7] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2937, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 373, in __init__
+    self.init_disaggregation()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 933, in init_disaggregation
+    self.disagg_prefill_bootstrap_queue = PrefillBootstrapQueue(
+                                          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 107, in __init__
+    self.kv_manager = self._init_kv_manager()
+                      ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/prefill.py", line 177, in _init_kv_manager
+    kv_manager: BaseKVManager = kv_manager_class(
+                                ^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 165, in __init__
+    self.init_engine()
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/conn.py", line 229, in init_engine
+    self.engine = MooncakeTransferEngine(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 105, in __init__
+    self.initialize(
+  File "/app/sglang/sglang-latest/lib64/python3.12/site-packages/sglang/srt/disaggregation/mooncake/transfer_engine.py", line 181, in initialize
+    ret_value = self.engine.initialize(
+                ^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: open: Address family not supported by protocol
+
+[2026-02-27 11:41:07] Received sigquit from a child process. It usually means the child failed.
+tpgds-aihub0001:1370595:1372071 [7] NCCL INFO [Service thread] Connection closed by localRank 0
+
+Killed
