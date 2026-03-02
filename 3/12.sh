@@ -938,43 +938,178 @@ router
     "version": "0.5.9"
 }
 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+enp0s20f0u5u2c2  UNKNOWN        
+enp86s0f0        DOWN           
+enp25s0np0       UP             10.99.91.59/31 
+enp41s0np0       UP             10.99.92.59/31 
+enp86s0f1        DOWN           
+enp59s0np0       UP             10.99.93.59/31 
+enp83s0f0np0     DOWN           
+enp83s0f1np1     DOWN           
+enp92s0np0       UP             10.99.94.59/31 
+enp155s0np0      UP             10.99.95.59/31 
+enp170s0np0      UP             10.99.96.59/31 
+enp187s0np0      UP             10.99.97.59/31 
+enp210s0f0np0    UP             
+enp210s0f1np1    DOWN           
+enp218s0np0      UP             10.99.98.59/31 
+bond0            UP             10.73.175.137/29 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ibdev2netdev 
+mlx5_0 port 1 ==> enp25s0np0 (Up)
+mlx5_1 port 1 ==> enp41s0np0 (Up)
+mlx5_10 port 1 ==> enp210s0f1np1 (Down)
+mlx5_11 port 1 ==> enp218s0np0 (Up)
+mlx5_2 port 1 ==> enp59s0np0 (Up)
+mlx5_3 port 1 ==> bond0 (Up)
+mlx5_4 port 1 ==> enp83s0f1np1 (Down)
+mlx5_5 port 1 ==> enp92s0np0 (Up)
+mlx5_6 port 1 ==> enp155s0np0 (Up)
+mlx5_7 port 1 ==> enp170s0np0 (Up)
+mlx5_8 port 1 ==> enp187s0np0 (Up)
+mlx5_9 port 1 ==> bond0 (Up)
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ nvidia-smi topo -m
+	GPU0	GPU1	GPU2	GPU3	GPU4	GPU5	GPU6	GPU7	NIC0	NIC1	NIC2	NIC3	NIC4	NIC5	NIC6	NIC7	NIC8	NIC9	NIC10	NIC11	CPU Affinity	NUMA Affinity	GPU NUMA ID
+GPU0	 X 	NV18	NV18	NV18	NV18	NV18	NV18	NV18	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU1	NV18	 X 	NV18	NV18	NV18	NV18	NV18	NV18	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU2	NV18	NV18	 X 	NV18	NV18	NV18	NV18	NV18	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU3	NV18	NV18	NV18	 X 	NV18	NV18	NV18	NV18	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU4	NV18	NV18	NV18	NV18	 X 	NV18	NV18	NV18	NODE	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU5	NV18	NV18	NV18	NV18	NV18	 X 	NV18	NV18	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	0-191	0		N/A
+GPU6	NV18	NV18	NV18	NV18	NV18	NV18	 X 	NV18	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	0-191	0		N/A
+GPU7	NV18	NV18	NV18	NV18	NV18	NV18	NV18	 X 	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	0-191	0		N/A
+NIC0	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC1	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC2	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC3	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC4	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	 X 	NODE	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC5	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE	NODE	NODE				
+NIC6	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE	NODE				
+NIC7	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE	NODE				
+NIC8	NODE	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	NODE	NODE	NODE				
+NIC9	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 	PIX	NODE				
+NIC10	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	 X 	NODE				
+NIC11	NODE	NODE	NODE	NODE	NODE	NODE	NODE	PIX	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	NODE	 X 				
+
+Legend:
+
+  X    = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  NODE = Connection traversing PCIe as well as the interconnect between PCIe Host Bridges within a NUMA node
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typically the CPU)
+  PXB  = Connection traversing multiple PCIe bridges (without traversing the PCIe Host Bridge)
+  PIX  = Connection traversing at most a single PCIe bridge
+  NV#  = Connection traversing a bonded set of # NVLinks
+
+NIC Legend:
+
+  NIC0: mlx5_0
+  NIC1: mlx5_1
+  NIC2: mlx5_2
+  NIC3: mlx5_3
+  NIC4: mlx5_4
+  NIC5: mlx5_5
+  NIC6: mlx5_6
+  NIC7: mlx5_7
+  NIC8: mlx5_8
+  NIC9: mlx5_9
+  NIC10: mlx5_10
+  NIC11: mlx5_11
 
 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+enp0s20f0u5u2c2  UNKNOWN        
+enp86s0f0        DOWN           
+enp25s0np0       UP             10.99.91.63/31 
+enp41s0np0       UP             10.99.92.63/31 
+enp86s0f1        DOWN           
+enp59s0np0       UP             10.99.93.63/31 
+enp83s0f0np0     UP             
+enp83s0f1np1     DOWN           
+enp92s0np0       UP             10.99.94.63/31 
+enp155s0np0      UP             10.99.95.63/31 
+enp170s0np0      UP             10.99.96.63/31 
+enp187s0np0      UP             10.99.97.63/31 
+enp210s0f0np0    UP             
+enp210s0f1np1    DOWN           
+enp218s0np0      UP             10.99.98.63/31 
+bond0            UP             10.73.175.138/29 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ ibdev2netdev 
+mlx5_0 port 1 ==> enp25s0np0 (Up)
+mlx5_1 port 1 ==> enp41s0np0 (Up)
+mlx5_10 port 1 ==> enp210s0f1np1 (Down)
+mlx5_11 port 1 ==> enp218s0np0 (Up)
+mlx5_2 port 1 ==> enp59s0np0 (Up)
+mlx5_3 port 1 ==> bond0 (Up)
+mlx5_4 port 1 ==> enp83s0f1np1 (Down)
+mlx5_5 port 1 ==> enp92s0np0 (Up)
+mlx5_6 port 1 ==> enp155s0np0 (Up)
+mlx5_7 port 1 ==> enp170s0np0 (Up)
+mlx5_8 port 1 ==> enp187s0np0 (Up)
+mlx5_9 port 1 ==> bond0 (Up)
 
-[dcbsr_dev@tpgds-aihub0003 ~]$ python3 -m sglang.bench_serving \
-  --backend sglang \
-  --host 10.99.91.39 \
-  --port 8000 \
-  --num-prompts 20 \
-  --request-rate 4 \
-  --input-len 512 \
-  --output-len 128
-/usr/bin/python3: Error while finding module specification for 'sglang.bench_serving' (ModuleNotFoundError: No module named 'sglang')
-[dcbsr_dev@tpgds-aihub0003 ~]$ . /app/sglang/sglang-latest/bin/activate
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0003 ~]$ python3 -m sglang.bench_serving   --backend sglang   --host 10.99.91.39   --port 8000   --num-prompts 20   --request-rate 4   --input-len 512   --output-len 128
-usage: bench_serving.py [-h] [--backend {sglang,sglang-native,sglang-oai,sglang-oai-chat,vllm,vllm-chat,lmdeploy,lmdeploy-chat,trt,gserver,truss}]
-                        [--base-url BASE_URL] [--host HOST] [--port PORT]
-                        [--dataset-name {sharegpt,custom,openai,random,random-ids,generated-shared-prefix,mmmu,image,mooncake}]
-                        [--dataset-path DATASET_PATH] [--model MODEL] [--served-model-name SERVED_MODEL_NAME] [--tokenizer TOKENIZER]
-                        [--num-prompts NUM_PROMPTS] [--sharegpt-output-len SHAREGPT_OUTPUT_LEN] [--sharegpt-context-len SHAREGPT_CONTEXT_LEN]
-                        [--random-input-len RANDOM_INPUT_LEN] [--random-output-len RANDOM_OUTPUT_LEN] [--random-range-ratio RANDOM_RANGE_RATIO]
-                        [--image-count IMAGE_COUNT] [--image-resolution IMAGE_RESOLUTION] [--random-image-count] [--image-format IMAGE_FORMAT]
-                        [--image-content IMAGE_CONTENT] [--request-rate REQUEST_RATE] [--use-trace-timestamps] [--max-concurrency MAX_CONCURRENCY]
-                        [--output-file OUTPUT_FILE] [--output-details] [--print-requests] [--disable-tqdm] [--disable-stream] [--return-logprob]
-                        [--return-routed-experts] [--seed SEED] [--disable-ignore-eos] [--extra-request-body {"key1": "value1", "key2": "value2"}]
-                        [--apply-chat-template] [--profile] [--plot-throughput]
-                        [--profile-activities {CPU,GPU,CUDA_PROFILER} [{CPU,GPU,CUDA_PROFILER} ...]] [--profile-num-steps PROFILE_NUM_STEPS]
-                        [--profile-by-stage] [--profile-stages PROFILE_STAGES [PROFILE_STAGES ...]] [--profile-output-dir PROFILE_OUTPUT_DIR]
-                        [--profile-prefix PROFILE_PREFIX] [--lora-name [LORA_NAME ...]] [--lora-request-distribution {uniform,distinct,skewed}]
-                        [--lora-zipf-alpha LORA_ZIPF_ALPHA] [--prompt-suffix PROMPT_SUFFIX] [--pd-separated]
-                        [--profile-prefill-url [PROFILE_PREFILL_URL ...] | --profile-decode-url [PROFILE_DECODE_URL ...]] [--flush-cache]
-                        [--warmup-requests WARMUP_REQUESTS] [--tokenize-prompt] [--gsp-num-groups GSP_NUM_GROUPS]
-                        [--gsp-prompts-per-group GSP_PROMPTS_PER_GROUP] [--gsp-system-prompt-len GSP_SYSTEM_PROMPT_LEN]
-                        [--gsp-question-len GSP_QUESTION_LEN] [--gsp-output-len GSP_OUTPUT_LEN] [--gsp-range-ratio GSP_RANGE_RATIO]
-                        [--gsp-fast-prepare] [--gsp-send-routing-key] [--gsp-num-turns GSP_NUM_TURNS] [--gsp-ordered]
-                        [--mooncake-slowdown-factor MOONCAKE_SLOWDOWN_FACTOR] [--mooncake-num-rounds MOONCAKE_NUM_ROUNDS]
-                        [--mooncake-workload {mooncake,conversation,synthetic,toolagent}] [--tag TAG] [--header HEADER [HEADER ...]]
-bench_serving.py: error: unrecognized arguments: --input-len 512 --output-len 128
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0009 ~]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+ens108np0        UP             10.99.91.47/31 
+ens12f0np0       UP             
+ens12f1np1       DOWN           
+ens109np0        UP             10.99.92.47/31 
+ens110np0        UP             10.99.93.47/31 
+ens111np0        UP             10.99.94.47/31 
+ens112np0        UP             10.99.95.47/31 
+ens20f0np0       UP             
+ens20f1np1       DOWN           
+ens113np0        UP             10.99.96.47/31 
+ens114np0        UP             10.99.97.47/31 
+ens115np0        UP             10.99.98.47/31 
+bond0            UP             10.73.175.121/29 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0009 ~]$ ibdev2netdev 
+mlx5_0 port 1 ==> ens108np0 (Up)
+mlx5_1 port 1 ==> bond0 (Up)
+mlx5_10 port 1 ==> ens114np0 (Up)
+mlx5_11 port 1 ==> ens115np0 (Up)
+mlx5_2 port 1 ==> ens12f1np1 (Down)
+mlx5_3 port 1 ==> ens109np0 (Up)
+mlx5_4 port 1 ==> ens110np0 (Up)
+mlx5_5 port 1 ==> ens111np0 (Up)
+mlx5_6 port 1 ==> ens112np0 (Up)
+mlx5_7 port 1 ==> bond0 (Up)
+mlx5_8 port 1 ==> ens20f1np1 (Down)
+mlx5_9 port 1 ==> ens113np0 (Up)
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0012 ~]$ ip -br -c a
+lo               UNKNOWN        127.0.0.1/8 
+eno1             DOWN           
+eno2             DOWN           
+ens3np0          UP             10.99.91.43/31 
+ens2np0          UP             10.99.92.43/31 
+ens4np0          UP             10.99.93.43/31 
+ens1np0          UP             10.99.94.43/31 
+ens8np0          UP             10.99.95.43/31 
+ens7np0          UP             10.99.96.43/31 
+ens6np0          UP             10.99.97.43/31 
+ens5np0          UP             10.99.98.43/31 
+ens12f0np0       UP             
+ens12f1np1       DOWN           
+ens10f0np0       UP             
+ens10f1np1       DOWN           
+bond0            UP             10.73.175.161/29 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0012 ~]$ ibdev2netdev 
+mlx5_0 port 1 ==> ens3np0 (Up)
+mlx5_1 port 1 ==> ens2np0 (Up)
+mlx5_10 port 1 ==> bond0 (Up)
+mlx5_11 port 1 ==> ens10f1np1 (Down)
+mlx5_2 port 1 ==> ens4np0 (Up)
+mlx5_3 port 1 ==> ens1np0 (Up)
+mlx5_4 port 1 ==> ens8np0 (Up)
+mlx5_5 port 1 ==> ens7np0 (Up)
+mlx5_6 port 1 ==> ens6np0 (Up)
+mlx5_7 port 1 ==> ens5np0 (Up)
+mlx5_8 port 1 ==> bond0 (Up)
+mlx5_9 port 1 ==> ens12f1np1 (Down)
 
 
 
