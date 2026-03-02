@@ -1230,108 +1230,21 @@ bash/app/sglang/sglang-latest/bin/python3 -m sglang_router.launch_router \
 
 
 
-tpgds-aihub0008:52323:52323 [7] NCCL INFO Connected to proxy localRank 6 -> connection 0x7f9438007258
-tpgds-aihub0008:52323:53602 [7] NCCL INFO New proxy send connection 74 from local rank 3, transport 2
-tpgds-aihub0008:52323:53602 [7] NCCL INFO proxyProgressAsync opId=0x560e41afb7c0 op.type=1 op.reqBuff=0x7fef3c2a0650 op.respSize=16 done
-tpgds-aihub0008:52319:52319 [3] NCCL INFO ncclPollProxyResponse Received new opId=0x560e41afb7c0
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Received and initiated operation=Init res=0
-tpgds-aihub0008:52321:52321 [5] NCCL INFO init.cc:491 Cuda Host Alloc Size 1048576 pointer 0x7f21ade82000
-tpgds-aihub0008:52319:52319 [3] NCCL INFO resp.opId=0x560e41afb7c0 matches expected opId=0x560e41afb7c0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO Connected to proxy localRank 7 -> connection 0x7fef3c0071e0
-tpgds-aihub0008:52318:52318 [2] NCCL INFO init.cc:491 Cuda Host Alloc Size 1048576 pointer 0x7f81c9e82000
-tpgds-aihub0008:52318:52318 [2] NCCL INFO init.cc:501 Cuda Host Alloc Size 65536 pointer 0x7f82abf8e200
-tpgds-aihub0008:52318:52318 [2] NCCL INFO init.cc:502 Cuda Host Alloc Size 65536 pointer 0x7f82abf9e200
-tpgds-aihub0008:52323:53602 [7] NCCL INFO transport/p2p.cc:233 Cuda Alloc Size 33554432 pointer 0x7fef0a000000
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Allocated shareable buffer 0x7fef0a000000 size 33554432 ipcDesc 0x7fef3c3a1668
-tpgds-aihub0008:52323:53602 [7] NCCL INFO proxyProgressAsync opId=0x560e41afb7c0 op.type=2 op.reqBuff=0x7fef3c2a0650 op.respSize=0 done
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Received and initiated operation=SharedInit res=0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO ncclPollProxyResponse Received new opId=0x560e41afb7c0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO resp.opId=0x560e41afb7c0 matches expected opId=0x560e41afb7c0
-tpgds-aihub0008:52321:53599 [5] NCCL INFO transport/p2p.cc:233 Cuda Alloc Size 33554432 pointer 0x7f219a000000
-tpgds-aihub0008:52319:52319 [3] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
-tpgds-aihub0008:52322:53601 [6] NCCL INFO transport/p2p.cc:233 Cuda Alloc Size 33554432 pointer 0x7f93fa000000
-tpgds-aihub0008:52319:52319 [3] NCCL INFO 16 coll channels, 16 collnet channels, 0 nvls channels, 16 p2p channels, 2 p2p channels per peer
-tpgds-aihub0008:52321:53599 [5] NCCL INFO Allocated shareable buffer 0x7f219a000000 size 33554432 ipcDesc 0x7f21d829f248
-tpgds-aihub0008:52322:53601 [6] NCCL INFO Allocated shareable buffer 0x7f93fa000000 size 33554432 ipcDesc 0x7f94382feaf8
-tpgds-aihub0008:52321:53599 [5] NCCL INFO proxyProgressAsync opId=0x55deeb9b3150 op.type=2 op.reqBuff=0x7f21d82d2fa0 op.respSize=0 done
-tpgds-aihub0008:52322:53601 [6] NCCL INFO proxyProgressAsync opId=0x562ba6fee6f0 op.type=2 op.reqBuff=0x7f94383f6fe0 op.respSize=0 done
-tpgds-aihub0008:52321:53599 [5] NCCL INFO Received and initiated operation=SharedInit res=0
-tpgds-aihub0008:52322:52322 [6] NCCL INFO ncclPollProxyResponse Received new opId=0x55deeb9b3150
-tpgds-aihub0008:52323:52323 [7] NCCL INFO ncclPollProxyResponse Received new opId=0x562ba6fee6f0
-tpgds-aihub0008:52322:52322 [6] NCCL INFO resp.opId=0x55deeb9b3150 matches expected opId=0x55deeb9b3150
-tpgds-aihub0008:52323:52323 [7] NCCL INFO resp.opId=0x562ba6fee6f0 matches expected opId=0x562ba6fee6f0
-tpgds-aihub0008:52322:53601 [6] NCCL INFO Received and initiated operation=SharedInit res=0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO init.cc:447 Cuda Alloc Size 23648 pointer 0x7f6202a2a000
-tpgds-aihub0008:52323:52323 [7] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
-tpgds-aihub0008:52323:52323 [7] NCCL INFO 16 coll channels, 16 collnet channels, 0 nvls channels, 16 p2p channels, 2 p2p channels per peer
-tpgds-aihub0008:52319:52319 [3] NCCL INFO init.cc:449 Cuda Alloc Size 64 pointer 0x7f6202a2fe00
-tpgds-aihub0008:52323:52323 [7] NCCL INFO init.cc:447 Cuda Alloc Size 23648 pointer 0x7ff026a2a000
-tpgds-aihub0008:52321:52321 [5] NCCL INFO init.cc:501 Cuda Host Alloc Size 65536 pointer 0x7f228ff8e200
-tpgds-aihub0008:52323:52323 [7] NCCL INFO init.cc:449 Cuda Alloc Size 64 pointer 0x7ff026a2fe00
-tpgds-aihub0008:52321:52321 [5] NCCL INFO init.cc:502 Cuda Host Alloc Size 65536 pointer 0x7f228ff9e200
-tpgds-aihub0008:52323:53602 [7] NCCL INFO New proxy send connection 75 from local rank 6, transport 2
-tpgds-aihub0008:52319:52319 [3] NCCL INFO init.cc:491 Cuda Host Alloc Size 1048576 pointer 0x7f60f5e82000
-tpgds-aihub0008:52323:53602 [7] NCCL INFO proxyProgressAsync opId=0x55deeb9b3150 op.type=1 op.reqBuff=0x7fef3c2a0650 op.respSize=16 done
-tpgds-aihub0008:52322:52322 [6] NCCL INFO ncclPollProxyResponse Received new opId=0x55deeb9b3150
-tpgds-aihub0008:52319:52319 [3] NCCL INFO init.cc:501 Cuda Host Alloc Size 65536 pointer 0x7f61d7f8e200
-tpgds-aihub0008:52322:52322 [6] NCCL INFO resp.opId=0x55deeb9b3150 matches expected opId=0x55deeb9b3150
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Received and initiated operation=Init res=0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO init.cc:502 Cuda Host Alloc Size 65536 pointer 0x7f61d7f9e200
-tpgds-aihub0008:52322:52322 [6] NCCL INFO Connected to proxy localRank 7 -> connection 0x7fef3c007258
-tpgds-aihub0008:52323:52323 [7] NCCL INFO init.cc:491 Cuda Host Alloc Size 1048576 pointer 0x7fef1be82000
-tpgds-aihub0008:52323:52323 [7] NCCL INFO init.cc:501 Cuda Host Alloc Size 65536 pointer 0x7feffbf8e200
-tpgds-aihub0008:52323:53602 [7] NCCL INFO transport/p2p.cc:233 Cuda Alloc Size 33554432 pointer 0x7fef08000000
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Allocated shareable buffer 0x7fef08000000 size 33554432 ipcDesc 0x7fef3c2fed78
-tpgds-aihub0008:52323:53602 [7] NCCL INFO proxyProgressAsync opId=0x55deeb9b3150 op.type=2 op.reqBuff=0x7fef3c2a0650 op.respSize=0 done
-tpgds-aihub0008:52323:52323 [7] NCCL INFO init.cc:502 Cuda Host Alloc Size 65536 pointer 0x7feffbf9e200
-tpgds-aihub0008:52322:52322 [6] NCCL INFO ncclPollProxyResponse Received new opId=0x55deeb9b3150
-tpgds-aihub0008:52322:52322 [6] NCCL INFO resp.opId=0x55deeb9b3150 matches expected opId=0x55deeb9b3150
-tpgds-aihub0008:52322:52322 [6] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
-tpgds-aihub0008:52322:52322 [6] NCCL INFO 16 coll channels, 16 collnet channels, 0 nvls channels, 16 p2p channels, 2 p2p channels per peer
-tpgds-aihub0008:52323:53602 [7] NCCL INFO Received and initiated operation=SharedInit res=0
-tpgds-aihub0008:52322:52322 [6] NCCL INFO init.cc:447 Cuda Alloc Size 23648 pointer 0x7f951aa2a000
-tpgds-aihub0008:52322:52322 [6] NCCL INFO init.cc:449 Cuda Alloc Size 64 pointer 0x7f951aa2fe00
-tpgds-aihub0008:52322:52322 [6] NCCL INFO init.cc:491 Cuda Host Alloc Size 1048576 pointer 0x7f940de82000
-tpgds-aihub0008:52322:52322 [6] NCCL INFO init.cc:501 Cuda Host Alloc Size 65536 pointer 0x7f94eff8e200
-tpgds-aihub0008:52322:52322 [6] NCCL INFO init.cc:502 Cuda Host Alloc Size 65536 pointer 0x7f94eff9e200
-tpgds-aihub0008:52323:52323 [7] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52319:52319 [3] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52323:52323 [7] NCCL INFO ncclCommInitRank comm 0x562b9d3ba940 rank 15 nranks 16 cudaDev 7 nvmlDev 7 busId db000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52317:52317 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52319:52319 [3] NCCL INFO ncclCommInitRank comm 0x560e379800b0 rank 11 nranks 16 cudaDev 3 nvmlDev 3 busId 5d000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52321:52321 [5] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52316:52316 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52323:52323 [7] NCCL INFO Init timings - ncclCommInitRank: rank 15 nranks 16 total 1.53 (kernels 0.24, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.07, graphs 0.01, connections 0.21, rest 0.00)
-tpgds-aihub0008:52317:52317 [1] NCCL INFO ncclCommInitRank comm 0x55b79c4620d0 rank 9 nranks 16 cudaDev 1 nvmlDev 1 busId 2a000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52320:52320 [4] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52318:52318 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52319:52319 [3] NCCL INFO Init timings - ncclCommInitRank: rank 11 nranks 16 total 1.55 (kernels 0.24, alloc 0.99, bootstrap 0.02, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.21, rest 0.00)
-tpgds-aihub0008:52321:52321 [5] NCCL INFO ncclCommInitRank comm 0x555927d9ee40 rank 13 nranks 16 cudaDev 5 nvmlDev 5 busId ab000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52316:52316 [0] NCCL INFO ncclCommInitRank comm 0x55d658aa20b0 rank 8 nranks 16 cudaDev 0 nvmlDev 0 busId 18000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52322:52322 [6] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
-tpgds-aihub0008:52317:52317 [1] NCCL INFO Init timings - ncclCommInitRank: rank 9 nranks 16 total 1.55 (kernels 0.22, alloc 0.81, bootstrap 0.23, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.21, rest 0.00)
-tpgds-aihub0008:52320:52320 [4] NCCL INFO ncclCommInitRank comm 0x5609ed20d210 rank 12 nranks 16 cudaDev 4 nvmlDev 4 busId 9a000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52318:52318 [2] NCCL INFO ncclCommInitRank comm 0x563cc3da24f0 rank 10 nranks 16 cudaDev 2 nvmlDev 2 busId 3a000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52321:52321 [5] NCCL INFO Init timings - ncclCommInitRank: rank 13 nranks 16 total 1.54 (kernels 0.25, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.21, rest 0.00)
-tpgds-aihub0008:52316:52316 [0] NCCL INFO Init timings - ncclCommInitRank: rank 8 nranks 16 total 1.57 (kernels 0.25, alloc 1.01, bootstrap 0.02, allgathers 0.01, topo 0.07, graphs 0.00, connections 0.21, rest 0.00)
-tpgds-aihub0008:52322:52322 [6] NCCL INFO ncclCommInitRank comm 0x55dee1833070 rank 14 nranks 16 cudaDev 6 nvmlDev 6 busId ba000 commId 0xabaf8d8e9c0f4614 - Init COMPLETE
-tpgds-aihub0008:52320:52320 [4] NCCL INFO Init timings - ncclCommInitRank: rank 12 nranks 16 total 1.53 (kernels 0.24, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.07, graphs 0.01, connections 0.21, rest 0.01)
-tpgds-aihub0008:52318:52318 [2] NCCL INFO Init timings - ncclCommInitRank: rank 10 nranks 16 total 1.54 (kernels 0.25, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.07, graphs 0.01, connections 0.21, rest 0.00)
-tpgds-aihub0008:52322:52322 [6] NCCL INFO Init timings - ncclCommInitRank: rank 14 nranks 16 total 1.54 (kernels 0.22, alloc 1.01, bootstrap 0.02, allgathers 0.01, topo 0.07, graphs 0.01, connections 0.21, rest 0.00)
-tpgds-aihub0008:52316:52316 [0] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f1315e00400 recvbuff 0x7f1315e00400 count 1 datatype 7 op 0 root 0 comm 0x55d658aa20b0 [nranks=16] stream 0x55d662c1f640
-tpgds-aihub0008:52316:52316 [0] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52318:52318 [2] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f82e9e00400 recvbuff 0x7f82e9e00400 count 1 datatype 7 op 0 root 0 comm 0x563cc3da24f0 [nranks=16] stream 0x563ccdf22820
-tpgds-aihub0008:52318:52318 [2] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52323:52323 [7] NCCL INFO AllReduce: opCount 0 sendbuff 0x7ff039e00400 recvbuff 0x7ff039e00400 count 1 datatype 7 op 0 root 0 comm 0x562b9d3ba940 [nranks=16] stream 0x562ba6fee6f0
-tpgds-aihub0008:52323:52323 [7] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52317:52317 [1] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f5c09e00400 recvbuff 0x7f5c09e00400 count 1 datatype 7 op 0 root 0 comm 0x55b79c4620d0 [nranks=16] stream 0x55b7a65dd410
-tpgds-aihub0008:52317:52317 [1] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52320:52320 [4] NCCL INFO AllReduce: opCount 0 sendbuff 0x7ff43de00400 recvbuff 0x7ff43de00400 count 1 datatype 7 op 0 root 0 comm 0x5609ed20d210 [nranks=16] stream 0x5609f7387c10
-tpgds-aihub0008:52320:52320 [4] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52321:52321 [5] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f22cde00400 recvbuff 0x7f22cde00400 count 1 datatype 7 op 0 root 0 comm 0x555927d9ee40 [nranks=16] stream 0x555931f1c930
-tpgds-aihub0008:52321:52321 [5] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52322:52322 [6] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f952de00400 recvbuff 0x7f952de00400 count 1 datatype 7 op 0 root 0 comm 0x55dee1833070 [nranks=16] stream 0x55deeb9b3150
-tpgds-aihub0008:52322:52322 [6] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
-tpgds-aihub0008:52319:52319 [3] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f6215e00400 recvbuff 0x7f6215e00400 count 1 datatype 7 op 0 root 0 comm 0x560e379800b0 [nranks=16] stream 0x560e41afb7c0
-tpgds-aihub0008:52319:52319 [3] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
 
+
+-02 20:20:17 TP2] KV Cache is allocated. #tokens: 326223, KV size: 21.35 GB
+[2026-03-02 20:20:17 TP2] Memory pool end. avail mem=15.31 GB
+[2026-03-02 20:20:17 TP3] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP1] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP0] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP2] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP4] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP0] Capture cuda graph bs [1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128]
+[2026-03-02 20:20:17 TP6] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP7] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+[2026-03-02 20:20:17 TP5] Capture cuda graph begin. This can take up to several minutes. avail mem=15.21 GB
+Capturing batches (bs=128 avail_mem=15.07 GB):   0%|                                                                         | 0/20 [00:00<?, ?it/s][2026-03-02 20:20:19 TP0] Entering DeepGEMM JIT Pre-Compile session. It may take a long time (typically 10-20 mins) if you have not run `sglang.compile_deep_gemm`. It is recommended to run `sglang.compile_deep_gemm` with same args as `sglang.launch_server` for pre-compilation to reduce the overhead if you have not run it before. For example: `python3 -m sglang.compile_deep_gemm --model deepseek-ai/DeepSeek-V3 --tp 8 --trust-remote-code`
+[2026-03-02 20:20:19 TP0] Try DeepGEMM JIT Compiling for <GEMM_NT_F8F8BF16> N=2112, K=7168, num_groups=1 with all Ms. It only takes a little time (typically 1 sec) if you have run `python3 -m sglang.compile_deep_gemm`. 
+[2026-03-02 20:20:19 TP0] Required memory for warmup: 0.18792724609375GB, Available memory: 15.0498046875GB
+
+DeepGEMM warmup:   5%|████▏                                                                                     | 769/16384 [00:41<12:55, 20.14it/s
