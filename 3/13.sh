@@ -178,3 +178,39 @@ cat /proc/206836/status | grep -E "State|VmRSS|VmPeak"
 bash# На обоих:
 nvidia-smi --query-gpu=memory.used,memory.free --format=csv
 Скорее всего SGLang сейчас инициализирует NIXL/disaggregation engine и ждёт ответа от prefill. Это может занять несколько минут.
+
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ cat /proc/222051/status | grep -E "State|VmRSS|VmPeak"
+State:	S (sleeping)
+VmPeak:	53515308 kB
+VmRSS:	 1075148 kB
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ cat /proc/206836/wchan
+pipe_read((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihubcat /proc/206836/status | grep -E "State|VmRSS|VmPeak"S|VmPeak"
+State:	S (sleeping)
+VmPeak:	53217996 kB
+VmRSS:	  995612 kB
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ nvidia-smi --query-gpu=memory.used,memory.free --format=csv
+memory.used [MiB], memory.free [MiB]
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+1718 MiB, 79364 MiB
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ nvidia-smi --query-gpu=memory.used,memory.free --format=csv
+memory.used [MiB], memory.free [MiB]
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
+1718 MiB, 79363 MiB
