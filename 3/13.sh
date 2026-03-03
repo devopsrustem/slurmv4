@@ -39,3 +39,43 @@ bashconda install -c conda-forge nccl
 Но сначала проверь версию чтобы понимать с чего стартуем:
 bashpython3 -c "import torch; print(torch.cuda.nccl.version())"
 И параллельно — попробуй NCCL_ALGO=Ring без обновления, это займёт 2 минуты и может сразу решить проблему. Если сработает — обновление вообще не нужно.
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 models]$ python3 -c "import torch; print(torch.cuda.nccl.version())"
+(2, 27, 5)
+
+
+tpgds-aihub0007:177788:177788 [1] NCCL INFO NET/IB : Made virtual device [0] name=mlx5_0 speed=400000 ndevs=1
+tpgds-aihub0007:177790:177790 [3] NCCL INFO NET/IB: [2] mlx5_2:uverbs2:1/RoCE provider=Mlx5 speed=400000 context=0x5563d0080110 pciPath=/sys/devices/pci0000:37/0000:37:01.0/0000:38:00.0/0000:39:01.0/0000:3b:00.0 ar=0
+tpgds-aihub0007:177790:177790 [3] NCCL INFO NET/IB : Made virtual device [2] name=mlx5_2 speed=400000 ndevs=1
+tpgds-aihub0007:177794:177794 [7] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:177794:177794 [7] NCCL INFO NET/IB: [2] mlx5_2:uverbs2:1/RoCE provider=Mlx5 speed=400000 context=0x558f83b735d0 pciPath=/sys/devices/pci0000:37/0000:37:01.0/0000:38:00.0/0000:39:01.0/0000:3b:00.0 ar=0
+tpgds-aihub0007:177794:177794 [7] NCCL INFO NET/IB : Made virtual device [2] name=mlx5_2 speed=400000 ndevs=1
+tpgds-aihub0007:177793:177793 [6] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:177789:177789 [2] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+tpgds-aihub0007:177789:177789 [2] NCCL INFO NCCL_IB_DISABLE set by environment to 0.
+tpgds-aihub0007:177793:177793 [6] NCCL INFO NET/IB: [0] mlx5_0:uverbs0:1/RoCE provider=Mlx5 speed=400000 context=0x558e4a17b8d0 pciPath=/sys/devices/pci0000:15/0000:15:01.0/0000:16:00.0/0000:17:01.0/0000:19:00.0 ar=0
+tpgds-aihub0007:177793:177793 [6] NCCL INFO NET/IB : Made virtual device [0] name=mlx5_0 speed=400000 ndevs=1
+tpgds-aihub0007:177789:177789 [2] NCCL INFO NCCL_SOCKET_IFNAME set by environment to enp25s0np0
+tpgds-aihub0007:177789:177789 [2] NCCL INFO NCCL_IB_HCA set to mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11
+tpgds-aihub0007:177787:177787 [0] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:177788:177788 [1] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:177787:177787 [0] NCCL INFO NET/IB: [5] mlx5_5:uverbs5:1/RoCE provider=Mlx5 speed=400000 context=0x557a90dfa330 pciPath=/sys/devices/pci0000:59/0000:59:01.0/0000:5a:00.0/0000:5b:00.0/0000:5c:00.0 ar=0
+
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ sudo find / -name libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda12/lib/nccl_ofi/libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/lib/nccl_ofi/libnccl-net.so
+[dcbsr_dev@tpgds-aihub0003 ~]$ 
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 models]$ sudo find / -name libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda12/lib/nccl_ofi/libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/lib/nccl_ofi/libnccl-net.so
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 models]$ 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 models]$ sudo find / -name libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda12/lib/nccl_ofi/libnccl-net.so
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/lib/nccl_ofi/libnccl-net.so
+
+
+
