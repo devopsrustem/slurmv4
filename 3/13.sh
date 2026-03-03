@@ -602,6 +602,22 @@ Mar 03 18:39:35 tpgds-aihub0008 nv-fabricmanager[5219]: Successfully configured 
 Mar 03 18:39:35 tpgds-aihub0008 nvidia-fabricmanager-start.sh[5075]: Started "Nvidia Fabric Manager"
 Mar 03 18:39:35 tpgds-aihub0008 systemd[1]: Started NVIDIA fabric manager service.
 
+Попробуй отключить NVSwitch для NCCL — заставь использовать только PCIe/RoCE:
+
+bash
+NCCL_NVLS_ENABLE=0 \
+NCCL_P2P_DISABLE=1 \
+NCCL_SHM_DISABLE=0 \
+Или проверь какой GPU висит на порту 60:
+
+bash
+# На 0007:
+nvidia-smi nvlink -s -i 0,1,2,3,4,5,6,7 2>/dev/null | grep -E "Error|Inactive|port 60"
+
+# И посмотри статус всех NVLink портов:
+nvidia-smi nvlink -e -i 0 2>/dev/null | head -20
+Если один GPU имеет дефектный NVLink порт — NCCL может вечно ждать передачи через него.
+
 
 
 
