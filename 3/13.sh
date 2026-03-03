@@ -661,3 +661,23 @@ bash
 nvidia-smi nvlink -s 2>/dev/null | grep -i "inactive\|error\|down"
 Если NCCL_P2P_DISABLE=1 поможет — значит проблема именно в NVSwitch3 Link 60.
 
+
+
+
+
+
+
+
+[2026-03-03 20:06:13 TP0] Custom allreduce is disabled because this process group spans across nodes.
+[2026-03-03 20:06:13 TP6] Custom allreduce is disabled because this process group spans across nodes.
+[2026-03-03 20:06:13 TP7] Custom allreduce is disabled because this process group spans across nodes.
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
