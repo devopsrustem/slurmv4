@@ -78,4 +78,6 @@ tpgds-aihub0007:177787:177787 [0] NCCL INFO NET/IB: [5] mlx5_5:uverbs5:1/RoCE pr
 /opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/lib/nccl_ofi/libnccl-net.so
 
 
-
+NCCL_ALGO=Ring \
+NCCL_PROTO=Simple \
+NCCL_TREE_THRESHOLD=0 \
