@@ -18,3 +18,10 @@ tpgds-aihub0007:177793:177793 [6] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f24
 tpgds-aihub0007:177793:177793 [6] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
 
 https://github.com/NVIDIA/nccl/issues/1534
+
+
+NCCL_ALGO=Ring \
+NCCL_PROTO=Simple \
+Это принудительно переключит на Ring алгоритм вместо Tree.
+Убей текущие процессы на 0007/0008:
+bashpkill -f sglang
