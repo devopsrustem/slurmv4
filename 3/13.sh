@@ -505,3 +505,36 @@ nvidia-smi | head -3
 cat /proc/driver/nvidia/versionдрайвер точно не при чем7:36 PMДиагностировал зависание GPU после инициализации NCCLДиагностировал зависание GPU после инициализации NCCLТогда посмотрим что именно крутится на GPU:
 bash# На 0007 - какие CUDA kernels выполняются:
 nvidia-smi pmon -c 3 -s u
+
+
+[dcbsr_dev@tpgds-aihub0007 ~]$ nvidia-smi pmon -c 3 -s u
+# gpu         pid   type     sm    mem    enc    dec    jpg    ofa    command 
+# Idx           #    C/G      %      %      %      %      %      %    name 
+    0      13532     C     99      0      -      -      -      -    sglang::schedul
+    1      13533     C     99      0      -      -      -      -    sglang::schedul
+    2      13534     C     99      0      -      -      -      -    sglang::schedul
+    3      13535     C     99      0      -      -      -      -    sglang::schedul
+    4      13536     C     99      0      -      -      -      -    sglang::schedul
+    5      13537     C     99      0      -      -      -      -    sglang::schedul
+    6      13538     C     99      0      -      -      -      -    sglang::schedul
+    7      13539     C     99      0      -      -      -      -    sglang::schedul
+    0      13532     C     99      0      -      -      -      -    sglang::schedul
+    1      13533     C     99      0      -      -      -      -    sglang::schedul
+    2      13534     C     99      0      -      -      -      -    sglang::schedul
+    3      13535     C     99      0      -      -      -      -    sglang::schedul
+    4      13536     C     99      0      -      -      -      -    sglang::schedul
+    5      13537     C     99      0      -      -      -      -    sglang::schedul
+    6      13538     C     99      0      -      -      -      -    sglang::schedul
+    7      13539     C     99      0      -      -      -      -    sglang::schedul
+    0      13532     C     99      0      -      -      -      -    sglang::schedul
+    1      13533     C     99      0      -      -      -      -    sglang::schedul
+    2      13534     C     99      0      -      -      -      -    sglang::schedul
+    3      13535     C    100      0      -      -      -      -    sglang::schedul
+    4      13536     C     99      0      -      -      -      -    sglang::schedul
+    5      13537     C     99      0      -      -      -      -    sglang::schedul
+    6      13538     C     99      0      -      -      -      -    sglang::schedul
+    7      13539     C     99      0      -      -      -      -    sglang::schedul
+[dcbsr_dev@tpgds-aihub0007 ~]$ cat /proc/driver/nvidia/version
+NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  590.48.01  Release Build  (root@tpgds-aihub0007)  Mon Mar  2 03:02:25 PM MSK 2026
+GCC version:  gcc version 11.5.0 20240719 (Platform V SberLinux 11.5.0-11) (GCC) 
+[dcbsr_dev@tpgds-aihub0007 ~]$ 
