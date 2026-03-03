@@ -631,3 +631,30 @@ modinfo gdrdrv 2>/dev/null | grep filename
 ls: cannot access '/dev/gdrdrv': No such file or directory
 [dcbsr_dev@tpgds-aihub0003 ~]$ modinfo gdrdrv 2>/dev/null | grep filename
 [dcbsr_dev@tpgds-aihub0003 ~]$ 
+
+
+
+
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ sudo find / -name libcudart.so.13
+/usr/local/targets/x86_64-linux/lib/libcudart.so.13
+/usr/local/cuda-13.1/targets/x86_64-linux/lib/libcudart.so.13
+/usr/local/cuda-13.1/lib64/libcudart.so.13
+/app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/nvidia/cu13/lib/libcudart.so.13
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sudo find / -name libcudart.so.13
+find: ‘/proc/205601’: No such file or directory
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
+[dcbsr_dev@tpgds-aihub0003 ~]$ SGLANG_HOST_IP=10.99.91.49 MC_GID_INDEX=3 MC_TCP_BIND_ADDRESS=10.99.91.49 SGLANG_LOCAL_IP_NIC=ens3np0 GLOO_SOCKET_FAMILY=AF_INET GLOO_SOCKET_IFNAME=ens3np0 NCCL_SOCKET_IFNAME=ens3np0 NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7 NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_IB_DISABLE=0 NCCL_NET_GDR_LEVEL=PIX NCCL_NVLS_ENABLE=0 NCCL_CROSS_NIC=1 NCCL_TIMEOUT=600 CUDA_DEVICE_MAX_CONNECTIONS=1 PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false /opt/mooncake-libs/run-with-new-libstdc.sh python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/ --trust-remote-code   --tp-size 16 --host 10.99.91.49 --port 30001   --dist-init-addr 10.99.91.49:5000 --nnodes 2 --node-rank 0   --mem-fraction-static 0.8 --disaggregation-mode decode   --disaggregation-transfer-backend nixl   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_7   --max-running-requests 128
+tpgds-aihub0007:203921:203921 [4] NCCL INFO NCCL_IB_HCA set to mlx5_0
+tpgds-aihub0007:203923:203923 [6] NCCL INFO NET/Plugin: libcudart.so.13: cannot open shared object file: No such file or directory
+tpgds-aihub0007:203923:203923 [6] NCCL INFO NCCL_IB_DISABLE set by environment to 0.
+tpgds-aihub0007:203924:203924 [7] NCCL INFO NET/Plugin: libcudart.so.13: cannot open shared object file: No such file or directory
+tpgds-aihub0007:203924:203924 [7] NCCL INFO NCCL_IB_DISABLE set by environment to 0.
+tpgds-aihub0007:203923:203923 [6] NCCL INFO NCCL_SOCKET_IFNAME set by environment to enp25s0np0
+
+
+
+
