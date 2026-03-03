@@ -133,3 +133,32 @@ cat /proc/$(pgrep -f "scheduler_TP0" | head -1)/wchan
 
 # И стек вызовов:
 sudo cat /proc/$(pgrep -f "scheduler_TP0" | head -1)/stack
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ pgrep -a sglang
+207007 sglang::scheduler_TP8                                                                                                                                 
+207008 sglang::scheduler_TP9                                                                                                                                 
+207009 sglang::scheduler_TP10                                                                                                                                
+207010 sglang::scheduler_TP11                                                                                                                                
+207011 sglang::scheduler_TP12                                                                                                                                
+207012 sglang::scheduler_TP13                                                                                                                                
+207013 sglang::scheduler_TP14                                                                                                                                
+207014 sglang::scheduler_TP15                                                                                                                                 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ pgrep -a python
+206836 python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.63 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 1 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
+207006 /app/sglang/sglang-0.5.9/bin/python3 -c from multiprocessing.resource_tracker import main;main(76)
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ pgrep -a sglang
+222221 sglang::scheduler_TP0                                                                                                                                 
+222222 sglang::scheduler_TP1                                                                                                                                 
+222223 sglang::scheduler_TP2                                                                                                                                 
+222224 sglang::scheduler_TP3                                                                                                                                 
+222225 sglang::scheduler_TP4                                                                                                                                 
+222226 sglang::scheduler_TP5                                                                                                                                 
+222227 sglang::scheduler_TP6                                                                                                                                 
+222228 sglang::scheduler_TP7                                                                                                                                  
+222229 sglang::detokenizer                                                                                                                                    
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ pgrep -a python
+222051 python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.59 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
+222220 /app/sglang/sglang-0.5.9/bin/python3 -c from multiprocessing.resource_tracker import main;main(76)
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
