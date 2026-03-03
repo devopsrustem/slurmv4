@@ -486,3 +486,22 @@ SGLANG_DISABLE_OUTLINES_DISK_CACHE=0
 
 find /app/tmp/torchinductor_dcbsr_dev -type f | wc -l
 watch -n 15 'find /app/tmp/torchinductor_dcbsr_dev -type f | wc -l'
+
+
+# На 0007 - простой тест без sglang:
+python3 -c "
+import torch
+print('CUDA:', torch.cuda.is_available())
+print('GPU count:', torch.cuda.device_count())
+x = torch.randn(1000, 1000).cuda()
+y = torch.randn(1000, 1000).cuda()
+z = torch.matmul(x, y)
+torch.cuda.synchronize()
+print('matmul OK:', z.shape)
+"
+И сравни версию драйвера с 0003:
+bash# На 0007 и 0003:
+nvidia-smi | head -3
+cat /proc/driver/nvidia/versionдрайвер точно не при чем7:36 PMДиагностировал зависание GPU после инициализации NCCLДиагностировал зависание GPU после инициализации NCCLТогда посмотрим что именно крутится на GPU:
+bash# На 0007 - какие CUDA kernels выполняются:
+nvidia-smi pmon -c 3 -s u
