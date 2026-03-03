@@ -578,3 +578,30 @@ tpgds-aihub0008:181414:181414 [3] NCCL INFO Init timings - ncclCommInitRank: ran
 tpgds-aihub0008:181413:181413 [2] NCCL INFO Init timings - ncclCommInitRank: rank 10 nranks 16 total 1.48 (kernels 0.25, alloc 1.02, bootstrap 0.01, allgathers 0.01, topo 0.05, graphs 0.00, connections 0.11, rest 0.03)
 
 висит
+
+так установил (как на aihub3)
+ 1414  [ 2026-02-24 19:27:04 MSK ] unzip master.zip
+ 1415  [ 2026-02-24 19:27:09 MSK ] cd gdrcopy-master/
+ 1416  [ 2026-02-24 19:27:15 MSK ] make clean
+ 1417  [ 2026-02-24 19:27:21 MSK ] make prefix=$HOME/gdrcopy_install CUDA=/usr/local/cuda-13.1 lib
+ 1418  [ 2026-02-24 19:27:28 MSK ] make prefix=$HOME/gdrcopy_install install
+ 1419  [ 2026-02-24 19:28:10 MSK ] ls -la $HOME/gdrcopy_install/lib/
+ 1420  [ 2026-02-24 19:28:16 MSK ] ls -la $HOME/gdrcopy_install/include/
+
+
+ ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ls -la $HOME/gdrcopy_install/lib/
+total 32
+drwxr-xr-x 2 dcbsr_dev dcbsr_dev    72 Mar  3 13:04 .
+drwxr-xr-x 5 dcbsr_dev dcbsr_dev    43 Mar  3 13:04 ..
+lrwxrwxrwx 1 dcbsr_dev dcbsr_dev    14 Mar  3 13:04 libgdrapi.so -> libgdrapi.so.2
+lrwxrwxrwx 1 dcbsr_dev dcbsr_dev    16 Mar  3 13:04 libgdrapi.so.2 -> libgdrapi.so.2.5
+-rwxr-xr-x 1 dcbsr_dev dcbsr_dev 31352 Mar  3 13:04 libgdrapi.so.2.5
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ls -la $HOME/gdrcopy_install/include/
+total 12
+drwxr-xr-x 2 dcbsr_dev dcbsr_dev   41 Mar  3 13:04 .
+drwxr-xr-x 5 dcbsr_dev dcbsr_dev   43 Mar  3 13:04 ..
+-rw-rw-r-- 1 dcbsr_dev dcbsr_dev 7887 Mar  3 13:04 gdrapi.h
+-rw-rw-r-- 1 dcbsr_dev dcbsr_dev  332 Mar  3 13:04 gdrconfig.h
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
