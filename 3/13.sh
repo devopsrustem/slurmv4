@@ -365,3 +365,12 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
   --max-running-requests 128
 Запускай сначала 0007, потом 0008.
 
+bashSGLANG_LOGGING_LEVEL=DEBUG \
+NCCL_DEBUG=INFO \
+NCCL_DEBUG_SUBSYS=INIT,NET \
+LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
+SGLANG_HOST_IP=10.99.91.59 ...
+Или если хочешь совсем подробно:
+bashSGLANG_LOGGING_LEVEL=DEBUG \
+TORCH_DISTRIBUTED_DEBUG=DETAIL \
+NCCL_DEBUG=WARN \
