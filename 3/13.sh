@@ -162,3 +162,19 @@ sudo cat /proc/$(pgrep -f "scheduler_TP0" | head -1)/stack
 222051 python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.59 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
 222220 /app/sglang/sglang-0.5.9/bin/python3 -c from multiprocessing.resource_tracker import main;main(76)
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
+
+
+Процессы живы! На 0007 даже detokenizer запущен — это хороший знак, значит оно дальше продвинулось. Проверь на чём висит главный python процесс:
+bash# На 0007:
+cat /proc/222051/wchan
+cat /proc/222051/status | grep -E "State|VmRSS|VmPeak"
+
+# На 0008:
+cat /proc/206836/wchan
+cat /proc/206836/status | grep -E "State|VmRSS|VmPeak"
+И проверь память GPU сейчас:
+bash# На обоих:
+nvidia-smi --query-gpu=memory.used,memory.free --format=csv
+Скорее всего SGLang сейчас инициализирует NIXL/disaggregation engine и ждёт ответа от prefill. Это может занять несколько минут.
