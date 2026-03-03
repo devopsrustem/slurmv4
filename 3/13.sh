@@ -468,3 +468,8 @@ bashfind /app ~/.cache /tmp -name "*.cubin" -newer /proc/1 2>/dev/null | grep -v
 [dcbsr_dev@tpgds-aihub0008 ~]$ 
 
 
+# Где реально компилирует:
+sudo lsof -p $(pgrep -f "scheduler_TP0") 2>/dev/null | grep -E "\.so|\.cubin|\.ptx|cache" | head -20
+
+# Переменная окружения для пути кэша:
+cat /proc/$(pgrep -f "scheduler_TP0")/environ | tr '\0' '\n' | grep -iE "cache|gemm|triton"
