@@ -284,3 +284,28 @@ ls ~/.cache/deep_gemm/ 2>/dev/null || ls /tmp/deep_gemm* 2>/dev/null
 find /home -name "*.cu" -newer /tmp 2>/dev/null | head -5
 На 0003/0006 этот кэш уже есть, поэтому они стартуют быстро. На 0007/0008 — компилируется с нуля молча.
 
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ lsof -p 222051 -i 2>/dev/null
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ top -b -n 1 -p $(pgrep -d',' -f "scheduler_TP|python3")
+top - 14:43:35 up 23:29,  2 users,  load average: 9.20, 9.12, 9.03
+Tasks:  10 total,   8 running,   2 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  4.3 us,  0.5 sy,  0.0 ni, 95.2 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+MiB Mem : 2062969.+total, 1914349.+free, 106780.5 used, 102069.0 buff/cache
+MiB Swap:   4096.0 total,   4096.0 free,      0.0 used. 1956188.+avail Mem 
+
+    PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 222221 dcbsr_d+  20   0  222.5g   1.6g 614356 R 200.0   0.1  91:26.46 sglang::schedul
+ 222222 dcbsr_d+  20   0  222.0g   1.5g 607692 R 106.7   0.1  45:55.31 sglang::schedul
+ 222225 dcbsr_d+  20   0  222.0g   1.5g 606420 R 106.7   0.1  45:53.52 sglang::schedul
+ 222223 dcbsr_d+  20   0  222.0g   1.5g 612256 R 100.0   0.1  45:53.99 sglang::schedul
+ 222224 dcbsr_d+  20   0  222.0g   1.5g 607680 R 100.0   0.1  45:53.43 sglang::schedul
+ 222226 dcbsr_d+  20   0  222.0g   1.5g 612860 R 100.0   0.1  45:53.91 sglang::schedul
+ 222227 dcbsr_d+  20   0  222.0g   1.5g 609964 R 100.0   0.1  45:54.45 sglang::schedul
+ 222228 dcbsr_d+  20   0  222.0g   1.5g 612520 R 100.0   0.1  45:53.54 sglang::schedul
+ 222051 dcbsr_d+  20   0   51.0g   1.0g 404548 S   0.0   0.1   0:23.63 python3
+ 222220 dcbsr_d+  20   0   18456  14720   8552 S   0.0   0.0   0:00.01 python3
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ls ~/.cache/deep_gemm/ 2>/dev/null || ls /tmp/deep_gemm* 2>/dev/null
+cache  tmp
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ find /home -name "*.cu" -newer /tmp 2>/dev/null | head -5
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
