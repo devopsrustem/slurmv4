@@ -621,3 +621,29 @@ nvidia-smi nvlink -e -i 0 2>/dev/null | head -20
 
 
 
+
+[  117.984502] nvidia-nvswitch3: SXid (PCI:0000:08:00.0): 22013, Non-fatal, Link 60 Minion Link DLREQ interrupt
+[  117.985304] nvidia-nvswitch3: SXid (PCI:0000:08:00.0): 22013, Severity 0 Engine instance 60 Sub-engine instance 00
+[  117.986807] nvidia-nvswitch3: SXid (PCI:0000:08:00.0): 22013, Data {0x0000003c, 0x0000003c, 0x00000000, 0x0000003c, 0x80000302, 0x00000000, 0x00000000, 0x00000000, 0x00000000}
+
+
+
+ 4428.423595] bond0: (slave enp83s0f0np0): speed changed to 0 on port 2
+[ 4428.434938] bond0: (slave enp83s0f0np0): link status definitely down, disabling slave
+[ 4435.115811] mlx5_core 0000:53:00.0 enp83s0f0np0: Link down
+[ 4435.195065] bond0: (slave enp83s0f0np0): link status definitely down, disabling slave
+[ 4441.768101] mlx5_core 0000:53:00.0 enp83s0f0np0: Link up
+[ 4441.769587] mlx5_core 0000:53:00.0 mlx5_3: Port: 1 Link ACTIVE
+[ 4441.852238] bond0: (slave enp83s0f0np0): link status definitely up, 100000 Mbps full duplex
+[ 4443.968257] mlx5_core 0000:53:00.0 enp83s0f0np0: Link down
+[ 4443.974372] mlx5_core 0000:53:00.0 mlx5_3: Port: 1 Link DOWN
+[ 4443.975417] bond0: (slave enp83s0f0np0): speed changed to 0 on port 2
+[ 4444.035309] bond0: (slave enp83s0f0np0): link status definitely down, disabling slave
+[ 4450.318539] mlx5_core 0000:53:00.0 enp83s0f0np0: Link up
+[ 4450.320122] mlx5_core 0000:53:00.0 mlx5_3: Port: 1 Link ACTIVE
+[ 4450.381185] bond0: (slave enp83s0f0np0): link status definitely up, 100000 Mbps full duplex
+[ 4450.918521] mlx5_core 0000:53:00.0 enp83s0f0np0: Link down
+[ 4450.934787] mlx5_core 0000:53:00.0 mlx5_3: Port: 1 Link DOWN
+[ 4450.935194] bond0: (slave enp83s0f0np0): speed changed to 0 on port 2
+[ 4451.003393] bond0: (slave enp83s0f0np0): link status definitely down, disabling slave
+
