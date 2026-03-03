@@ -657,4 +657,4 @@ tpgds-aihub0007:203923:203923 [6] NCCL INFO NCCL_SOCKET_IFNAME set by environmen
 
 
 
-
+LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH 
