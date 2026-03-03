@@ -447,3 +447,11 @@ tmpfs                          202G  8.0K  202G   1% /run/user/12003
 [dcbsr_dev@tpgds-aihub0008 ~]$ find ~/.cache/deep_gemm/ -name "*.cubin" -o -name "*.so" 2>/dev/null | wc -l
 0
 
+
+bash# На 0008 - актуальный PID python:
+pgrep -a python3 | grep sglang
+
+# И сколько файлов открыто:
+sudo lsof -p $(pgrep python3 | head -1) 2>/dev/null | wc -l
+И проверь куда сейчас пишет deep_gemm — возможно путь другой:
+bashfind /app ~/.cache /tmp -name "*.cubin" -newer /proc/1 2>/dev/null | grep -v triton | head -10
