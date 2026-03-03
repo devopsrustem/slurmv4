@@ -227,3 +227,17 @@ for pid in $(pgrep -f "scheduler_TP"); do
   echo -n "$(cat /proc/$pid/comm) ($pid): "
   cat /proc/$pid/wchan
 done
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ for pid in $(pgrep -f "scheduler_TP"); do
+  echo -n "$(cat /proc/$pid/comm) ($pid): "
+  cat /proc/$pid/wchan
+done
+sglang::schedul (222221): 0sglang::schedul (222222): 0sglang::schedul (222223): 0sglang::schedul (222224): 0sglang::schedul (222225): 0sglang::schedul (222226): 0sglang::schedul (222227): 0sglang::schedul (222228): 0((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ for pid in $(pgrep -f "scheduler_TP"); do
+  echo -n "$(cat /proc/$pid/comm) ($pid): "
+  cat /proc/$pid/wchan
+done
+sglang::schedul (207007): 0sglang::schedul (207008): 0sglang::schedul (207009): 0sglang::schedul (207010): 0sglang::schedul (207011): 0sglang::schedul (207012): 0sglang::schedul (207013): 0sglang::schedul (207014): 0((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ 
