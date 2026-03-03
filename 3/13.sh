@@ -374,3 +374,33 @@ SGLANG_HOST_IP=10.99.91.59 ...
 bashSGLANG_LOGGING_LEVEL=DEBUG \
 TORCH_DISTRIBUTED_DEBUG=DETAIL \
 NCCL_DEBUG=WARN \
+
+
+tpgds-aihub0007:11218:11218 [3] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:11218:11218 [3] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+tpgds-aihub0007:11218:11218 [3] NCCL INFO NET/IB: [11] mlx5_11:uverbs11:1/RoCE provider=Mlx5 speed=400000 context=0x55c3759a11b0 pciPath=/sys/devices/pci0000:d7/0000:d7:01.0/0000:d8:00.0/0000:d9:00.0/0000:da:00.0 ar=0
+
+
+tpgds-aihub0007:11222:11222 [7] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+tpgds-aihub0007:11222:11222 [7] NCCL INFO NCCL_IB_HCA set to mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11
+tpgds-aihub0007:11222:11222 [7] NCCL INFO Call to mlx5dv_get_data_direct_sysfs_path failed with error No such device errno 19
+
+
+tpgds-aihub0007:11215:11215 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so. 
+
+
+[dcbsr_dev@tpgds-aihub0008 ~]$ find ~/.cache/deep_gemm/ -name "*.cubin" -o -name "*.so" 2>/dev/null | wc -l
+0
+
+
+tpgds-aihub0007:13538:13538 [6] NCCL INFO ncclCommInitRank comm 0x55cdb22a7bb0 rank 6 nranks 16 cudaDev 6 nvmlDev 6 busId ba000 commId 0x9e2e2d778bf0e3a8 - Init COMPLETE
+tpgds-aihub0007:13532:13532 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+tpgds-aihub0007:13538:13538 [6] NCCL INFO Init timings - ncclCommInitRank: rank 6 nranks 16 total 1.52 (kernels 0.20, alloc 1.02, bootstrap 0.02, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.00)
+tpgds-aihub0007:13536:13536 [4] NCCL INFO Init timings - ncclCommInitRank: rank 4 nranks 16 total 1.53 (kernels 0.26, alloc 0.98, bootstrap 0.01, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.01)
+tpgds-aihub0007:13534:13534 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+tpgds-aihub0007:13532:13532 [0] NCCL INFO ncclCommInitRank comm 0x55bd73c0f7e0 rank 0 nranks 16 cudaDev 0 nvmlDev 0 busId 18000 commId 0x9e2e2d778bf0e3a8 - Init COMPLETE
+tpgds-aihub0007:13534:13534 [2] NCCL INFO ncclCommInitRank comm 0x55c4963dfa60 rank 2 nranks 16 cudaDev 2 nvmlDev 2 busId 3a000 commId 0x9e2e2d778bf0e3a8 - Init COMPLETE
+tpgds-aihub0007:13532:13532 [0] NCCL INFO Init timings - ncclCommInitRank: rank 0 nranks 16 total 1.54 (kernels 0.26, alloc 0.99, bootstrap 0.01, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.00)
+tpgds-aihub0007:13534:13534 [2] NCCL INFO Init timings - ncclCommInitRank: rank 2 nranks 16 total 1.53 (kernels 0.20, alloc 0.94, bootstrap 0.11, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.00)
+
+
