@@ -604,4 +604,24 @@ drwxr-xr-x 5 dcbsr_dev dcbsr_dev   43 Mar  3 13:04 ..
 -rw-rw-r-- 1 dcbsr_dev dcbsr_dev  332 Mar  3 13:04 gdrconfig.h
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
 
+bash
+lsmod | grep gdrdrv
+ls /dev/gdrdrv
+Если модуля нет — нужно собрать и загрузить:
+
+bash
+cd ~/gdrcopy-master
+make CUDA=/usr/local/cuda-13.1 drv
+sudo insmod src/gdrdrv/gdrdrv.ko
+lsmod | grep gdrdrv
+ls /dev/gdrdrv
+Если insmod требует подписи (secure boot) или нет прав — покажи ошибку.
+
+И проверь как это сделано на 0003:
+
+bash
+# На 0003:
+lsmod | grep gdrdrv
+ls /dev/gdrdrv
+modinfo gdrdrv 2>/dev/null | grep filename
 
