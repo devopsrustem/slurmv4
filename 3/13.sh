@@ -309,3 +309,22 @@ cache  tmp
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ find /home -name "*.cu" -newer /tmp 2>/dev/null | head -5
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
 
+
+
+
+
+
+
+
+
+
+
+# Сколько файлов уже скомпилировано:
+find ~/.cache/deep_gemm/ -name "*.cubin" -o -name "*.so" 2>/dev/null | wc -l
+
+# Активность в tmp (куда компилирует):
+ls -lt ~/.cache/deep_gemm/tmp/ | head -10
+
+# Сравни с 0003 - сколько там файлов:
+# (на 0003):
+find ~/.cache/deep_gemm/ -type f | wc -l
