@@ -538,3 +538,70 @@ nvidia-smi pmon -c 3 -s u
 NVRM version: NVIDIA UNIX Open Kernel Module for x86_64  590.48.01  Release Build  (root@tpgds-aihub0007)  Mon Mar  2 03:02:25 PM MSK 2026
 GCC version:  gcc version 11.5.0 20240719 (Platform V SberLinux 11.5.0-11) (GCC) 
 [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[dcbsr_dev@tpgds-aihub0007 ~]$ systemctl status nvidia-fabricmanager
+● nvidia-fabricmanager.service - NVIDIA fabric manager service
+     Loaded: loaded (/usr/lib/systemd/system/nvidia-fabricmanager.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-03-03 18:39:19 MSK; 1h 4min ago
+    Process: 4776 ExecStartPre=/usr/bin/nvidia-fabricmanager-start.sh --mode precheck (code=exited, status=0/SUCCESS)
+    Process: 5037 ExecStart=/usr/bin/nvidia-fabricmanager-start.sh --mode start (code=exited, status=0/SUCCESS)
+   Main PID: 5183 (nv-fabricmanage)
+      Tasks: 18 (limit: 3355442)
+     Memory: 23.4M (peak: 30.9M)
+        CPU: 2.659s
+     CGroup: /system.slice/nvidia-fabricmanager.service
+             └─5183 /usr/bin/nv-fabricmanager -c /usr/share/nvidia/nvswitch/fabricmanager.cfg
+
+Mar 03 18:38:51 tpgds-aihub0007 systemd[1]: Starting NVIDIA fabric manager service...
+Mar 03 18:38:51 tpgds-aihub0007 nvidia-fabricmanager-start.sh[5037]: Detected Pre-NVL5 system
+Mar 03 18:39:18 tpgds-aihub0007 nv-fabricmanager[5183]: Connected to 1 node.
+Mar 03 18:39:19 tpgds-aihub0007 nv-fabricmanager[5183]: Successfully configured all the available NVSwitches to route GPU NVLink traffic. NVLink Peer-to-Peer support will be enabled on>
+Mar 03 18:39:19 tpgds-aihub0007 nvidia-fabricmanager-start.sh[5037]: Started "Nvidia Fabric Manager"
+Mar 03 18:39:19 tpgds-aihub0007 systemd[1]: Started NVIDIA fabric manager service.
+Mar 03 18:39:57 tpgds-aihub0007 nv-fabricmanager[5183]: detected NVSwitch non-fatal error 22013 on NodeId 0 on NVSwitch pci bus id 00000000:08:00.0 physical id 3 port 60
+
+
+
+
+
+
+[dcbsr_dev@tpgds-aihub0008 ~]$ systemctl status nvidia-fabricmanager
+● nvidia-fabricmanager.service - NVIDIA fabric manager service
+     Loaded: loaded (/usr/lib/systemd/system/nvidia-fabricmanager.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-03-03 18:39:35 MSK; 1h 4min ago
+    Process: 4806 ExecStartPre=/usr/bin/nvidia-fabricmanager-start.sh --mode precheck (code=exited, status=0/SUCCESS)
+    Process: 5075 ExecStart=/usr/bin/nvidia-fabricmanager-start.sh --mode start (code=exited, status=0/SUCCESS)
+   Main PID: 5219 (nv-fabricmanage)
+      Tasks: 18 (limit: 3355442)
+     Memory: 24.1M (peak: 32.7M)
+        CPU: 2.748s
+     CGroup: /system.slice/nvidia-fabricmanager.service
+             └─5219 /usr/bin/nv-fabricmanager -c /usr/share/nvidia/nvswitch/fabricmanager.cfg
+
+Mar 03 18:39:05 tpgds-aihub0008 systemd[1]: Starting NVIDIA fabric manager service...
+Mar 03 18:39:05 tpgds-aihub0008 nvidia-fabricmanager-start.sh[5075]: Detected Pre-NVL5 system
+Mar 03 18:39:35 tpgds-aihub0008 nv-fabricmanager[5219]: Connected to 1 node.
+Mar 03 18:39:35 tpgds-aihub0008 nv-fabricmanager[5219]: Successfully configured all the available NVSwitches to route GPU NVLink traffic. NVLink Peer-to-Pe>
+Mar 03 18:39:35 tpgds-aihub0008 nvidia-fabricmanager-start.sh[5075]: Started "Nvidia Fabric Manager"
+Mar 03 18:39:35 tpgds-aihub0008 systemd[1]: Started NVIDIA fabric manager service.
+
+
+
+
