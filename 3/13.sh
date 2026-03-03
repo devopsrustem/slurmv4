@@ -25,3 +25,17 @@ NCCL_PROTO=Simple \
 Это принудительно переключит на Ring алгоритм вместо Tree.
 Убей текущие процессы на 0007/0008:
 bashpkill -f sglang
+
+
+python3 -c "import torch; print(torch.cuda.nccl.version())"
+# или
+find / -name "libnccl.so*" 2>/dev/null
+Но обновление NCCL в production среде — это риск, нужно согласование. Плюс SGLang 0.5.9 завязан на конкретную версию NCCL через PyTorch.
+Быстрее и безопаснее — просто добавить NCCL_ALGO=Ring NCCL_PROTO=Simple. Это решает проблему без обновления, именно так и советуют в комментариях к тому же issue как workaround.
+Попробуй сначала Ring/Simple — если заработает, обновление не нужно.мы пока в тестовой11:54 AMПризнал допустимость обновления в тестовой средеПризнал допустимость обновления в тестовой средеThe user is saying they're in a test environment, so updating NCCL is fine.DoneТогда попробуй обновить NCCL через pip:
+bashpip install nvidia-nccl-cu12 --upgrade --break-system-packages
+Или через conda если окружение на conda:
+bashconda install -c conda-forge nccl
+Но сначала проверь версию чтобы понимать с чего стартуем:
+bashpython3 -c "import torch; print(torch.cuda.nccl.version())"
+И параллельно — попробуй NCCL_ALGO=Ring без обновления, это займёт 2 минуты и может сразу решить проблему. Если сработает — обновление вообще не нужно.
