@@ -455,3 +455,16 @@ pgrep -a python3 | grep sglang
 sudo lsof -p $(pgrep python3 | head -1) 2>/dev/null | wc -l
 И проверь куда сейчас пишет deep_gemm — возможно путь другой:
 bashfind /app ~/.cache /tmp -name "*.cubin" -newer /proc/1 2>/dev/null | grep -v triton | head -10
+
+
+
+
+[dcbsr_dev@tpgds-aihub0008 ~]$ pgrep -a python3 | grep sglang
+12885 python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.63 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 1 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
+13053 /app/sglang/sglang-0.5.9/bin/python3 -c from multiprocessing.resource_tracker import main;main(76)
+[dcbsr_dev@tpgds-aihub0008 ~]$ sudo lsof -p $(pgrep python3 | head -1) 2>/dev/null | wc -l
+357
+[dcbsr_dev@tpgds-aihub0008 ~]$ find /app ~/.cache /tmp -name "*.cubin" -newer /proc/1 2>/dev/null | grep -v triton | head -10
+[dcbsr_dev@tpgds-aihub0008 ~]$ 
+
+
