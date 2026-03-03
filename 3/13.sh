@@ -403,4 +403,11 @@ tpgds-aihub0007:13534:13534 [2] NCCL INFO ncclCommInitRank comm 0x55c4963dfa60 r
 tpgds-aihub0007:13532:13532 [0] NCCL INFO Init timings - ncclCommInitRank: rank 0 nranks 16 total 1.54 (kernels 0.26, alloc 0.99, bootstrap 0.01, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.00)
 tpgds-aihub0007:13534:13534 [2] NCCL INFO Init timings - ncclCommInitRank: rank 2 nranks 16 total 1.53 (kernels 0.20, alloc 0.94, bootstrap 0.11, allgathers 0.02, topo 0.05, graphs 0.00, connections 0.20, rest 0.00)
 
+bash
+# На 0008 - смотри все файлы которые создаёт процесс:
+sudo lsof -p 206836 | grep -E "REG|DIR" | grep -v "mem" | tail -20
+
+# Или найди свежие файлы:
+find /tmp /home /root -name "*.cubin" -o -name "*.ptx" 2>/dev/null | head -10
+find /tmp -newer /tmp -maxdepth 3 2>/dev/null | head -20
 
