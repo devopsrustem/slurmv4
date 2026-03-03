@@ -241,3 +241,46 @@ sglang::schedul (222221): 0sglang::schedul (222222): 0sglang::schedul (222223): 
   cat /proc/$pid/wchan
 done
 sglang::schedul (207007): 0sglang::schedul (207008): 0sglang::schedul (207009): 0sglang::schedul (207010): 0sglang::schedul (207011): 0sglang::schedul (207012): 0sglang::schedul (207013): 0sglang::schedul (207014): 0((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# На 0007 - что процесс делает прямо сейчас:
+sudo strace -p 222051 -e trace=futex,connect,sendto,recvfrom 2>&1 | head -30
+
+# Открытые соединения:
+lsof -p 222051 -i 2>/dev/null
+И проверь — может логи пишутся в файл, а не в терминал:
+
+bash
+ls -lt /tmp/*.log 2>/dev/null
+ls -lt /tmp/sglang* 2>/dev/null
+find /tmp -name "*.log" -newer /tmp -maxdepth 2 2>/dev/null
+*.log  нет на серверах - никто не пишет
+
+2:41 PM
+
+Диагностировал застревание процесса после инициализации NCCL
+Диагностировал застревание процесса после инициализации NCCL
+Помнишь — на 0009 было "DeepGEMM JIT 5%"? Может 0007/0008 тоже компилируют JIT но молча. Проверь CPU активность:
+
+bash
+# На 0007 - смотрим что жрёт CPU:
+top -b -n 1 -p $(pgrep -d',' -f "scheduler_TP|python3")
+
+# Есть ли DeepGEMM кэш:
+ls ~/.cache/deep_gemm/ 2>/dev/null || ls /tmp/deep_gemm* 2>/dev/null
+find /home -name "*.cu" -newer /tmp 2>/dev/null | head -5
+На 0003/0006 этот кэш уже есть, поэтому они стартуют быстро. На 0007/0008 — компилируется с нуля молча.
+
