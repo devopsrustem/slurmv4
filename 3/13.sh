@@ -411,3 +411,39 @@ sudo lsof -p 206836 | grep -E "REG|DIR" | grep -v "mem" | tail -20
 find /tmp /home /root -name "*.cubin" -o -name "*.ptx" 2>/dev/null | head -10
 find /tmp -newer /tmp -maxdepth 3 2>/dev/null | head -20
 
+
+
+[dcbsr_dev@tpgds-aihub0008 ~]$ sudo lsof -p 206836 | grep -E "REG|DIR" | grep -v "mem" | tail -20
+[dcbsr_dev@tpgds-aihub0008 ~]$ find /tmp /home /root -name "*.cubin" -o -name "*.ptx" 2>/dev/null | head -10
+/home/dcbsr_dev/.triton/cache/XLJKEP2WX5VVDBMDFU2Y4WRYUXAR5E7FP3CPJKKOAZMAZFIIZIIQ/set_mla_kv_buffer_kernel.ptx
+/home/dcbsr_dev/.triton/cache/XLJKEP2WX5VVDBMDFU2Y4WRYUXAR5E7FP3CPJKKOAZMAZFIIZIIQ/set_mla_kv_buffer_kernel.cubin
+/home/dcbsr_dev/.triton/cache/QVJODX2LGJQSL4RANR55PKYW2ER3INWPVTUMG2ZJSFYWRRAFOILQ/memcpy_triton_kernel.ptx
+/home/dcbsr_dev/.triton/cache/QVJODX2LGJQSL4RANR55PKYW2ER3INWPVTUMG2ZJSFYWRRAFOILQ/memcpy_triton_kernel.cubin
+/home/dcbsr_dev/.triton/cache/IVP3PISPK6O6KGFTMMSIMGFF43ZZRMBMVG4YE7FEJ4XY4A2A5D2A/fused_moe_kernel.ptx
+/home/dcbsr_dev/.triton/cache/IVP3PISPK6O6KGFTMMSIMGFF43ZZRMBMVG4YE7FEJ4XY4A2A5D2A/fused_moe_kernel.cubin
+/home/dcbsr_dev/.triton/cache/BKHG3B4PTU6ANA7UQTVIN4BV6L4KPPPA2WRV2HGQ5RS35RHQ3OPQ/act_and_mul_kernel.ptx
+/home/dcbsr_dev/.triton/cache/BKHG3B4PTU6ANA7UQTVIN4BV6L4KPPPA2WRV2HGQ5RS35RHQ3OPQ/act_and_mul_kernel.cubin
+/home/dcbsr_dev/.triton/cache/HLL6PSAL6VU6JJVUKQQGZWQ3BWLLEMBZSNKLNTWL56SXJ2II3H5A/fused_moe_kernel.ptx
+/home/dcbsr_dev/.triton/cache/HLL6PSAL6VU6JJVUKQQGZWQ3BWLLEMBZSNKLNTWL56SXJ2II3H5A/fused_moe_kernel.cubin
+[dcbsr_dev@tpgds-aihub0008 ~]$ df -h
+Filesystem                     Size  Used Avail Use% Mounted on
+devtmpfs                       4.0M     0  4.0M   0% /dev
+tmpfs                         1008G  253M 1008G   1% /dev/shm
+tmpfs                          403G   12M  403G   1% /run
+efivarfs                       512K  209K  299K  42% /sys/firmware/efi/efivars
+/dev/mapper/rootvg-lvroot      102G  803M  102G   1% /
+/dev/mapper/rootvg-lvusr       117G   40G   78G  35% /usr
+/dev/md127                     769M  449M  265M  63% /boot
+/dev/mapper/rootvg-lvopt       115G  4.3G  111G   4% /opt
+/dev/mapper/rootvg-lvvar       115G  7.6G  108G   7% /var
+/dev/mapper/rootvg-lvhome      104G  830M  104G   1% /home
+/dev/mapper/rootvg-lvtmp       104G  784M  104G   1% /tmp
+tmpfs                           25M  744K   25M   3% /var/log/audit_log_tmpfs
+/dev/md125                     200M  7.4M  193M   4% /boot/efi
+/dev/mapper/rootvg-lvvarcrash   50G  393M   50G   1% /var/crash
+/dev/md0                        28T  2.6T   26T  10% /app
+tmpfs                          202G  8.0K  202G   1% /run/user/12003
+[dcbsr_dev@tpgds-aihub0008 ~]$ find /tmp -newer /tmp -maxdepth 3 2>/dev/null | head -20
+[dcbsr_dev@tpgds-aihub0008 ~]$ find ~/.cache/deep_gemm/ -name "*.cubin" -o -name "*.so" 2>/dev/null | wc -l
+0
+
