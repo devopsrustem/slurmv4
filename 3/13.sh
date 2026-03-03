@@ -128,3 +128,8 @@ tpgds-aihub0007:222223:222223 [2] NCCL INFO TUNER/Plugin: Failed to find ncclTun
 tpgds-aihub0007:222223:222223 [2] NCCL INFO ncclCommInitRank comm 0x558473e12480 rank 2 nranks 16 cudaDev 2 nvmlDev 2 busId 3a000 commId 0xde4443395863ef4a - Init COMPLETE
 tpgds-aihub0007:222223:222223 [2] NCCL INFO Init timings - ncclCommInitRank: rank 2 nranks 16 total 2.18 (kernels 0.25, alloc 1.11, bootstrap 0.53, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.21, rest 0.01)
 
+# На 0007 - на чём заблокирован главный процесс:
+cat /proc/$(pgrep -f "scheduler_TP0" | head -1)/wchan
+
+# И стек вызовов:
+sudo cat /proc/$(pgrep -f "scheduler_TP0" | head -1)/stack
