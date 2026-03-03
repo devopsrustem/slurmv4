@@ -214,3 +214,16 @@ memory.used [MiB], memory.free [MiB]
 1718 MiB, 79363 MiB
 1718 MiB, 79363 MiB
 1718 MiB, 79363 MiB
+
+
+# На 0007:
+for pid in $(pgrep -f "scheduler_TP"); do
+  echo -n "$(cat /proc/$pid/comm) ($pid): "
+  cat /proc/$pid/wchan
+done
+
+# На 0008:
+for pid in $(pgrep -f "scheduler_TP"); do
+  echo -n "$(cat /proc/$pid/comm) ($pid): "
+  cat /proc/$pid/wchan
+done
