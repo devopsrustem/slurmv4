@@ -81,3 +81,39 @@ tpgds-aihub0007:177787:177787 [0] NCCL INFO NET/IB: [5] mlx5_5:uverbs5:1/RoCE pr
 NCCL_ALGO=Ring \
 NCCL_PROTO=Simple \
 NCCL_TREE_THRESHOLD=0 \
+
+
+tpgds-aihub0007:185306:185306 [4] NCCL INFO ncclCommInitRank comm 0x5635705dda90 rank 4 nranks 16 cudaDev 4 nvmlDev 4 busId 9a000 commId 0x221dee7fa4558566 - Init COMPLETE
+tpgds-aihub0007:185302:185302 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+tpgds-aihub0007:185304:185304 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+tpgds-aihub0007:185308:185308 [6] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+tpgds-aihub0007:185303:185303 [1] NCCL INFO Init timings - ncclCommInitRank: rank 1 nranks 16 total 1.57 (kernels 0.25, alloc 0.98, bootstrap 0.04, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.22, rest 0.00)
+tpgds-aihub0007:185306:185306 [4] NCCL INFO Init timings - ncclCommInitRank: rank 4 nranks 16 total 1.54 (kernels 0.25, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.07, graphs 0.00, connections 0.21, rest 0.00)
+tpgds-aihub0007:185302:185302 [0] NCCL INFO ncclCommInitRank comm 0x55a0be47d620 rank 0 nranks 16 cudaDev 0 nvmlDev 0 busId 18000 commId 0x221dee7fa4558566 - Init COMPLETE
+tpgds-aihub0007:185304:185304 [2] NCCL INFO ncclCommInitRank comm 0x55ff90c097e0 rank 2 nranks 16 cudaDev 2 nvmlDev 2 busId 3a000 commId 0x221dee7fa4558566 - Init COMPLETE
+tpgds-aihub0007:185308:185308 [6] NCCL INFO ncclCommInitRank comm 0x55eac75f37e0 rank 6 nranks 16 cudaDev 6 nvmlDev 6 busId ba000 commId 0x221dee7fa4558566 - Init COMPLETE
+tpgds-aihub0007:185302:185302 [0] NCCL INFO Init timings - ncclCommInitRank: rank 0 nranks 16 total 1.58 (kernels 0.25, alloc 0.86, bootstrap 0.17, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.22, rest 0.00)
+tpgds-aihub0007:185304:185304 [2] NCCL INFO Init timings - ncclCommInitRank: rank 2 nranks 16 total 1.54 (kernels 0.25, alloc 0.99, bootstrap 0.00, allgathers 0.01, topo 0.06, graphs 0.00, connections 0.22, rest 0.00)
+tpgds-aihub0007:185308:185308 [6] NCCL INFO Init timings - ncclCommInitRank: rank 6 nranks 16 total 1.54 (kernels 0.25, alloc 0.99, bootstrap 0.01, allgathers 0.01, topo 0.07, graphs 0.00, connections 0.22, rest 0.00)
+tpgds-aihub0007:185308:185308 [6] NCCL INFO AllReduce: opCount 0 sendbuff 0x7fb8ade00400 recvbuff 0x7fb8ade00400 count 1 datatype 7 op 0 root 0 comm 0x55eac75f37e0 [nranks=16] stream 0x55ead176e920
+tpgds-aihub0007:185308:185308 [6] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185307:185307 [5] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f8d11e00400 recvbuff 0x7f8d11e00400 count 1 datatype 7 op 0 root 0 comm 0x56297849a330 [nranks=16] stream 0x56298261b6d0
+tpgds-aihub0007:185307:185307 [5] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185302:185302 [0] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f757de00400 recvbuff 0x7f757de00400 count 1 datatype 7 op 0 root 0 comm 0x55a0be47d620 [nranks=16] stream 0x55a0c85fa4a0
+tpgds-aihub0007:185302:185302 [0] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185302:185302 [0] NCCL INFO AllReduce: 4 Bytes -> Algo RING proto SIMPLE channel{Lo..Hi}={0..0}
+tpgds-aihub0007:185303:185303 [1] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f6713e00400 recvbuff 0x7f6713e00400 count 1 datatype 7 op 0 root 0 comm 0x563d06699bf0 [nranks=16] stream 0x563d10818b20
+tpgds-aihub0007:185303:185303 [1] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185305:185305 [3] NCCL INFO AllReduce: opCount 0 sendbuff 0x7fd39de00400 recvbuff 0x7fd39de00400 count 1 datatype 7 op 0 root 0 comm 0x561cb2ec2cc0 [nranks=16] stream 0x561cbd03ee20
+tpgds-aihub0007:185305:185305 [3] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185304:185304 [2] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f8c71e00400 recvbuff 0x7f8c71e00400 count 1 datatype 7 op 0 root 0 comm 0x55ff90c097e0 [nranks=16] stream 0x55ff9ad83490
+tpgds-aihub0007:185304:185304 [2] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185306:185306 [4] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f7a97e00400 recvbuff 0x7f7a97e00400 count 1 datatype 7 op 0 root 0 comm 0x5635705dda90 [nranks=16] stream 0x56357a75dfe0
+tpgds-aihub0007:185306:185306 [4] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+tpgds-aihub0007:185309:185309 [7] NCCL INFO AllReduce: opCount 0 sendbuff 0x7f4311e00400 recvbuff 0x7f4311e00400 count 1 datatype 7 op 0 root 0 comm 0x55e11d052a20 [nranks=16] stream 0x55e1271cb4f0
+tpgds-aihub0007:185309:185309 [7] NCCL INFO misc/utils.cc:233 memory stack hunk malloc(65536)
+
+[2026-03-03 12:11:38] tpgds-aihub0007:185303:186751 [1] transport/net_ib.cc:2453 NCCL WARN NET/IB: Got completion from peer 10.99.91.63<51161> with status=4 opcode=32614 len=32614 vendor err 81 (Send) localGid ::ffff:10.99.92.59 remoteGids::ffff:10.99.91.63 hca mlx5_1
+tpgds-aihub0007:185303:186751 [1] NCCL INFO transport/net.cc:1227 -> 6
+
+на этом зависает
