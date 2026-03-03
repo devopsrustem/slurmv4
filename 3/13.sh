@@ -473,3 +473,14 @@ sudo lsof -p $(pgrep -f "scheduler_TP0") 2>/dev/null | grep -E "\.so|\.cubin|\.p
 
 # Переменная окружения для пути кэша:
 cat /proc/$(pgrep -f "scheduler_TP0")/environ | tr '\0' '\n' | grep -iE "cache|gemm|triton"
+
+
+[dcbsr_dev@tpgds-aihub0007 ~]$ find ~/.cache/deep_gemm/ -type f | wc -l
+0
+[dcbsr_dev@tpgds-aihub0007 ~]$ sudo lsof -p $(pgrep -f "scheduler_TP0") 2>/dev/null | grep -E "\.so|\.cubin|\.ptx|cache" | head -20
+[dcbsr_dev@tpgds-aihub0007 ~]$ cat /proc/$(pgrep -f "scheduler_TP0")/environ | tr '\0' '\n' | grep -iE "cache|gemm|triton"
+DG_JIT_CACHE_DIR=/home/dcbsr_dev/.cache/deep_gemm
+TORCHINDUCTOR_CACHE_DIR=/app/tmp/torchinductor_dcbsr_dev
+SGLANG_DISABLE_OUTLINES_DISK_CACHE=0
+[dcbsr_dev@tpgds-aihub0007 ~]$ 
+
