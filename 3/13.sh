@@ -625,3 +625,9 @@ lsmod | grep gdrdrv
 ls /dev/gdrdrv
 modinfo gdrdrv 2>/dev/null | grep filename
 
+[dcbsr_dev@tpgds-aihub0003 ~]$ lsmod | grep gdrdrv
+[dcbsr_dev@tpgds-aihub0003 ~]$ lsmod | grep gdrdrv
+[dcbsr_dev@tpgds-aihub0003 ~]$ ls /dev/gdrdrv
+ls: cannot access '/dev/gdrdrv': No such file or directory
+[dcbsr_dev@tpgds-aihub0003 ~]$ modinfo gdrdrv 2>/dev/null | grep filename
+[dcbsr_dev@tpgds-aihub0003 ~]$ 
