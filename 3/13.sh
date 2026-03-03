@@ -647,3 +647,17 @@ nvidia-smi nvlink -e -i 0 2>/dev/null | head -20
 [ 4450.935194] bond0: (slave enp83s0f0np0): speed changed to 0 on port 2
 [ 4451.003393] bond0: (slave enp83s0f0np0): link status definitely down, disabling slave
 
+Попробуй отключить NVLink P2P — заставить NCCL использовать только PCIe:
+
+bash
+NCCL_P2P_DISABLE=1 \
+NCCL_NVLS_ENABLE=0 \
+LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
+SGLANG_HOST_IP=10.99.91.59 ...
+И проверь какой GPU на битом NVLink порту:
+
+bash
+# На 0007:
+nvidia-smi nvlink -s 2>/dev/null | grep -i "inactive\|error\|down"
+Если NCCL_P2P_DISABLE=1 поможет — значит проблема именно в NVSwitch3 Link 60.
+
