@@ -484,3 +484,5 @@ TORCHINDUCTOR_CACHE_DIR=/app/tmp/torchinductor_dcbsr_dev
 SGLANG_DISABLE_OUTLINES_DISK_CACHE=0
 [dcbsr_dev@tpgds-aihub0007 ~]$ 
 
+find /app/tmp/torchinductor_dcbsr_dev -type f | wc -l
+watch -n 15 'find /app/tmp/torchinductor_dcbsr_dev -type f | wc -l'
