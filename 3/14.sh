@@ -18,3 +18,21 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
   --max-running-requests 128
 0008 — то же самое, только SGLANG_HOST_IP=10.99.91.63, --host 10.99.91.63, --node-rank 1.
 Ключевое отличие от предыдущих попыток — убрал NCCL_NET_GDR_LEVEL=PIX и NCCL_CROSS_NIC=1, оставил только mlx5_0. Максимально близко к рабочему torchrun тесту.
+
+
+
+На 0007 (rank 0):
+bashNCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
+NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring \
+torchrun --nproc_per_node=8 --nnodes=2 --node_rank=0 \
+  --master_addr=10.99.91.59 --master_port=29500 \
+  /tmp/test_nccl.py
+На 0008 (rank 1) одновременно:
+bashNCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
+NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring \
+torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 \
+  --master_addr=10.99.91.59 --master_port=29500 \
+  /tmp/test_nccl.py
+Если зависнет — проблема именно в 0007↔0008 inter-node NCCL.
