@@ -576,3 +576,30 @@ sed -n '460,480p' /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang
                             None,
                             residual,
                         )
+
+
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '455,475p' /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/layers/communicator.py
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
+                            inp2=None,
+                            inp2_weight=None,
+                            inp2_epsilon=None,
+                            group_size=128,
+                            dtype_quant=torch.float8_e4m3fn,
+                            res1=None,
+                            output_unquantized_inp1=False,
+                        )
+
+                    else:
+                        hidden_states = self.input_layernorm(hidden_states)
+                else:
+
+                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
+                        hidden_states, *_, residual = fused_rms_mxfp4_quant(
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
