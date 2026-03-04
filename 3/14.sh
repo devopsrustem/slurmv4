@@ -56,3 +56,26 @@ ip addr show enp25s0np0 | grep inet
 host 10.99.91.59
 Если IP реально 10.99.91.59 — добавь в /etc/hosts:
 bashecho "10.99.91.59 tpgds-aihub0007" | sudo tee -a /etc/hosts
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ hostname -I
+10.99.91.59 10.99.92.59 10.99.93.59 10.99.94.59 10.99.95.59 10.99.96.59 10.99.97.59 10.99.98.59 10.73.175.137 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ ip addr show enp25s0np0 | grep inet
+    inet 10.99.91.59/31 scope global noprefixroute enp25s0np0
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ host 10.99.91.59
+59.91.99.10.in-addr.arpa domain name pointer tpgds-aihub0003.delta.sbrf.ru.
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+#10.73.175.137     tpgds-aihub0007.delta.sbrf.ru tpgds-aihub0007
+10.99.91.59     tpgds-aihub0007.delta.sbrf.ru tpgds-aihub0007
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ hostname -I
+10.99.91.63 10.99.92.63 10.99.93.63 10.99.94.63 10.99.95.63 10.99.96.63 10.99.97.63 10.99.98.63 10.73.175.138 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ ip addr show enp25s0np0 | grep inet
+    inet 10.99.91.63/31 scope global noprefixroute enp25s0np0
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ host 10.99.91.63
+63.91.99.10.in-addr.arpa domain name pointer tpgds-aihub0003.delta.sbrf.ru.
+
