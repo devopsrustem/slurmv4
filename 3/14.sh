@@ -103,3 +103,6 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
   --disaggregation-transfer-backend nixl \
   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
   --max-running-requests 128
+
+
+sudo py-spy dump --pid $(pgrep -f "sglang.launch_server")
