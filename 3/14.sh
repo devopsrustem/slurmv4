@@ -426,3 +426,7 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
 /app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
 /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
 
+026-03-04 16:46:41 TP4] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP1] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP2] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+Capturing batches (bs=128 avail_mem=15.16 GB):   0%|                                                                                    | 0/20 [00:00<?, ?it/s]
