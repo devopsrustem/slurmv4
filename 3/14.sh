@@ -346,3 +346,14 @@ Thread 544367 (active): "MainThread"
 
     def _resolve_stream(self, stream: Optional[torch.cuda.Stream]):
         """Return the stream to use for NCCL calls.
+
+
+# На 0007 И 0008 - одинаково:
+sed -i 's/            self.all_reduce(data)/            #self.all_reduce(data)/' \
+  /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+
+sed -i 's/            self.stream.synchronize()/            #self.stream.synchronize()/' \
+  /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+
+
+sed -n '110,130p' /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
