@@ -521,3 +521,4 @@ Thread 560240 (idle): "InductorSubproc"
     _bootstrap_inner (threading.py:1075)
     _bootstrap (threading.py:1032)
 
+grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py | head -10
