@@ -28,3 +28,16 @@ python3 -m sglang.launch_server \
   --disaggregation-transfer-backend nixl \
   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
   --max-running-requests 128
+
+
+((sglang-0.5.8.post1) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sudo find / -name all_reduce*
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda12/microbenchmarks/nccl_tests/all_reduce_perf
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda12/microbenchmarks/nccl_tests/all_reduce_perf_mpi
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/microbenchmarks/nccl_tests/all_reduce_perf
+/opt/nvidia/nvidia_hpc_benchmarks_mpich/cuda13/microbenchmarks/nccl_tests/all_reduce_perf_mpi
+/app/tmp/uv/archive-v0/r8kos_ydg1hwacWqDaBmg/sglang/srt/distributed/device_communicators/all_reduce_utils.py
+/app/tmp/uv/archive-v0/Wvf4lMgHGjKogMzPuJxYG/sglang/srt/distributed/device_communicators/all_reduce_utils.py
+/app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/__pycache__/all_reduce_utils.cpython-312.pyc
+/app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/all_reduce_utils.py
+/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/__pycache__/all_reduce_utils.cpython-312.pyc
+/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/distributed/device_communicators/all_reduce_utils.py
