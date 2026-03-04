@@ -459,3 +459,65 @@ sed -n '455,475p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/s
                             hidden_states,
                             self.input_layernorm.weight,
                             self.input_layernorm.variance_epsilon,
+
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ py-spy dump --pid $(pgrep -f "scheduler_TP0")
+Process 558210: sglang::scheduler_TP0
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558210 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+    capture_one_batch_size (cuda_graph_runner.py:732)
+    _capture_one_stream (cuda_graph_runner.py:513)
+    capture (cuda_graph_runner.py:526)
+    __init__ (cuda_graph_runner.py:370)
+    init_device_graphs (model_runner.py:2156)
+    initialize (model_runner.py:609)
+    __init__ (model_runner.py:413)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+    spawn_main (multiprocessing/spawn.py:122)
+    <module> (<string>:1)
+Thread 559920 (idle): "Thread-1"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 560225 (idle): "Thread-2"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 560240 (idle): "InductorSubproc"
+    _recv_msg (torch/_inductor/compile_worker/subproc_pool.py:73)
+    _read_thread (torch/_inductor/compile_worker/subproc_pool.py:228)
+    run (threading.py:1012)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+
