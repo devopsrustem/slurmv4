@@ -371,3 +371,8 @@ Thread 544367 (active): "MainThread"
     def _resolve_stream(self, stream: Optional[torch.cuda.Stream]):
         """Return the stream to use for NCCL calls.
 
+
+[2026-03-04 16:38:57 TP6] Ignore import error when loading sglang.srt.models.glm_ocr: No module named 'transformers.models.glm_ocr'
+[2026-03-04 16:38:57 TP6] Ignore import error when loading sglang.srt.models.glm_ocr_nextn: No module named 'transformers.models.glm_ocr'
+[2026-03-04 16:38:57 TP6] Ignore import error when loading sglang.srt.models.glmasr: cannot import name 'GlmAsrConfig' from 'transformers' (/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/transformers/__init__.py)
+
