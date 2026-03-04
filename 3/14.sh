@@ -522,3 +522,34 @@ Thread 560240 (idle): "InductorSubproc"
     _bootstrap (threading.py:1032)
 
 grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py | head -10
+
+
+
+
+
+
+
+
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py | head -10
+386:    def prepare_attn_and_capture_last_layer_outputs(
+394:        hidden_states, residual = self.prepare_attn(
+412:    def prepare_attn(
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '462,475p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+                            dtype_quant=torch.float8_e4m3fn,
+                            res1=None,
+                            output_unquantized_inp1=False,
+                        )
+
+                    else:
+                        hidden_states = self.input_layernorm(hidden_states)
+                else:
+
+                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
+                        hidden_states, *_, residual = fused_rms_mxfp4_quant(
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
+
