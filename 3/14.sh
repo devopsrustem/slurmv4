@@ -435,9 +435,7 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
 [2026-03-04 16:46:41 TP2] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
 Capturing batches (bs=128 avail_mem=15.16 GB):   0%|                                                                                    | 0/20 [00:00<?, ?it/s]
 
-
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ for pid in $(pgrep -f "scheduler_TP"); do   echo "=== PID $pid ===";   py-spy dump --pid $pid 2>/dev/null | head -20; done
-=== PID 558210 ===
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ py-spy dump --pid $(pgrep -f "scheduler_TP0")
 Process 558210: sglang::scheduler_TP0
 Python v3.12.12 (/usr/bin/python3.12)
 
@@ -458,151 +456,95 @@ Thread 558210 (active): "MainThread"
     forward (deepseek_v2.py:2920)
     decorate_context (torch/utils/_contextlib.py:120)
     run_once (cuda_graph_runner.py:719)
-=== PID 558211 ===
-Process 558211: sglang::scheduler_TP1
-Python v3.12.12 (/usr/bin/python3.12)
+    capture_one_batch_size (cuda_graph_runner.py:732)
+    _capture_one_stream (cuda_graph_runner.py:513)
+    capture (cuda_graph_runner.py:526)
+    __init__ (cuda_graph_runner.py:370)
+    init_device_graphs (model_runner.py:2156)
+    initialize (model_runner.py:609)
+    __init__ (model_runner.py:413)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+    spawn_main (multiprocessing/spawn.py:122)
+    <module> (<string>:1)
+Thread 559920 (idle): "Thread-1"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 560225 (idle): "Thread-2"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 560240 (idle): "InductorSubproc"
+    _recv_msg (torch/_inductor/compile_worker/subproc_pool.py:73)
+    _read_thread (torch/_inductor/compile_worker/subproc_pool.py:228)
+    run (threading.py:1012)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ nvidia-smi
+Wed Mar  4 16:54:09 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 590.48.01              Driver Version: 590.48.01      CUDA Version: 13.1     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          On  |   00000000:18:00.0 Off |                    0 |
+| N/A   33C    P0            139W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA H100 80GB HBM3          On  |   00000000:2A:00.0 Off |                    0 |
+| N/A   33C    P0            131W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA H100 80GB HBM3          On  |   00000000:3A:00.0 Off |                    0 |
+| N/A   35C    P0            140W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA H100 80GB HBM3          On  |   00000000:5D:00.0 Off |                    0 |
+| N/A   34C    P0            139W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA H100 80GB HBM3          On  |   00000000:9A:00.0 Off |                    0 |
+| N/A   32C    P0            136W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA H100 80GB HBM3          On  |   00000000:AB:00.0 Off |                    0 |
+| N/A   36C    P0            137W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA H100 80GB HBM3          On  |   00000000:BA:00.0 Off |                    0 |
+| N/A   35C    P0            144W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA H100 80GB HBM3          On  |   00000000:DB:00.0 Off |                    0 |
+| N/A   32C    P0            139W /  700W |   65792MiB /  81559MiB |    100%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
 
-Thread 558211 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558212 ===
-Process 558212: sglang::scheduler_TP2
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558212 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558213 ===
-Process 558213: sglang::scheduler_TP3
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558213 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558214 ===
-Process 558214: sglang::scheduler_TP4
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558214 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558215 ===
-Process 558215: sglang::scheduler_TP5
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558215 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558216 ===
-Process 558216: sglang::scheduler_TP6
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558216 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-=== PID 558217 ===
-Process 558217: sglang::scheduler_TP7
-Python v3.12.12 (/usr/bin/python3.12)
-
-Thread 558217 (active): "MainThread"
-    __call__ (torch/_ops.py:841)
-    rmsnorm (sgl_kernel/elementwise.py:45)
-    forward_cuda (layernorm.py:148)
-    forward (utils/multi_platform.py:71)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    prepare_attn (communicator.py:468)
-    forward (deepseek_v2.py:2388)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2737)
-    _call_impl (torch/nn/modules/module.py:1786)
-    _wrapped_call_impl (torch/nn/modules/module.py:1775)
-    forward (deepseek_v2.py:2920)
-    decorate_context (torch/utils/_contextlib.py:120)
-    run_once (cuda_graph_runner.py:719)
-
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|    0   N/A  N/A          558210      C   sglang::scheduler_TP0                 65782MiB |
+|    1   N/A  N/A          558211      C   sglang::scheduler_TP1                 65782MiB |
+|    2   N/A  N/A          558212      C   sglang::scheduler_TP2                 65782MiB |
+|    3   N/A  N/A          558213      C   sglang::scheduler_TP3                 65782MiB |
+|    4   N/A  N/A          558214      C   sglang::scheduler_TP4                 65782MiB |
+|    5   N/A  N/A          558215      C   sglang::scheduler_TP5                 65782MiB |
+|    6   N/A  N/A          558216      C   sglang::scheduler_TP6                 65782MiB |
+|    7   N/A  N/A          558217      C   sglang::scheduler_TP7                 65782MiB |
++-----------------------------------------------------------------------------------------+
