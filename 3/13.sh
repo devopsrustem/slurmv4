@@ -779,3 +779,25 @@ dist.all_reduce(x)
 torch.cuda.synchronize()
 print(f'rank {rank} OK: {x[0].item()}')
 "
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 torchrun --nproc_per_node=8 --master_addr=10.99.91.63 --master_port=29500   -c "import torch
+import torch.distributed as dist
+dist.init_process_group('nccl')
+rank = dist.get_rank()
+x = torch.ones(1000).cuda(rank)
+dist.all_reduce(x)
+torch.cuda.synchronize()
+print(f'rank {rank} OK: {x[0].item()}')
+"
+usage: torchrun [-h] [--nnodes NNODES] [--nproc-per-node NPROC_PER_NODE]
+                [--rdzv-backend RDZV_BACKEND] [--rdzv-endpoint RDZV_ENDPOINT] [--rdzv-id RDZV_ID]
+                [--rdzv-conf RDZV_CONF] [--standalone] [--max-restarts MAX_RESTARTS]
+                [--monitor-interval MONITOR_INTERVAL] [--start-method {spawn,fork,forkserver}]
+                [--event-log-handler EVENT_LOG_HANDLER] [--role ROLE] [-m] [--no-python]
+                [--run-path] [--log-dir LOG_DIR] [-r REDIRECTS] [-t TEE]
+                [--local-ranks-filter LOCAL_RANKS_FILTER] [--node-rank NODE_RANK]
+                [--master-addr MASTER_ADDR] [--master-port MASTER_PORT] [--local-addr LOCAL_ADDR]
+                [--logs-specs LOGS_SPECS] [--numa-binding {node,socket,exclusive,core-complex}]
+                training_script ...
+torchrun: error: unrecognized arguments: -c
