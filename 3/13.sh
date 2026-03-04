@@ -801,3 +801,26 @@ usage: torchrun [-h] [--nnodes NNODES] [--nproc-per-node NPROC_PER_NODE]
                 [--logs-specs LOGS_SPECS] [--numa-binding {node,socket,exclusive,core-complex}]
                 training_script ...
 torchrun: error: unrecognized arguments: -c
+
+
+
+
+
+cat > /tmp/test_nccl.py << 'EOF'
+import torch
+import torch.distributed as dist
+
+dist.init_process_group('nccl')
+rank = dist.get_rank()
+x = torch.ones(1000).cuda(rank)
+dist.all_reduce(x)
+torch.cuda.synchronize()
+print(f'rank {rank} OK: {x[0].item()}')
+EOF
+
+NCCL_NVLS_ENABLE=0 \
+NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 \
+NCCL_IB_GID_INDEX=3 \
+torchrun --nproc_per_node=8 --master_addr=10.99.91.63 --master_port=29500 \
+  /tmp/test_nccl.py
