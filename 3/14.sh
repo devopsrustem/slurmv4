@@ -26,3 +26,25 @@ W0304 15:04:49.732000 533558 torch/distributed/run.py:803] *********************
 [W304 15:04:53.193097809 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
 [W304 15:04:53.194587795 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
 
+bash
+# На 0007:
+host 10.99.91.59
+cat /etc/hosts | grep 10.99.91.59
+И запусти тест с явным rdzv backend чтобы обойти DNS:
+
+bash
+# На 0007:
+NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
+torchrun --nproc_per_node=8 --nnodes=2 --node_rank=0 \
+  --rdzv_backend=c10d \
+  --rdzv_endpoint=10.99.91.59:29500 \
+  /tmp/test_nccl.py
+
+# На 0008:
+NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
+torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 \
+  --rdzv_backend=c10d \
+  --rdzv_endpoint=10.99.91.59:29500 \
+  /tmp/test_nccl.py
