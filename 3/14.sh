@@ -125,4 +125,22 @@ W0304 12:17:14.161000 267897 torch/distributed/run.py:803] *********************
 [W304 12:17:19.938432391 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
 [W304 12:17:19.941479740 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
 [W304 12:17:19.942025561 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+
+
+
+cat > /tmp/test_nccl.py << 'EOF'
+import torch
+import torch.distributed as dist
+import os
+
+dist.init_process_group('nccl')
+rank = dist.get_rank()
+local_rank = int(os.environ['LOCAL_RANK'])
+torch.cuda.set_device(local_rank)
+x = torch.ones(1000).cuda(local_rank)
+dist.all_reduce(x)
+torch.cuda.synchronize()
+print(f'rank {rank} local_rank {local_rank} OK: {x[0].item()}')
+dist.destroy_process_group()
+EOF
 [W304 12:17:19.980160588 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol)
