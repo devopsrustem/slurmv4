@@ -79,3 +79,7 @@ bashecho "10.99.91.59 tpgds-aihub0007" | sudo tee -a /etc/hosts
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ host 10.99.91.63
 63.91.99.10.in-addr.arpa domain name pointer tpgds-aihub0003.delta.sbrf.ru.
 
+LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
+python3 -m sglang.compile_deep_gemm \
+  --model /app/models/Deepseek-R1/ \
+  --tp 8 --trust-remote-code
