@@ -195,4 +195,5 @@ GRUB_ENABLE_BLSCFG=true
 GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 crashkernel=1G-4G:192M,4G-64G:256M,64G-:512M resume=/dev/mapper/rootvg-lvswap rd.md.uuid=7ce4fa65:91e1792e:70daaa77:518e6e8d rd.lvm.lv=rootvg/lvroot rd.md.uuid=09ce113e:0aa529fa:275857e3:076a9163 rd.lvm.lv=rootvg/lvswap rd.lvm.lv=rootvg/lvusr selinux=0 audit=1 tsx=auto slab_nomerge"
 GRUB_CMDLINE_LINUX="rd.driver.blacklist=nouveau rd.driver.blacklist=nova-core"
 
-
+pdsh -w tpgds-aihub0003,tpgds-aihub0006,tpgds-aihub0007,tpgds-aihub0008 \
+  'python3 -c "import torch; print(torch.cuda.nccl.version())"'
