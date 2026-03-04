@@ -433,3 +433,13 @@ Capturing batches (bs=128 avail_mem=15.16 GB):   0%|                            
 
 
 grep -n "_tp_reduce_scatter\|def _tp_reduce_scatter" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ grep -n "_tp_reduce_scatter\|def _tp_reduce_scatter" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+38:    attn_tp_reduce_scatter_tensor,
+421:            hidden_states, residual = self._tp_reduce_scatter(
+517:    def _tp_reduce_scatter(
+837:        attn_tp_reduce_scatter_tensor(hidden_states, input_hidden_states)
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
