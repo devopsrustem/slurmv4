@@ -421,3 +421,188 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
   --disaggregation-transfer-backend nixl \
   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
   --max-running-requests 128
+
+
+  [2026-03-04 16:46:41 TP7] Memory pool end. avail mem=15.40 GB
+[2026-03-04 16:46:41 TP5] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP6] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP3] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP7] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP0] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP0] Capture cuda graph bs [1, 2, 4, 8, 12, 16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128]
+[2026-03-04 16:46:41 TP4] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP1] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+[2026-03-04 16:46:41 TP2] Capture cuda graph begin. This can take up to several minutes. avail mem=15.30 GB
+Capturing batches (bs=128 avail_mem=15.16 GB):   0%|                                                                                    | 0/20 [00:00<?, ?it/s]
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ for pid in $(pgrep -f "scheduler_TP"); do   echo "=== PID $pid ===";   py-spy dump --pid $pid 2>/dev/null | head -20; done
+=== PID 558210 ===
+Process 558210: sglang::scheduler_TP0
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558210 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558211 ===
+Process 558211: sglang::scheduler_TP1
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558211 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558212 ===
+Process 558212: sglang::scheduler_TP2
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558212 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558213 ===
+Process 558213: sglang::scheduler_TP3
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558213 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558214 ===
+Process 558214: sglang::scheduler_TP4
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558214 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558215 ===
+Process 558215: sglang::scheduler_TP5
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558215 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558216 ===
+Process 558216: sglang::scheduler_TP6
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558216 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+=== PID 558217 ===
+Process 558217: sglang::scheduler_TP7
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 558217 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+
