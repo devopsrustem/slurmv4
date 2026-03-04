@@ -348,12 +348,26 @@ Thread 544367 (active): "MainThread"
         """Return the stream to use for NCCL calls.
 
 
-# На 0007 И 0008 - одинаково:
-sed -i 's/            self.all_reduce(data)/            #self.all_reduce(data)/' \
-  /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '110,130p' /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+        # `torch.cuda.device` is a context manager that changes the
+        # current cuda device to the specified one
+        with torch.cuda.device(device):
+            self.comm: ncclComm_t = self.nccl.ncclCommInitRank(
+                self.world_size, self.unique_id, self.rank
+            )
+            self.stream = torch.cuda.Stream()
 
-sed -i 's/            self.stream.synchronize()/            #self.stream.synchronize()/' \
-  /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+            # A small all_reduce for warmup.
+            data = torch.zeros(1, device=device)
+            #self.all_reduce(data)
+            #self.stream.synchronize()
+            del data
 
+        # by default it is disabled, e.g. in profiling models and prefill phase.
+        # to use it, use under `with obj.change_state(enable=True)`, usually
+        # when we are using CUDA graph.
+        self.disabled = True
 
-sed -n '110,130p' /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/distributed/device_communicators/pynccl.py
+    def _resolve_stream(self, stream: Optional[torch.cuda.Stream]):
+        """Return the stream to use for NCCL calls.
+
