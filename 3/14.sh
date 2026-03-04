@@ -1,146 +1,544 @@
-0007:
-bashLD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
-SGLANG_HOST_IP=10.99.91.59 MC_GID_INDEX=3 MC_TCP_BIND_ADDRESS=10.99.91.59 \
-SGLANG_LOCAL_IP_NIC=enp25s0np0 GLOO_SOCKET_FAMILY=AF_INET GLOO_SOCKET_IFNAME=enp25s0np0 \
-NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA=mlx5_0 \
-NCCL_IB_GID_INDEX=3 NCCL_IB_TC=106 NCCL_IB_DISABLE=0 \
-NCCL_NVLS_ENABLE=0 NCCL_CROSS_NIC=0 NCCL_TIMEOUT=600 \
-NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring NCCL_PROTO=Simple \
-CUDA_DEVICE_MAX_CONNECTIONS=1 \
-PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PARALLELISM=false \
-/opt/mooncake-libs/run-with-new-libstdc.sh python3 -m sglang.launch_server \
-  --model-path /app/models/Deepseek-R1/ --trust-remote-code \
-  --tp-size 16 --host 10.99.91.59 --port 30001 \
-  --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0 \
-  --mem-fraction-static 0.8 --disaggregation-mode decode \
-  --disaggregation-transfer-backend nixl \
-  --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
-  --max-running-requests 128
-0008 — то же самое, только SGLANG_HOST_IP=10.99.91.63, --host 10.99.91.63, --node-rank 1.
-Ключевое отличие от предыдущих попыток — убрал NCCL_NET_GDR_LEVEL=PIX и NCCL_CROSS_NIC=1, оставил только mlx5_0. Максимально близко к рабочему torchrun тесту.
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ pip freeze
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.3
+aiosignal==1.4.0
+airportsdata==20260208
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anthropic==0.84.0
+anyio==4.12.1
+apache-tvm-ffi==0.1.9
+asttokens==3.0.1
+attrs==25.4.0
+blobfile==3.0.0
+build==1.4.0
+certifi==2026.2.25
+cffi==2.0.0
+charset-normalizer==3.4.4
+click==8.3.1
+cloudpickle==3.1.2
+compressed-tensors==0.14.0
+cuda-bindings==12.9.5
+cuda-pathfinder==1.4.0
+cuda-python==12.9.0
+datasets==4.6.1
+decorator==5.2.1
+decord2==3.0.0
+dill==0.4.0
+diskcache==5.6.3
+distro==1.9.0
+docstring_parser==0.17.0
+einops==0.8.2
+executing==2.2.1
+fastapi==0.135.1
+filelock==3.25.0
+flashinfer-cubin==0.6.3
+flashinfer-python==0.6.3
+frozenlist==1.8.0
+fsspec==2026.2.0
+gguf==0.18.0
+grpcio==1.78.0
+grpcio-health-checking==1.78.0
+grpcio-reflection==1.78.0
+h11==0.16.0
+hf-xet==1.3.2
+hf_transfer==0.1.9
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==0.36.2
+idna==3.11
+interegular==0.3.3
+ipython==9.10.0
+ipython_pygments_lexers==1.1.1
+jedi==0.19.2
+Jinja2==3.1.6
+jiter==0.13.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+lark==1.3.1
+llguidance==0.7.30
+loguru==0.7.3
+lxml==6.0.2
+MarkupSafe==3.0.3
+matplotlib-inline==0.2.1
+modelscope==1.34.0
+mooncake==0.0.1
+mpmath==1.3.0
+msgspec==0.20.0
+multidict==6.7.1
+multiprocess==0.70.18
+nest-asyncio==1.6.0
+networkx==3.6.1
+ninja==1.13.0
+nixl==0.10.0
+nixl-cu12==0.10.0
+numpy==2.4.2
+nvidia-cublas-cu12==12.8.4.1
+nvidia-cuda-cupti-cu12==12.8.90
+nvidia-cuda-nvrtc-cu12==12.8.93
+nvidia-cuda-runtime-cu12==12.8.90
+nvidia-cudnn-cu12==9.10.2.21
+nvidia-cudnn-frontend==1.18.0
+nvidia-cufft-cu12==11.3.3.83
+nvidia-cufile-cu12==1.13.1.3
+nvidia-curand-cu12==10.3.9.90
+nvidia-cusolver-cu12==11.7.3.90
+nvidia-cusparse-cu12==12.5.8.93
+nvidia-cusparselt-cu12==0.7.1
+nvidia-cutlass-dsl==4.3.5
+nvidia-ml-py==13.590.48
+nvidia-nccl-cu12==2.27.5
+nvidia-nvjitlink-cu12==12.8.93
+nvidia-nvshmem-cu12==3.3.20
+nvidia-nvtx-cu12==12.8.90
+openai==2.6.1
+openai-harmony==0.0.4
+orjson==3.11.7
+outlines==0.1.11
+outlines_core==0.1.26
+packaging==26.0
+pandas==3.0.1
+parso==0.8.6
+partial-json-parser==0.2.1.1.post7
+pexpect==4.9.0
+pillow==12.1.1
+prometheus_client==0.24.1
+prompt_toolkit==3.0.52
+propcache==0.4.1
+protobuf==6.33.5
+psutil==7.2.2
+ptyprocess==0.7.0
+pure_eval==0.2.3
+py-spy==0.4.1
+pyarrow==23.0.1
+pybase64==1.4.3
+pycountry==26.2.16
+pycparser==3.0
+pycryptodomex==3.23.0
+pydantic==2.12.5
+pydantic_core==2.41.5
+Pygments==2.19.2
+pyproject_hooks==1.2.0
+python-dateutil==2.9.0.post0
+python-multipart==0.0.22
+PyYAML==6.0.3
+pyzmq==27.1.0
+quack-kernels==0.2.4
+referencing==0.37.0
+regex==2026.2.28
+requests==2.32.5
+rpds-py==0.30.0
+safetensors==0.7.0
+scipy==1.17.1
+sentencepiece==0.2.1
+setproctitle==1.3.7
+setuptools==82.0.0
+sgl-kernel==0.3.21
+sglang==0.5.9
+six==1.17.0
+smg-grpc-proto==0.4.1
+sniffio==1.3.1
+soundfile==0.13.1
+stack-data==0.6.3
+starlette==0.52.1
+sympy==1.14.0
+tabulate==0.9.0
+tiktoken==0.12.0
+timm==1.0.16
+tokenizers==0.22.2
+torch==2.9.1
+torch_c_dlpack_ext==0.1.5
+torch_memory_saver==0.0.9
+torchao==0.9.0
+torchaudio==2.9.1
+torchcodec==0.8.0
+torchvision==0.24.1
+tqdm==4.67.3
+traitlets==5.14.3
+transformers==4.57.1
+triton==3.5.1
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+urllib3==2.6.3
+uv==0.10.7
+uvicorn==0.41.0
+uvloop==0.22.1
+wcwidth==0.6.0
+wheel==0.46.3
+xgrammar==0.1.27
+xxhash==3.6.0
+yarl==1.23.0
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ show_gids | awk '/mlx5_[0-9]/ && $3==3'
+mlx5_0	1	3	0000:0000:0000:0000:0000:ffff:0a63:5b3b	10.99.91.59  	v2	enp25s0np0
+mlx5_1	1	3	0000:0000:0000:0000:0000:ffff:0a63:5c3b	10.99.92.59  	v2	enp41s0np0
+mlx5_11	1	3	0000:0000:0000:0000:0000:ffff:0a63:623b	10.99.98.59  	v2	enp218s0np0
+mlx5_2	1	3	0000:0000:0000:0000:0000:ffff:0a63:5d3b	10.99.93.59  	v2	enp59s0np0
+mlx5_3	1	3	0000:0000:0000:0000:0000:ffff:0a49:af89	10.73.175.137  	v2	bond0
+mlx5_5	1	3	0000:0000:0000:0000:0000:ffff:0a63:5e3b	10.99.94.59  	v2	enp92s0np0
+mlx5_6	1	3	0000:0000:0000:0000:0000:ffff:0a63:5f3b	10.99.95.59  	v2	enp155s0np0
+mlx5_7	1	3	0000:0000:0000:0000:0000:ffff:0a63:603b	10.99.96.59  	v2	enp170s0np0
+mlx5_8	1	3	0000:0000:0000:0000:0000:ffff:0a63:613b	10.99.97.59  	v2	enp187s0np0
+mlx5_9	1	3	0000:0000:0000:0000:0000:ffff:0a49:af89	10.73.175.137  	v2	bond0
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ pip freeze
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.3
+aiosignal==1.4.0
+airportsdata==20260208
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anthropic==0.84.0
+anyio==4.12.1
+apache-tvm-ffi==0.1.9
+asttokens==3.0.1
+attrs==25.4.0
+blobfile==3.0.0
+build==1.4.0
+certifi==2026.2.25
+cffi==2.0.0
+charset-normalizer==3.4.4
+click==8.3.1
+cloudpickle==3.1.2
+compressed-tensors==0.14.0
+cuda-bindings==12.9.5
+cuda-pathfinder==1.4.0
+cuda-python==12.9.0
+datasets==4.6.1
+decorator==5.2.1
+decord2==3.0.0
+dill==0.4.0
+diskcache==5.6.3
+distro==1.9.0
+docstring_parser==0.17.0
+einops==0.8.2
+executing==2.2.1
+fastapi==0.135.1
+filelock==3.25.0
+flashinfer-cubin==0.6.3
+flashinfer-python==0.6.3
+frozenlist==1.8.0
+fsspec==2026.2.0
+gguf==0.18.0
+grpcio==1.78.0
+grpcio-health-checking==1.78.0
+grpcio-reflection==1.78.0
+h11==0.16.0
+hf-xet==1.3.2
+hf_transfer==0.1.9
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==0.36.2
+idna==3.11
+interegular==0.3.3
+ipython==9.10.0
+ipython_pygments_lexers==1.1.1
+jedi==0.19.2
+Jinja2==3.1.6
+jiter==0.13.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+lark==1.3.1
+llguidance==0.7.30
+loguru==0.7.3
+lxml==6.0.2
+MarkupSafe==3.0.3
+matplotlib-inline==0.2.1
+modelscope==1.34.0
+mooncake==0.0.1
+mpmath==1.3.0
+msgspec==0.20.0
+multidict==6.7.1
+multiprocess==0.70.18
+nest-asyncio==1.6.0
+networkx==3.6.1
+ninja==1.13.0
+nixl==0.10.0
+nixl-cu12==0.10.0
+numpy==2.4.2
+nvidia-cublas-cu12==12.8.4.1
+nvidia-cuda-cupti-cu12==12.8.90
+nvidia-cuda-nvrtc-cu12==12.8.93
+nvidia-cuda-runtime-cu12==12.8.90
+nvidia-cudnn-cu12==9.10.2.21
+nvidia-cudnn-frontend==1.18.0
+nvidia-cufft-cu12==11.3.3.83
+nvidia-cufile-cu12==1.13.1.3
+nvidia-curand-cu12==10.3.9.90
+nvidia-cusolver-cu12==11.7.3.90
+nvidia-cusparse-cu12==12.5.8.93
+nvidia-cusparselt-cu12==0.7.1
+nvidia-cutlass-dsl==4.3.5
+nvidia-ml-py==13.590.48
+nvidia-nccl-cu12==2.27.5
+nvidia-nvjitlink-cu12==12.8.93
+nvidia-nvshmem-cu12==3.3.20
+nvidia-nvtx-cu12==12.8.90
+openai==2.6.1
+openai-harmony==0.0.4
+orjson==3.11.7
+outlines==0.1.11
+outlines_core==0.1.26
+packaging==26.0
+pandas==3.0.1
+parso==0.8.6
+partial-json-parser==0.2.1.1.post7
+pexpect==4.9.0
+pillow==12.1.1
+prometheus_client==0.24.1
+prompt_toolkit==3.0.52
+propcache==0.4.1
+protobuf==6.33.5
+psutil==7.2.2
+ptyprocess==0.7.0
+pure_eval==0.2.3
+py-spy==0.4.1
+pyarrow==23.0.1
+pybase64==1.4.3
+pycountry==26.2.16
+pycparser==3.0
+pycryptodomex==3.23.0
+pydantic==2.12.5
+pydantic_core==2.41.5
+Pygments==2.19.2
+pyproject_hooks==1.2.0
+python-dateutil==2.9.0.post0
+python-multipart==0.0.22
+PyYAML==6.0.3
+pyzmq==27.1.0
+quack-kernels==0.2.4
+referencing==0.37.0
+regex==2026.2.28
+requests==2.32.5
+rpds-py==0.30.0
+safetensors==0.7.0
+scipy==1.17.1
+sentencepiece==0.2.1
+setproctitle==1.3.7
+setuptools==82.0.0
+sgl-kernel==0.3.21
+sglang==0.5.9
+six==1.17.0
+smg-grpc-proto==0.4.1
+sniffio==1.3.1
+soundfile==0.13.1
+stack-data==0.6.3
+starlette==0.52.1
+sympy==1.14.0
+tabulate==0.9.0
+tiktoken==0.12.0
+timm==1.0.16
+tokenizers==0.22.2
+torch==2.9.1
+torch_c_dlpack_ext==0.1.5
+torch_memory_saver==0.0.9
+torchao==0.9.0
+torchaudio==2.9.1
+torchcodec==0.8.0
+torchvision==0.24.1
+tqdm==4.67.3
+traitlets==5.14.3
+transformers==4.57.1
+triton==3.5.1
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+urllib3==2.6.3
+uv==0.10.7
+uvicorn==0.41.0
+uvloop==0.22.1
+wcwidth==0.6.0
+wheel==0.46.3
+xgrammar==0.1.27
+xxhash==3.6.0
+yarl==1.23.0
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ show_gids | awk "/mlx5_[0-9]+.*v2.*ens/ && \$3!=3"
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ show_gids | awk "/mlx5_[0-9]/ && $3!=3"
+awk: cmd. line:1: /mlx5_[0-9]/ && !=3
+awk: cmd. line:1:                 ^ syntax error
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ show_gids | awk "/mlx5_[0-9]/ && $3==3"
+awk: cmd. line:1: /mlx5_[0-9]/ && ==3
+awk: cmd. line:1:                 ^ syntax error
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ show_gids | awk '/mlx5_[0-9]/ && $3==3'
+mlx5_0	1	3	0000:0000:0000:0000:0000:ffff:0a63:5b3f	10.99.91.63  	v2	enp25s0np0
+mlx5_1	1	3	0000:0000:0000:0000:0000:ffff:0a63:5c3f	10.99.92.63  	v2	enp41s0np0
+mlx5_11	1	3	0000:0000:0000:0000:0000:ffff:0a63:623f	10.99.98.63  	v2	enp218s0np0
+mlx5_2	1	3	0000:0000:0000:0000:0000:ffff:0a63:5d3f	10.99.93.63  	v2	enp59s0np0
+mlx5_3	1	3	0000:0000:0000:0000:0000:ffff:0a49:af8a	10.73.175.138  	v2	bond0
+mlx5_5	1	3	0000:0000:0000:0000:0000:ffff:0a63:5e3f	10.99.94.63  	v2	enp92s0np0
+mlx5_6	1	3	0000:0000:0000:0000:0000:ffff:0a63:5f3f	10.99.95.63  	v2	enp155s0np0
+mlx5_7	1	3	0000:0000:0000:0000:0000:ffff:0a63:603f	10.99.96.63  	v2	enp170s0np0
+mlx5_8	1	3	0000:0000:0000:0000:0000:ffff:0a63:613f	10.99.97.63  	v2	enp187s0np0
+mlx5_9	1	3	0000:0000:0000:0000:0000:ffff:0a49:af8a	10.73.175.138  	v2	bond0
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0003 ~]$ pip freeze
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.3
+aiosignal==1.4.0
+airportsdata==20260208
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anthropic==0.84.0
+anyio==4.12.1
+apache-tvm-ffi==0.1.8.post2
+asttokens==3.0.1
+attrs==25.4.0
+blobfile==3.0.0
+build==1.4.0
+certifi==2026.2.25
+cffi==2.0.0
+charset-normalizer==3.4.4
+click==8.3.1
+cloudpickle==3.1.2
+compressed-tensors==0.13.0
+cuda-bindings==12.9.5
+cuda-pathfinder==1.4.0
+cuda-python==12.9.0
+datasets==4.6.0
+decorator==5.2.1
+decord2==3.0.0
+dill==0.4.0
+diskcache==5.6.3
+distro==1.9.0
+docstring_parser==0.17.0
+einops==0.8.2
+executing==2.2.1
+fastapi==0.133.1
+filelock==3.24.3
+flashinfer-cubin==0.6.3
+flashinfer-python==0.6.3
+frozenlist==1.8.0
+fsspec==2026.2.0
+gguf==0.17.1
+grpcio==1.78.0
+grpcio-health-checking==1.78.0
+grpcio-reflection==1.78.0
+h11==0.16.0
+hf-xet==1.3.1
+hf_transfer==0.1.9
+httpcore==1.0.9
+httpx==0.28.1
+huggingface_hub==0.36.2
+idna==3.11
+interegular==0.3.3
+ipython==9.10.0
+ipython_pygments_lexers==1.1.1
+jedi==0.19.2
+Jinja2==3.1.6
+jiter==0.13.0
+jsonschema==4.26.0
+jsonschema-specifications==2025.9.1
+lark==1.3.1
+llguidance==0.7.30
+loguru==0.7.3
+lxml==6.0.2
+MarkupSafe==3.0.3
+matplotlib-inline==0.2.1
+modelscope==1.34.0
+mpmath==1.3.0
+msgspec==0.20.0
+multidict==6.7.1
+multiprocess==0.70.18
+nest-asyncio==1.6.0
+networkx==3.6.1
+ninja==1.13.0
+nixl==0.10.0
+nixl-cu12==0.10.0
+numpy==2.4.2
+nvidia-cublas-cu12==12.8.4.1
+nvidia-cuda-cupti-cu12==12.8.90
+nvidia-cuda-nvrtc-cu12==12.8.93
+nvidia-cuda-runtime-cu12==12.8.90
+nvidia-cudnn-cu12==9.10.2.21
+nvidia-cudnn-frontend==1.18.0
+nvidia-cufft-cu12==11.3.3.83
+nvidia-cufile-cu12==1.13.1.3
+nvidia-curand-cu12==10.3.9.90
+nvidia-cusolver-cu12==11.7.3.90
+nvidia-cusparse-cu12==12.5.8.93
+nvidia-cusparselt-cu12==0.7.1
+nvidia-cutlass-dsl==4.3.5
+nvidia-ml-py==13.590.48
+nvidia-nccl-cu12==2.27.5
+nvidia-nvjitlink-cu12==12.8.93
+nvidia-nvshmem-cu12==3.3.20
+nvidia-nvtx-cu12==12.8.90
+openai==2.6.1
+openai-harmony==0.0.4
+orjson==3.11.7
+outlines==0.1.11
+outlines_core==0.1.26
+packaging==26.0
+pandas==3.0.1
+parso==0.8.6
+partial-json-parser==0.2.1.1.post7
+pexpect==4.9.0
+pillow==12.1.1
+prometheus_client==0.24.1
+prompt_toolkit==3.0.52
+propcache==0.4.1
+protobuf==6.33.5
+psutil==7.2.2
+ptyprocess==0.7.0
+pure_eval==0.2.3
+py-spy==0.4.1
+pyarrow==23.0.1
+pybase64==1.4.3
+pycountry==26.2.16
+pycparser==3.0
+pycryptodomex==3.23.0
+pydantic==2.12.5
+pydantic_core==2.41.5
+Pygments==2.19.2
+pyproject_hooks==1.2.0
+python-dateutil==2.9.0.post0
+python-multipart==0.0.22
+PyYAML==6.0.3
+pyzmq==27.1.0
+quack-kernels==0.2.4
+referencing==0.37.0
+regex==2026.2.19
+requests==2.32.5
+rpds-py==0.30.0
+safetensors==0.7.0
+scipy==1.17.1
+sentencepiece==0.2.1
+setproctitle==1.3.7
+setuptools==82.0.0
+sgl-kernel==0.3.21
+sglang==0.5.9
+six==1.17.0
+smg-grpc-proto==0.4.0
+sniffio==1.3.1
+soundfile==0.13.1
+stack-data==0.6.3
+starlette==0.52.1
+sympy==1.14.0
+tabulate==0.9.0
+tiktoken==0.12.0
+timm==1.0.16
+tokenizers==0.22.2
+torch==2.9.1
+torch_c_dlpack_ext==0.1.5
+torch_memory_saver==0.0.9
+torchao==0.9.0
+torchaudio==2.9.1
+torchcodec==0.8.0
+torchvision==0.24.1
+tqdm==4.67.3
+traitlets==5.14.3
+transformers==4.57.1
+triton==3.5.1
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+urllib3==2.6.3
+uv==0.10.6
+uvicorn==0.41.0
+uvloop==0.22.1
+wcwidth==0.6.0
+wheel==0.46.3
+xgrammar==0.1.27
+xxhash==3.6.0
+yarl==1.22.0
 
 
 
-На 0007 (rank 0):
-bashNCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
-NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
-NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring \
-torchrun --nproc_per_node=8 --nnodes=2 --node_rank=0 \
-  --master_addr=10.99.91.59 --master_port=29500 \
-  /tmp/test_nccl.py
-На 0008 (rank 1) одновременно:
-bashNCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 \
-NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 \
-NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring \
-torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 \
-  --master_addr=10.99.91.59 --master_port=29500 \
-  /tmp/test_nccl.py
-Если зависнет — проблема именно в 0007↔0008 inter-node NCCL.
-
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1   --master_addr=10.99.91.59 --master_port=29500   /tmp/test_nccl.py
-W0304 12:17:15.750000 469293 torch/distributed/run.py:803] 
-W0304 12:17:15.750000 469293 torch/distributed/run.py:803] *****************************************
-W0304 12:17:15.750000 469293 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0304 12:17:15.750000 469293 torch/distributed/run.py:803] *****************************************
-[W304 12:17:18.228653728 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.223723147 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.223868351 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.225036144 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.225098990 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.226303063 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.233063946 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.269516582 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.283025107 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [::ffff:10.99.91.59]:29500 (errno: 97 - Address family not supported by protocol).
-[rank12]: Traceback (most recent call last):
-[rank12]:   File "/tmp/test_nccl.py", line 6, in <module>
-[rank12]:     x = torch.ones(1000).cuda(rank)
-[rank12]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[rank12]: torch.AcceleratorError: CUDA error: invalid device ordinal
-[rank12]: GPU device may be out of range, do you have enough GPUs?
-[rank12]: CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-[rank12]: For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-[rank12]: Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
-[rank11]: Traceback (most recent call last):
-[rank11]:   File "/tmp/test_nccl.py", line 6, in <module>
-[rank11]:     x = torch.ones(1000).cuda(rank)
-[rank11]:         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-[rank11]: torch.AcceleratorError: CUDA error: invalid device ordinal
-[rank11]: GPU device may be out of range, do you have enough GPUs?
-[rank11]: CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
-[rank11]: For debugging consider passing CUDA_LAUNCH_BLOCKING=1
-[rank11]: Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
-
-W0304 12:17:22.059000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469398 closing signal SIGTERM
-W0304 12:17:22.060000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469399 closing signal SIGTERM
-W0304 12:17:22.060000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469400 closing signal SIGTERM
-W0304 12:17:22.061000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469403 closing signal SIGTERM
-W0304 12:17:22.061000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469404 closing signal SIGTERM
-W0304 12:17:22.062000 469293 torch/distributed/elastic/multiprocessing/api.py:908] Sending process 469405 closing signal SIGTERM
-E0304 12:17:22.232000 469293 torch/distributed/elastic/multiprocessing/api.py:882] failed (exitcode: 1) local_rank: 4 (pid: 469402) of binary: /app/sglang/sglang-0.5.9/bin/python3.12
-Traceback (most recent call last):
-  File "/app/sglang/sglang-0.5.9/bin/torchrun", line 6, in <module>
-    sys.exit(main())
-             ^^^^^^
-  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 357, in wrapper
-    return f(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^
-  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/distributed/run.py", line 936, in main
-    run(args)
-  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/distributed/run.py", line 927, in run
-    elastic_launch(
-  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/distributed/launcher/api.py", line 156, in __call__
-    return launch_agent(self._config, self._entrypoint, list(args))
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/distributed/launcher/api.py", line 293, in launch_agent
-    raise ChildFailedError(
-torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
-============================================================
-/tmp/test_nccl.py FAILED
-------------------------------------------------------------
-Failures:
-  <NO_OTHER_FAILURES>
-------------------------------------------------------------
-Root Cause (first observed failure):
-[0]:
-  time      : 2026-03-04_12:17:22
-  host      : tpgds-aihub0008.delta.sbrf.ru
-  rank      : 12 (local_rank: 4)
-  exitcode  : 1 (pid: 469402)
-  error_file: <N/A>
-  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
-============================================================
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ 
-
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 NCCL_TREE_THRESHOLD=0 NCCL_ALGO=Ring torchrun --nproc_per_node=8 --nnodes=2 --node_rank=0   --master_addr=10.99.91.59 --master_port=29500   /tmp/test_nccl.py
-W0304 12:17:14.161000 267897 torch/distributed/run.py:803] 
-W0304 12:17:14.161000 267897 torch/distributed/run.py:803] *****************************************
-W0304 12:17:14.161000 267897 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
-W0304 12:17:14.161000 267897 torch/distributed/run.py:803] *****************************************
-[W304 12:17:16.381145738 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.890936097 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.890940575 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.891672306 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.891997177 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.938432391 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.941479740 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-[W304 12:17:19.942025561 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
-
-
-
-cat > /tmp/test_nccl.py << 'EOF'
-import torch
-import torch.distributed as dist
-import os
-
-dist.init_process_group('nccl')
-rank = dist.get_rank()
-local_rank = int(os.environ['LOCAL_RANK'])
-torch.cuda.set_device(local_rank)
-x = torch.ones(1000).cuda(local_rank)
-dist.all_reduce(x)
-torch.cuda.synchronize()
-print(f'rank {rank} local_rank {local_rank} OK: {x[0].item()}')
-dist.destroy_process_group()
-EOF
-[W304 12:17:19.980160588 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol)
