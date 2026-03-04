@@ -824,3 +824,66 @@ NCCL_IB_HCA=mlx5_0 \
 NCCL_IB_GID_INDEX=3 \
 torchrun --nproc_per_node=8 --master_addr=10.99.91.63 --master_port=29500 \
   /tmp/test_nccl.py
+
+
+
+
+
+  ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ NCCL_NVLS_ENABLE=0 \
+NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA=mlx5_0 \
+NCCL_IB_GID_INDEX=3 \
+torchrun --nproc_per_node=8 --master_addr=10.99.91.63 --master_port=29500 \
+  /tmp/test_nccl.py
+W0304 11:43:02.259000 459529 torch/distributed/run.py:803] 
+W0304 11:43:02.259000 459529 torch/distributed/run.py:803] *****************************************
+W0304 11:43:02.259000 459529 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0304 11:43:02.259000 459529 torch/distributed/run.py:803] *****************************************
+[W304 11:43:04.740717891 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.706707124 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.706808537 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.708954522 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.711549602 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.717943376 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.719476080 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.720968152 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:43:05.721009962 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+rank 0 OK: 8.0
+[rank0]:[W304 11:43:11.687072425 ProcessGroupNCCL.cpp:1524] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+rank 3 OK: 8.0
+rank 2 OK: 8.0
+rank 1 OK: 8.0rank 4 OK: 8.0
+
+rank 7 OK: 8.0
+rank 6 OK: 8.0
+rank 5 OK: 8.0
+((sglang-0.5.9) )
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ NCCL_NVLS_ENABLE=0 NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA=mlx5_0 NCCL_IB_GID_INDEX=3 torchrun --nproc_per_node=8 --master_addr=10.99.91.59 --master_port=29500   /tmp/test_nccl.py
+W0304 11:55:32.795000 261148 torch/distributed/run.py:803] 
+W0304 11:55:32.795000 261148 torch/distributed/run.py:803] *****************************************
+W0304 11:55:32.795000 261148 torch/distributed/run.py:803] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0304 11:55:32.795000 261148 torch/distributed/run.py:803] *****************************************
+[W304 11:55:35.972884003 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.954271666 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.954271754 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.955695601 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.955877775 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.960522134 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.961070862 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.963365908 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+[W304 11:55:36.964768076 socket.cpp:767] [c10d] The client socket cannot be initialized to connect to [tpgds-aihub0003.delta.sbrf.ru]:29500 (errno: 97 - Address family not supported by protocol).
+rank 0 OK: 8.0
+[rank0]:[W304 11:55:42.889855303 ProcessGroupNCCL.cpp:1524] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+rank 5 OK: 8.0
+rank 4 OK: 8.0
+rank 6 OK: 8.0
+rank 2 OK: 8.0
+rank 1 OK: 8.0
+rank 7 OK: 8.0
+rank 3 OK: 8.0
+
+
+
+
+
