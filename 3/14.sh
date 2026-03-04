@@ -48,3 +48,11 @@ torchrun --nproc_per_node=8 --nnodes=2 --node_rank=1 \
   --rdzv_backend=c10d \
   --rdzv_endpoint=10.99.91.59:29500 \
   /tmp/test_nccl.py
+
+
+# На 0007:
+hostname -I
+ip addr show enp25s0np0 | grep inet
+host 10.99.91.59
+Если IP реально 10.99.91.59 — добавь в /etc/hosts:
+bashecho "10.99.91.59 tpgds-aihub0007" | sudo tee -a /etc/hosts
