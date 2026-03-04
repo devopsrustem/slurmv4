@@ -197,3 +197,6 @@ GRUB_CMDLINE_LINUX="rd.driver.blacklist=nouveau rd.driver.blacklist=nova-core"
 
 pdsh -w tpgds-aihub0003,tpgds-aihub0006,tpgds-aihub0007,tpgds-aihub0008 \
   'python3 -c "import torch; print(torch.cuda.nccl.version())"'
+
+
+cat /proc/113695/environ | tr '\0' '\n' | grep -E "NCCL|SGLANG|CUDA|NIXL|MC_"
