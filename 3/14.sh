@@ -443,3 +443,7 @@ grep -n "_tp_reduce_scatter\|def _tp_reduce_scatter" /app/sglang/sglang-0.5.9/li
 837:        attn_tp_reduce_scatter_tensor(hidden_states, input_hidden_states)
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
 
+
+
+
+sed -n '517,560p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
