@@ -447,3 +447,51 @@ grep -n "_tp_reduce_scatter\|def _tp_reduce_scatter" /app/sglang/sglang-0.5.9/li
 
 
 sed -n '517,560p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '517,560p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+    def _tp_reduce_scatter(
+        self,
+        hidden_states: torch.Tensor,
+        residual: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        if hidden_states.shape[0] == 0:
+            return hidden_states, hidden_states
+        assert (
+            hidden_states.shape[0] % self._context.tp_size == 0
+        ), f"Expected total tokens {hidden_states.shape[0]} % tp_size {self._context.tp_size} to be 0"
+        local_tokens = hidden_states.shape[0] // self._context.tp_size
+        output = hidden_states.new_empty(local_tokens, *hidden_states.shape[1:])
+        get_tp_group().reduce_scatter_tensor(output, hidden_states)
+        if residual is not None:
+            residual = residual.tensor_split(self._context.tp_size)[
+                self._context.tp_rank
+            ]
+        return output, residual
+
+    def prepare_mlp(
+        self,
+        hidden_states: torch.Tensor,
+        residual: torch.Tensor,
+        forward_batch: ForwardBatch,
+        cache=None,
+    ):
+        if cache is not None:
+            self._context.cache = cache
+
+        return self._communicate_with_all_reduce_and_layer_norm_fn(
+            hidden_states=hidden_states,
+            residual=residual,
+            forward_batch=forward_batch,
+            layernorm=self.post_attention_layernorm,
+            context=self._context,
+        )
+
+    def postprocess_layer(
+        self,
+        hidden_states: torch.Tensor,
+        residual: torch.Tensor,
+        forward_batch: ForwardBatch,
+    ):
+        return self._communicate_summable_tensor_pair_fn(
