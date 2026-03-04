@@ -526,98 +526,60 @@ grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12
 
 
 
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ py-spy dump --pid $(pgrep -f "scheduler_TP8")
+Process 597323: sglang::scheduler_TP8
+Python v3.12.12 (/usr/bin/python3.12)
 
-
-
-
-
-
-
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py | head -10
-386:    def prepare_attn_and_capture_last_layer_outputs(
-394:        hidden_states, residual = self.prepare_attn(
-412:    def prepare_attn(
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '462,475p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
-                            dtype_quant=torch.float8_e4m3fn,
-                            res1=None,
-                            output_unquantized_inp1=False,
-                        )
-
-                    else:
-                        hidden_states = self.input_layernorm(hidden_states)
-                else:
-
-                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
-                        hidden_states, *_, residual = fused_rms_mxfp4_quant(
-                            hidden_states,
-                            self.input_layernorm.weight,
-                            self.input_layernorm.variance_epsilon,
-
-
-((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '412,475p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
-    def prepare_attn(
-        self,
-        hidden_states: torch.Tensor,
-        residual: torch.Tensor,
-        forward_batch: ForwardBatch,
-        quant_format: str = "",
-        post_residual_addition: Optional[torch.Tensor] = None,
-    ):
-        if get_attn_tp_context().input_scattered:
-            hidden_states, residual = self._tp_reduce_scatter(
-                hidden_states,
-                residual,
-            )
-        if hidden_states.shape[0] == 0:
-            residual = hidden_states
-        else:
-            if (
-                residual is not None
-                and hasattr(hidden_states, "_sglang_needs_allreduce_fusion")
-                and hidden_states._sglang_needs_allreduce_fusion
-            ):
-                hidden_states, residual = (
-                    self.input_layernorm.forward_with_allreduce_fusion(
-                        hidden_states, residual
-                    )
-                )
-            else:
-                if residual is None:
-                    residual = hidden_states
-
-                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
-                        hidden_states, *_, _ = fused_rms_mxfp4_quant(
-                            hidden_states,
-                            self.input_layernorm.weight,
-                            self.input_layernorm.variance_epsilon,
-                            None,
-                            None,
-                            None,
-                            None,
-                        )
-                    elif _use_aiter and _is_gfx95_supported and ("fp8" in quant_format):
-
-                        hidden_states, _, _, _res = fused_rms_fp8_group_quant(
-                            hidden_states,
-                            self.input_layernorm.weight,
-                            self.input_layernorm.variance_epsilon,
-                            inp2=None,
-                            inp2_weight=None,
-                            inp2_epsilon=None,
-                            group_size=128,
-                            dtype_quant=torch.float8_e4m3fn,
-                            res1=None,
-                            output_unquantized_inp1=False,
-                        )
-
-                    else:
-                        hidden_states = self.input_layernorm(hidden_states)
-                else:
-
-                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
-                        hidden_states, *_, residual = fused_rms_mxfp4_quant(
-                            hidden_states,
-                            self.input_layernorm.weight,
-                            self.input_layernorm.variance_epsilon,
-
-
+Thread 597323 (active): "MainThread"
+    __call__ (torch/_ops.py:841)
+    rmsnorm (sgl_kernel/elementwise.py:45)
+    forward_cuda (layernorm.py:148)
+    forward (utils/multi_platform.py:71)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    prepare_attn (communicator.py:468)
+    forward (deepseek_v2.py:2388)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2737)
+    _call_impl (torch/nn/modules/module.py:1786)
+    _wrapped_call_impl (torch/nn/modules/module.py:1775)
+    forward (deepseek_v2.py:2920)
+    decorate_context (torch/utils/_contextlib.py:120)
+    run_once (cuda_graph_runner.py:719)
+    capture_one_batch_size (cuda_graph_runner.py:732)
+    _capture_one_stream (cuda_graph_runner.py:513)
+    capture (cuda_graph_runner.py:526)
+    __init__ (cuda_graph_runner.py:370)
+    init_device_graphs (model_runner.py:2156)
+    initialize (model_runner.py:609)
+    __init__ (model_runner.py:413)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+    spawn_main (multiprocessing/spawn.py:122)
+    <module> (<string>:1)
+Thread 598841 (idle): "Thread-1"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 599320 (idle): "InductorSubproc"
+    _recv_msg (torch/_inductor/compile_worker/subproc_pool.py:73)
+    _read_thread (torch/_inductor/compile_worker/subproc_pool.py:228)
+    run (threading.py:1012)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
+Thread 599332 (idle): "Thread-2"
+    wait (threading.py:359)
+    wait (threading.py:655)
+    run (tqdm/_monitor.py:60)
+    _bootstrap_inner (threading.py:1075)
+    _bootstrap (threading.py:1032)
