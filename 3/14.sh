@@ -65,3 +65,33 @@ Not root, Subscription Management repositories not updated
 Last metadata expiration check: 1 day, 8:08:27 ago on Tue 03 Mar 2026 11:29:38 AM MSK.
 Error: No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
 ((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ 
+
+
+
+
+
+
+
+
+# На 0007 (запусти первым):
+NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
+NCCL_IB_GID_INDEX=3 \
+NCCL_SOCKET_IFNAME=enp25s0np0 \
+torchrun --nproc_per_node=8 --nnodes=2 \
+  --node_rank=0 --master_addr=10.99.91.59 --master_port=29500 \
+  -m torch.distributed.run --no_python python3 -c "
+import torch, torch.distributed as dist
+dist.init_process_group('nccl')
+t = torch.ones(1024*1024).cuda(dist.get_rank() % 8)
+dist.all_reduce(t)
+print(f'rank {dist.get_rank()} OK')
+"
+bash
+# На 0008 одновременно:
+NCCL_IB_HCA=mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
+NCCL_IB_GID_INDEX=3 \
+NCCL_SOCKET_IFNAME=enp25s0np0 \
+torchrun --nproc_per_node=8 --nnodes=2 \
+  --node_rank=1 --master_addr=10.99.91.59 --master_port=29500 \
+  -m torch.distributed.run --no_python python3 -c "..."
+
