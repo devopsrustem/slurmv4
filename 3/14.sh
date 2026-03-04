@@ -148,3 +148,173 @@ for pid in $(pgrep -f "scheduler_TP"); do
   echo "=== PID $pid ==="
   py-spy dump --pid $pid 2>/dev/null | head -20
 done
+
+
+=== PID 544360 ===
+Process 544360: sglang::scheduler_TP0
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544360 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544361 ===
+Process 544361: sglang::scheduler_TP1
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544361 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544362 ===
+Process 544362: sglang::scheduler_TP2
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544362 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544363 ===
+Process 544363: sglang::scheduler_TP3
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544363 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544364 ===
+Process 544364: sglang::scheduler_TP4
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544364 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544365 ===
+Process 544365: sglang::scheduler_TP5
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544365 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544366 ===
+Process 544366: sglang::scheduler_TP6
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544366 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
+=== PID 544367 ===
+Process 544367: sglang::scheduler_TP7
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544367 (active): "MainThread"
+    synchronize (torch/cuda/streams.py:102)
+    __init__ (pynccl.py:121)
+    __init__ (distributed/parallel_state.py:338)
+    init_model_parallel_group (distributed/parallel_state.py:1379)
+    initialize_model_parallel (distributed/parallel_state.py:1676)
+    init_torch_distributed (model_runner.py:812)
+    __init__ (model_runner.py:392)
+    _init_model_runner (tp_worker.py:346)
+    __init__ (tp_worker.py:247)
+    init_tp_model_worker (scheduler.py:522)
+    init_model_worker (scheduler.py:564)
+    __init__ (scheduler.py:368)
+    run_scheduler_process (scheduler.py:3139)
+    run (multiprocessing/process.py:108)
+    _bootstrap (multiprocessing/process.py:314)
+    _main (multiprocessing/spawn.py:135)
