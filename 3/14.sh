@@ -141,3 +141,10 @@ Thread 581325 (idle): "MainThread"
     <module> (sglang/launch_server.py:35)
     _run_code (<frozen runpy>:88)
     _run_module_as_main (<frozen runpy>:198)
+
+
+# На 0007 - дампи все процессы:
+for pid in $(pgrep -f "scheduler_TP"); do
+  echo "=== PID $pid ==="
+  py-spy dump --pid $pid 2>/dev/null | head -20
+done
