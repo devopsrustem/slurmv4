@@ -727,3 +727,20 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
 Тест 1 завис → 0007 виноват (NVSwitch Link 60)
 Тест 2 завис → 0008 виноват
 Оба зависли → проблема в межсерверной совместимости Supermicro + noname
+
+# На 0007 - тест allreduce между 8 GPU:
+python3 -c "
+import torch
+import torch.distributed as dist
+import os
+
+os.environ['NCCL_NVLS_ENABLE'] = '0'
+
+dist.init_process_group('nccl', init_method='tcp://10.99.91.59:29500', rank=0, world_size=8)
+torch.cuda.set_device(0)
+x = torch.ones(1000).cuda()
+dist.all_reduce(x)
+torch.cuda.synchronize()
+print('allreduce OK:', x[0].item())
+dist.destroy_process_group()
+"
