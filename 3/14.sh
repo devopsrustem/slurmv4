@@ -495,3 +495,9 @@ sed -n '517,560p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/s
         forward_batch: ForwardBatch,
     ):
         return self._communicate_summable_tensor_pair_fn(
+
+
+
+
+        # На 0003:
+ps aux | grep sglang | grep -v grep | tr ' ' '\n' | grep -E "cuda.graph\|attn.tp\|overlap"
