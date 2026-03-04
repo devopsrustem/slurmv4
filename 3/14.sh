@@ -106,3 +106,38 @@ PYTORCH_ALLOC_CONF=expandable_segments:True,max_split_size_mb:256 TOKENIZERS_PAR
 
 
 sudo py-spy dump --pid $(pgrep -f "sglang.launch_server")
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ py-spy dump --pid $(pgrep -f "sglang.launch_server")
+Process 544105: python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.59 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 544105 (idle): "MainThread"
+    _recv (multiprocessing/connection.py:395)
+    _recv_bytes (multiprocessing/connection.py:430)
+    recv (multiprocessing/connection.py:250)
+    _wait_for_scheduler_ready (engine.py:894)
+    _launch_subprocesses (engine.py:1084)
+    launch_server (http_server.py:1894)
+    run_server (sglang/launch_server.py:28)
+    <module> (sglang/launch_server.py:35)
+    _run_code (<frozen runpy>:88)
+    _run_module_as_main (<frozen runpy>:198)
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0008 ~]$ py-spy dump --pid $(pgrep -f "sglang.launch_server")
+Process 581325: python3 -m sglang.launch_server --model-path /app/models/Deepseek-R1/ --trust-remote-code --tp-size 16 --host 10.99.91.63 --port 30001 --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 1 --mem-fraction-static 0.8 --disaggregation-mode decode --disaggregation-transfer-backend nixl --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 --max-running-requests 128
+Python v3.12.12 (/usr/bin/python3.12)
+
+Thread 581325 (idle): "MainThread"
+    _recv (multiprocessing/connection.py:395)
+    _recv_bytes (multiprocessing/connection.py:430)
+    recv (multiprocessing/connection.py:250)
+    _wait_for_scheduler_ready (engine.py:894)
+    _launch_subprocesses (engine.py:1044)
+    launch_server (http_server.py:1894)
+    run_server (sglang/launch_server.py:28)
+    <module> (sglang/launch_server.py:35)
+    _run_code (<frozen runpy>:88)
+    _run_module_as_main (<frozen runpy>:198)
