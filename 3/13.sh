@@ -744,3 +744,20 @@ torch.cuda.synchronize()
 print('allreduce OK:', x[0].item())
 dist.destroy_process_group()
 "
+
+python3 -c "
+import torch
+import torch.distributed as dist
+import os
+
+os.environ['NCCL_NVLS_ENABLE'] = '0'
+os.environ['GLOO_SOCKET_FAMILY'] = 'AF_INET'
+
+dist.init_process_group('nccl', init_method='tcp://10.99.91.59:29500?use_libuv=0', rank=0, world_size=1)
+torch.cuda.set_device(0)
+x = torch.ones(1000).cuda()
+dist.all_reduce(x)
+torch.cuda.synchronize()
+print('allreduce OK:', x[0].item())
+dist.destroy_process_group()
+"
