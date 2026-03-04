@@ -553,3 +553,71 @@ grep -n "prepare_attn\|def prepare_attn" /app/sglang/sglang-0.5.9/lib/python3.12
                             self.input_layernorm.weight,
                             self.input_layernorm.variance_epsilon,
 
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sed -n '412,475p' /app/sglang/sglang-0.5.9/lib/python3.12/site-packages/sglang/srt/layers/communicator.py
+    def prepare_attn(
+        self,
+        hidden_states: torch.Tensor,
+        residual: torch.Tensor,
+        forward_batch: ForwardBatch,
+        quant_format: str = "",
+        post_residual_addition: Optional[torch.Tensor] = None,
+    ):
+        if get_attn_tp_context().input_scattered:
+            hidden_states, residual = self._tp_reduce_scatter(
+                hidden_states,
+                residual,
+            )
+        if hidden_states.shape[0] == 0:
+            residual = hidden_states
+        else:
+            if (
+                residual is not None
+                and hasattr(hidden_states, "_sglang_needs_allreduce_fusion")
+                and hidden_states._sglang_needs_allreduce_fusion
+            ):
+                hidden_states, residual = (
+                    self.input_layernorm.forward_with_allreduce_fusion(
+                        hidden_states, residual
+                    )
+                )
+            else:
+                if residual is None:
+                    residual = hidden_states
+
+                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
+                        hidden_states, *_, _ = fused_rms_mxfp4_quant(
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
+                            None,
+                            None,
+                            None,
+                            None,
+                        )
+                    elif _use_aiter and _is_gfx95_supported and ("fp8" in quant_format):
+
+                        hidden_states, _, _, _res = fused_rms_fp8_group_quant(
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
+                            inp2=None,
+                            inp2_weight=None,
+                            inp2_epsilon=None,
+                            group_size=128,
+                            dtype_quant=torch.float8_e4m3fn,
+                            res1=None,
+                            output_unquantized_inp1=False,
+                        )
+
+                    else:
+                        hidden_states = self.input_layernorm(hidden_states)
+                else:
+
+                    if _use_aiter and _is_gfx95_supported and ("mxfp4" in quant_format):
+                        hidden_states, *_, residual = fused_rms_mxfp4_quant(
+                            hidden_states,
+                            self.input_layernorm.weight,
+                            self.input_layernorm.variance_epsilon,
+
+
