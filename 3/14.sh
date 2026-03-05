@@ -483,3 +483,6 @@ c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm
 /usr/bin/ld: cannot find -lcudart
 collect2: error: ld returned 1 exit status
 ninja: build stopped: subcommand failed.
+
+
+sudo ln -s /usr/local/cuda-12.8/targets/x86_64-linux/lib /usr/local/cuda-12.8/lib64
