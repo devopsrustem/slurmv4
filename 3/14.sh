@@ -371,3 +371,44 @@ Killed
 
 LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
 
+RuntimeError: ninja exited with status 1
+stdout:
+[1/1] c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+FAILED: [code=1] sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so 
+c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+/usr/bin/ld: cannot find -lcudart
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+
+[2026-03-05 10:40:45] SIGQUIT received. signum=None, frame=None. It usually means one child failed.
+Killed
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sudo find / -name lcudart
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ yum provides */lcudart
+Not root, Subscription Management repositories not updated
+Last metadata expiration check: 1 day, 23:13:05 ago on Tue 03 Mar 2026 11:29:38 AM MSK.
+Error: No matches found. If searching for a file, try specifying the full path or using a wildcard prefix ("*/") at the beginning.
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ yum provides */lcudart^C
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ sudo find / -name libcudart*
+/usr/local/cuda-12.9/targets/x86_64-linux/lib/libcudart.so.12
+/usr/local/cuda-12.9/targets/x86_64-linux/lib/libcudart.so.12.9.79
+/usr/local/cuda-12.9/targets/x86_64-linux/lib/libcudart.so
+/usr/local/cuda-12.9/targets/x86_64-linux/lib/libcudart_static.a
+/usr/local/cuda-13.1/lib64/libcudart.so
+/usr/local/cuda-13.1/lib64/libcudart.so.13
+/usr/local/cuda-13.1/lib64/libcudart.so.13.1.80
+/usr/local/cuda-13.1/lib64/libcudart_static.a
+/usr/local/cuda-13.1/targets/x86_64-linux/lib/libcudart.so.13
+/usr/local/cuda-13.1/targets/x86_64-linux/lib/libcudart.so.13.1.80
+/usr/local/cuda-13.1/targets/x86_64-linux/lib/libcudart_static.a
+/usr/local/cuda-13.1/targets/x86_64-linux/lib/libcudart.so
+/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart.so.12
+/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart.so.12.8.90
+/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart.so
+/usr/local/cuda-12.8/targets/x86_64-linux/lib/libcudart_static.a
+/app/tmp/uv/archive-v0/zoIRoyoN6gAzqgV5cIOIs/torchvision.libs/libcudart.e8e8b82a.so.12
+/app/tmp/uv/archive-v0/E3TYI_9-uBQzicjwWdnqS/nvidia/cuda_runtime/lib/libcudart.so.12
+/app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+/app/sglang/sglang-0.5.8.post1/lib/python3.12/site-packages/torchvision.libs/libcudart.e8e8b82a.so.12
+/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/nvidia/cuda_runtime/lib/libcudart.so.12
+/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/torchvision.libs/libcudart.e8e8b82a.so.12
