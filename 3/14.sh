@@ -116,3 +116,25 @@ Error distribution:
   -H "Content-Type: application/json" \
   -d '{"model":"default","messages":[{"role":"user","content":"1+666"}],"max_tokens":12048}' \
   http://10.82.101.193:8000/v1/chat/completions
+
+
+  
+0007:
+bashLD_LIBRARY_PATH=/usr/local/cuda-12.8/targets/x86_64-linux/lib:/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
+SGLANG_HOST_IP=10.99.91.59 \
+NCCL_SOCKET_IFNAME=enp25s0np0 \
+NCCL_IB_HCA="=mlx5_0,=mlx5_1,=mlx5_2,=mlx5_5,=mlx5_6,=mlx5_7,=mlx5_8,=mlx5_11" \
+NCCL_IB_GID_INDEX=3 \
+NCCL_NVLS_ENABLE=0 \
+NCCL_ALGO=Ring \
+NCCL_PROTO=Simple \
+NCCL_IB_CUDA_SUPPORT=0 \
+python3 -m sglang.launch_server \
+  --model-path /app/models/Deepseek-R1/ --trust-remote-code \
+  --tp-size 16 --host 10.99.91.59 --port 30001 \
+  --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0 \
+  --mem-fraction-static 0.8 --disaggregation-mode decode \
+  --disaggregation-transfer-backend nixl \
+  --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
+  --max-running-requests 128 --disable-cuda-graph
+0008: то же, node-rank 1, SGLANG_HOST_IP=10.99.91.63, host=10.99.91.63.
