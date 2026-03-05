@@ -200,3 +200,14 @@ pdsh -w tpgds-aihub0003,tpgds-aihub0006,tpgds-aihub0007,tpgds-aihub0008 \
 
 
 cat /proc/113695/environ | tr '\0' '\n' | grep -E "NCCL|SGLANG|CUDA|NIXL|MC_"
+
+
+[rank10]:[W305 10:17:38.040221001 ProcessGroupNCCL.cpp:1771] [PG ID 0 PG GUID 0 Rank 10] Failed to check the "should dump" flag on TCPStore, (maybe TCPStore server has shut down too early), with error: Broken pipe
+[rank15]:[W305 10:17:38.404745404 TCPStore.cpp:106] [c10d] sendBytes failed on SocketImpl(fd=102, addr=tpgds-aihub0008.delta.sbrf.ru:33978, remote=10.99.91.59:5000): Broken pipe
+Exception raised from sendBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x80 (0x7fd72e37cb80 in /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x5ffc5b1 (0x7fd7111fc5b1 in /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x5ffce42 (0x7fd7111fce42 in /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: <unknown function> + 0x5ffe94e (0x7fd7111fe94e in /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+
+
