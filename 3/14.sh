@@ -211,3 +211,162 @@ frame #2: <unknown function> + 0x5ffce42 (0x7fd7111fce42 in /app/sglang/sglang-0
 frame #3: <unknown function> + 0x5ffe94e (0x7fd7111fe94e in /app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/lib/libtorch_cpu.so)
 
 
+
+
+
+
+
+
+
+((sglang-0.5.9) ) [dcbsr_dev@tpgds-aihub0007 ~]$ NCCL_IB_DISABLE=1 SGLANG_HOST_IP=10.99.91.59 NCCL_SOCKET_IFNAME=enp25s0np0 NCCL_IB_HCA="=mlx5_0,=mlx5_1,=mlx5_2,=mlx5_5,=mlx5_6,=mlx5_7,=mlx5_8,=mlx5_11" NCCL_IB_GID_INDEX=3 python3 -m sglang.launch_server   --model-path /app/models/Deepseek-R1/ --trust-remote-code   --tp-size 16 --host 10.99.91.59 --port 30001   --dist-init-addr 10.99.91.59:5000 --nnodes 2 --node-rank 0   --mem-fraction-static 0.8 --disaggregation-mode decode   --disaggregation-transfer-backend nixl   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11   --max-running-requests 128 
+
+
+Warning: please use at least NVCC 12.9 for the best DeepGEMM performance
+[2026-03-05 10:24:01 TP1] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 370, in __init__
+    self.capture()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 526, in capture
+    _capture_one_stream()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 513, in _capture_one_stream
+    ) = self.capture_one_batch_size(bs, forward, stream_idx)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 732, in capture_one_batch_size
+    run_once()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 719, in run_once
+    logits_output_or_pp_proxy_tensors = forward(
+                                        ^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2919, in forward
+    hidden_states = self.model(
+                    ^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2730, in forward
+    hidden_states, residual = layer(
+                              ^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2395, in forward
+    hidden_states = self.self_attn(
+                    ^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1366, in forward
+    s = self.forward_prepare(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1420, in forward_prepare
+    inner_state = self.forward_absorb_prepare(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1729, in forward_absorb_prepare
+    q_pe, k_pe = self.rotary_emb(positions, q_pe, k_pe)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/layers/utils/multi_platform.py", line 71, in forward
+    return self._forward_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/layers/rotary_embedding.py", line 365, in forward_cuda
+    apply_rope_with_cos_sin_cache_inplace(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 227, in apply_rope_with_cos_sin_cache_inplace
+    apply_rope_pos_ids_cos_sin_cache_without_kv_cache(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/_ops.py", line 1255, in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 108, in apply_rope_pos_ids_cos_sin_cache_without_kv_cache
+    module = _jit_apply_rope_pos_ids_cos_sin_cache_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/utils.py", line 28, in wrapper
+    result_map[key] = fn(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 26, in _jit_apply_rope_pos_ids_cos_sin_cache_module
+    return load_jit(
+           ^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/utils.py", line 162, in load_jit
+    return load_inline(
+           ^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 1035, in load_inline
+    build_inline(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 877, in build_inline
+    return _build_impl(
+           ^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 672, in _build_impl
+    build_ninja(str(build_dir))
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 542, in build_ninja
+    raise RuntimeError("\n".join(msg))
+RuntimeError: ninja exited with status 1
+stdout:
+[1/1] c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+FAILED: [code=1] sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so 
+c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+/usr/bin/ld: cannot find -lcudart
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 3130, in run_scheduler_process
+    scheduler = Scheduler(
+                ^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 368, in __init__
+    self.init_model_worker()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 564, in init_model_worker
+    self.init_tp_model_worker()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 522, in init_tp_model_worker
+    self.tp_worker = TpModelWorker(
+                     ^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 247, in __init__
+    self._init_model_runner()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 330, in _init_model_runner
+    self._model_runner = ModelRunner(
+                         ^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 413, in __init__
+    self.initialize(min_per_gpu_memory)
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 609, in initialize
+    self.init_device_graphs()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 2156, in init_device_graphs
+    self.graph_runner = graph_runners[self.device](self)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/cuda_graph_runner.py", line 372, in __init__
+    raise Exception(
+Exception: Capture cuda graph failed: ninja exited with status 1
+stdout:
+[1/1] c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+FAILED: [code=1] sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so 
+c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+/usr/bin/ld: cannot find -lcudart
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
+
+Possible solutions:
+1. set --mem-fraction-static to a smaller value (e.g., 0.8 or 0.7)
+2. set --cuda-graph-max-bs to a smaller value (e.g., 16)
+3. disable torch compile by not using --enable-torch-compile
+4. disable CUDA graph by --disable-cuda-graph. (Not recommended. Huge performance loss)
+Open an issue on GitHub https://github.com/sgl-project/sglang/issues/new/choose 
+
+
+[2026-03-05 10:24:01] Received sigquit from a child process. It usually means the child failed.
+Killed
+
+
+
