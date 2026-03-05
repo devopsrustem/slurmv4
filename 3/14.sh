@@ -418,3 +418,11 @@ Status code distribution:
 
 Error distribution:
   [99]	Post "http://10.82.101.193:8000/v1/chat/completions": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+
+
+
+
+./hey_linux_amd64 -n 10 -c 2 -m POST \
+  -H "Content-Type: application/json" \
+  -d '{"model":"default","messages":[{"role":"user","content":"1+666"}],"max_tokens":12048}' \
+  http://10.82.101.193:8000/v1/chat/completions
