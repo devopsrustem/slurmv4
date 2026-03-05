@@ -370,3 +370,116 @@ Killed
 
 
 LD_LIBRARY_PATH=/usr/local/cuda-12.8/targets/x86_64-linux/lib:/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH
+
+
+
+Warning: please use at least NVCC 12.9 for the best DeepGEMM performance
+Warning: please use at least NVCC 12.9 for the best DeepGEMM performance
+[2026-03-05 10:48:59 TP5] Scheduler hit an exception: Traceback (most recent call last):
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 3184, in run_scheduler_process
+    scheduler.event_loop_overlap_disagg_decode()
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/disaggregation/decode.py", line 943, in event_loop_overlap_disagg_decode
+    batch_result = self.run_batch(batch)
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/scheduler.py", line 2328, in run_batch
+    batch_result = self.model_worker.forward_batch_generation(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/managers/tp_worker.py", line 456, in forward_batch_generation
+    out = self.model_runner.forward(
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 2401, in forward
+    output = self._forward_raw(
+             ^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 2488, in _forward_raw
+    ret = self.forward_decode(
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/model_executor/model_runner.py", line 2300, in forward_decode
+    return self.model.forward(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2919, in forward
+    hidden_states = self.model(
+                    ^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2730, in forward
+    hidden_states, residual = layer(
+                              ^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 2395, in forward
+    hidden_states = self.self_attn(
+                    ^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1366, in forward
+    s = self.forward_prepare(
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1420, in forward_prepare
+    inner_state = self.forward_absorb_prepare(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/models/deepseek_v2.py", line 1729, in forward_absorb_prepare
+    q_pe, k_pe = self.rotary_emb(positions, q_pe, k_pe)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1775, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/nn/modules/module.py", line 1786, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/layers/utils/multi_platform.py", line 71, in forward
+    return self._forward_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/srt/layers/rotary_embedding.py", line 365, in forward_cuda
+    apply_rope_with_cos_sin_cache_inplace(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 227, in apply_rope_with_cos_sin_cache_inplace
+    apply_rope_pos_ids_cos_sin_cache_without_kv_cache(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/torch/_ops.py", line 1255, in __call__
+    return self._op(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 108, in apply_rope_pos_ids_cos_sin_cache_without_kv_cache
+    module = _jit_apply_rope_pos_ids_cos_sin_cache_module()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/utils.py", line 28, in wrapper
+    result_map[key] = fn(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/rope.py", line 26, in _jit_apply_rope_pos_ids_cos_sin_cache_module
+    return load_jit(
+           ^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/sglang/jit_kernel/utils.py", line 162, in load_jit
+    return load_inline(
+           ^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 1035, in load_inline
+    build_inline(
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 877, in build_inline
+    return _build_impl(
+           ^^^^^^^^^^^^
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 672, in _build_impl
+    build_ninja(str(build_dir))
+  File "/app/sglang/sglang-0.5.9/lib64/python3.12/site-packages/tvm_ffi/cpp/extension.py", line 542, in build_ninja
+    raise RuntimeError("\n".join(msg))
+RuntimeError: ninja exited with status 1
+stdout:
+[1/1] c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+FAILED: [code=1] sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so 
+c++ cuda_0.o -shared -L/app/sglang/sglang-0.5.9/lib/python3.12/site-packages/tvm_ffi/lib -ltvm_ffi -L/usr/local/cuda-12.8/lib64 -lcudart -o sgl_kernel_jit_apply_rope_pos_ids_cos_sin_cache.so
+/usr/bin/ld: cannot find -lcudart
+collect2: error: ld returned 1 exit status
+ninja: build stopped: subcommand failed.
