@@ -369,4 +369,5 @@ Open an issue on GitHub https://github.com/sgl-project/sglang/issues/new/choose
 Killed
 
 
+LD_LIBRARY_PATH=/usr/local/cuda-13.1/lib64:$LD_LIBRARY_PATH \
 
