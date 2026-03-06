@@ -284,3 +284,7 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200]	20 responses
+
+
+pdsh -w tpgds-aihub0003,tpgds-aihub0007 \
+  'cat /proc/driver/nvidia/params | grep -i "peer\|gdr\|p2p"'
