@@ -237,3 +237,50 @@ Details (average, fastest, slowest):
 
 Status code distribution:
   [200]	20 responses
+
+
+
+23534980@sigma.sbrf.ru@CAB-WSN-0052363:/home/work/23534980@sigma.sbrf.ru$ ./hey_linux_amd64 -n 20 -c 5 -t 120 -m POST   -H "Content-Type: application/json"   -d '{"model":"default","messages":[{"role":"user","content":"1+666"}],"max_tokens":2048}'   http://10.82.101.193:8000/v1/chat/completions
+
+Summary:
+  Total:	205.8991 secs
+  Slowest:	99.2151 secs
+  Fastest:	3.2024 secs
+  Average:	45.2867 secs
+  Requests/sec:	0.0971
+  
+  Total data:	96849 bytes
+  Size/request:	4842 bytes
+
+Response time histogram:
+  3.202 [1]	|■■■■
+  12.804 [10]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  22.405 [0]	|
+  32.006 [0]	|
+  41.607 [0]	|
+  51.209 [0]	|
+  60.810 [0]	|
+  70.411 [1]	|■■■■
+  80.013 [0]	|
+  89.614 [0]	|
+  99.215 [8]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+
+Latency distribution:
+  10% in 5.7529 secs
+  25% in 6.4774 secs
+  50% in 7.5695 secs
+  75% in 95.5002 secs
+  90% in 99.0386 secs
+  95% in 99.2151 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0020 secs, 3.2024 secs, 99.2151 secs
+  DNS-lookup:	0.0000 secs, 0.0000 secs, 0.0000 secs
+  req write:	0.0000 secs, 0.0000 secs, 0.0001 secs
+  resp wait:	45.2845 secs, 3.1939 secs, 99.2070 secs
+  resp read:	0.0001 secs, 0.0000 secs, 0.0002 secs
+
+Status code distribution:
+  [200]	20 responses
