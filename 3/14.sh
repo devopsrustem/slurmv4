@@ -138,3 +138,102 @@ python3 -m sglang.launch_server \
   --disaggregation-ib-device mlx5_0,mlx5_1,mlx5_2,mlx5_5,mlx5_6,mlx5_7,mlx5_8,mlx5_11 \
   --max-running-requests 128 --disable-cuda-graph
 0008: то же, node-rank 1, SGLANG_HOST_IP=10.99.91.63, host=10.99.91.63.
+
+
+
+
+
+
+
+23534980@sigma.sbrf.ru@CAB-WSN-0052363:/home/work/23534980@sigma.sbrf.ru$ ./hey_linux_amd64 -n 20 -c 5 -t 120 -m POST   -H "Content-Type: application/json"   -d '{"model":"default","messages":[{"role":"user","content":"1+666"}],"max_tokens":2048}'   http://10.82.101.193:8000/v1/chat/completions
+
+Summary:
+  Total:	368.3566 secs
+  Slowest:	55.4212 secs
+  Fastest:	3.6413 secs
+  Average:	10.3381 secs
+  Requests/sec:	0.0543
+  
+  Total data:	23785 bytes
+  Size/request:	2162 bytes
+
+Response time histogram:
+  3.641 [1]	|■■■■
+  8.819 [9]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  13.997 [0]	|
+  19.175 [0]	|
+  24.353 [0]	|
+  29.531 [0]	|
+  34.709 [0]	|
+  39.887 [0]	|
+  45.065 [0]	|
+  50.243 [0]	|
+  55.421 [1]	|■■■■
+
+
+Latency distribution:
+  10% in 4.5251 secs
+  25% in 4.6539 secs
+  50% in 6.3148 secs
+  75% in 8.3544 secs
+  90% in 55.4212 secs
+  0% in 0.0000 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0039 secs, 3.6413 secs, 55.4212 secs
+  DNS-lookup:	0.0000 secs, 0.0000 secs, 0.0000 secs
+  req write:	0.0001 secs, 0.0000 secs, 0.0001 secs
+  resp wait:	10.3341 secs, 3.6412 secs, 55.4122 secs
+  resp read:	0.0001 secs, 0.0000 secs, 0.0001 secs
+
+Status code distribution:
+  [200]	11 responses
+
+Error distribution:
+  [9]	Post "http://10.82.101.193:8000/v1/chat/completions": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
+
+23534980@sigma.sbrf.ru@CAB-WSN-0052363:/home/work/23534980@sigma.sbrf.ru$ ./hey_linux_amd64 -n 20 -c 5 -t 120 -m POST   -H "Content-Type: application/json"   -d '{"model":"default","messages":[{"role":"user","content":"1+666"}],"max_tokens":2048}'   http://10.82.101.193:8000/v1/chat/completions
+
+Summary:
+  Total:	29.8537 secs
+  Slowest:	8.5696 secs
+  Fastest:	2.0942 secs
+  Average:	6.4054 secs
+  Requests/sec:	0.6699
+  
+  Total data:	41285 bytes
+  Size/request:	2064 bytes
+
+Response time histogram:
+  2.094 [1]	|■■■■■■
+  2.742 [0]	|
+  3.389 [0]	|
+  4.037 [0]	|
+  4.684 [0]	|
+  5.332 [0]	|
+  5.979 [7]	|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+  6.627 [4]	|■■■■■■■■■■■■■■■■■■■■■■■
+  7.275 [2]	|■■■■■■■■■■■
+  7.922 [3]	|■■■■■■■■■■■■■■■■■
+  8.570 [3]	|■■■■■■■■■■■■■■■■■
+
+
+Latency distribution:
+  10% in 5.5500 secs
+  25% in 5.9038 secs
+  50% in 6.2404 secs
+  75% in 7.6786 secs
+  90% in 8.0686 secs
+  95% in 8.5696 secs
+  0% in 0.0000 secs
+
+Details (average, fastest, slowest):
+  DNS+dialup:	0.0022 secs, 2.0942 secs, 8.5696 secs
+  DNS-lookup:	0.0000 secs, 0.0000 secs, 0.0000 secs
+  req write:	0.0000 secs, 0.0000 secs, 0.0002 secs
+  resp wait:	6.4031 secs, 2.0941 secs, 8.5613 secs
+  resp read:	0.0001 secs, 0.0000 secs, 0.0002 secs
+
+Status code distribution:
+  [200]	20 responses
